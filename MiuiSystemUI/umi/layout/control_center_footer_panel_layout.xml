@@ -8,6 +8,9 @@
         <com.android.systemui.controlcenter.phone.widget.QCToggleSliderView android:gravity="center" android:layout_gravity="end|center" android:orientation="horizontal" android:id="@id/qs_brightness" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="@dimen/qs_control_brightness_width" android:layout_height="fill_parent" android:contentDescription="@string/accessibility_brightness" />
     </com.android.systemui.controlcenter.phone.widget.ControlCenterBrightnessView>
     <ImageView android:layout_gravity="center" android:id="@id/qs_expand_indicator" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_control_expand_indicator_margin_top" android:src="@drawable/qs_control_tiles_indicator" />
-    <LinearLayout android:orientation="vertical" android:id="@id/smart_home_container" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="45.09088dip" />
+    <LinearLayout android:orientation="vertical" android:id="@id/plugin_view_container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <LinearLayout android:orientation="vertical" android:id="@id/miplay_container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+        <LinearLayout android:orientation="vertical" android:id="@id/smart_home_container" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="45.09088dip" />
+    </LinearLayout>
     <include android:gravity="center" android:layout_gravity="center" android:id="@id/settings_footer" android:clipChildren="false" android:clipToPadding="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_control_expand_indicator_margin_top" layout="@layout/qs_control_settings_footer" />
 </com.android.systemui.controlcenter.phone.widget.ControlCenterFooterPanel>
