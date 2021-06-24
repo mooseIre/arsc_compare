@@ -128,7 +128,8 @@ public class MiuiGxzwSensor {
     }
 
     /* access modifiers changed from: private */
-    public void doRegisterDozeSensor() {
+    /* access modifiers changed from: public */
+    private void doRegisterDozeSensor() {
         Sensor defaultSensor = this.mSensorManager.getDefaultSensor(TYPE_PUT_UP_DETECT, true);
         if (defaultSensor != null) {
             this.mSensorManager.registerListener(this.mPutUpSensorListener, defaultSensor, 3, this.mHandler);
@@ -146,7 +147,8 @@ public class MiuiGxzwSensor {
     }
 
     /* access modifiers changed from: private */
-    public void doUnregisterSensor() {
+    /* access modifiers changed from: public */
+    private void doUnregisterSensor() {
         this.mSensorManager.unregisterListener(this.mPutUpSensorListener);
         this.mSensorManager.unregisterListener(this.mNonUIListener);
     }
