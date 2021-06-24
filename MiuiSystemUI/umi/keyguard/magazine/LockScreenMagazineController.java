@@ -54,6 +54,7 @@ import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.phone.KeyguardBottomAreaView;
@@ -897,7 +898,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
                 intent.putExtra("wallpaper_uri", getLockScreenMagazineWallpaperInfo().wallpaperUri);
                 intent.putExtra("wallpaper_details", new Gson().toJson(getLockScreenMagazineWallpaperInfo()));
             } else {
-                intent.putExtra("from", "keyguard");
+                intent.putExtra("from", MiPlayPlugin.REF_KEYGUARD);
             }
             return intent;
         } catch (Exception unused) {

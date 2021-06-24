@@ -28,6 +28,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.phone.StatusBar;
 
+/* access modifiers changed from: package-private */
 public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchListener, DisplayManager.DisplayListener, MiuiGxzwQuickOpenView.QuickViewListener, MiuiGxzwSensor.MiuiGxzwSensorListener, MiuiGxzwTransparentTimer.TransparentTimerListener {
     private CollectGxzwListener mCollectGxzwListener;
     private int mCurrentNonUIMode;
@@ -113,6 +114,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         }
     };
 
+    /* access modifiers changed from: package-private */
     public interface CollectGxzwListener {
         void onCollectStateChange(boolean z);
 
@@ -131,6 +133,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         initView();
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public WindowManager.LayoutParams generateLayoutParams() {
         return this.mLayoutParams;
@@ -155,6 +158,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         layoutParams.setTitle("gxzw_touch");
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -164,6 +168,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).addObserver(this.mWakefulnessObserver);
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -296,6 +301,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         this.mMiuiGxzwAnimView.onKeyguardAuthen(z);
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public Rect caculateRegion() {
         int i;
@@ -309,6 +315,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         return new Rect(MiuiGxzwUtils.GXZW_ICON_X - i2, MiuiGxzwUtils.GXZW_ICON_Y - i, MiuiGxzwUtils.GXZW_ICON_X + MiuiGxzwUtils.GXZW_ICON_WIDTH + i2, MiuiGxzwUtils.GXZW_ICON_Y + MiuiGxzwUtils.GXZW_ICON_HEIGHT + i);
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
@@ -370,6 +377,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         return this.mMiuiGxzwTouchHelper.onTouch(motionEvent);
     }
 
+    /* access modifiers changed from: package-private */
     public void setCanvasInfo(float f, float f2, float f3, float f4, float f5) {
         if (MiuiGxzwUtils.isLargeFod()) {
             this.mHighlightView.setTouchCenter(f, f2);
@@ -400,6 +408,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         announceForAccessibility(str);
     }
 
+    /* access modifiers changed from: package-private */
     public void onTouchDown() {
         if (!this.mTouchDown) {
             Log.i("MiuiGxzwViewIcon", "onTouchDown");
@@ -435,6 +444,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         }
     }
 
+    /* access modifiers changed from: package-private */
     public void onTouchUp(boolean z) {
         if (this.mTouchDown) {
             Log.i("MiuiGxzwViewIcon", "onTouchUp");
@@ -540,6 +550,8 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void showBouncer() {
         ((StatusBar) Dependency.get(StatusBar.class)).collapsePanels();
     }
@@ -635,6 +647,8 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updateDozeScreenState() {
         if (!MiuiKeyguardUtils.isInvertColorsEnable(((FrameLayout) this).mContext)) {
             if (this.mGxzwIconTransparent) {
@@ -681,7 +695,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
                 }
 
                 public final void run() {
-                    MiuiGxzwIconView.lambda$setNonUIMode$1(this.f$0);
+                    MiuiGxzwUtils.setTouchMode(17, this.f$0);
                 }
             });
         }
