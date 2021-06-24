@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Property;
 import android.view.DisplayCutout;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,10 @@ import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
 import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.phone.controls.MiPlayPluginManager;
+import com.android.systemui.qs.miplay.MiPlayDetailAdapter;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.RowAnimationUtils;
@@ -39,6 +43,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     private final AnimationProperties animationProperties;
     private boolean mChildrenUpdateRequested;
     private final ViewTreeObserver.OnPreDrawListener mChildrenUpdater;
+    private ModalQSControlDetail mContentView;
     private FrameLayout mDialogContainer;
     private NotificationEntry mEntry;
     private boolean mFirstAddUpdateRequested;
@@ -491,43 +496,71 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         }
     }
 
-    public void enterModal(NotificationEntry notificationEntry) {
+    public void enterModalForMiPlay(View view, String str) {
         removeRow();
         removeMenu();
-        this.mEntry = notificationEntry;
-        if (!(notificationEntry.getModalRow().getIntrinsicHeight() == 0 || notificationEntry.getModalRow().getActualHeight() == 0) || this.mFirstAddUpdateRequested) {
-            addRow(notificationEntry);
-            addMenu(notificationEntry);
-            this.animationProperties.setAnimationEndAction(null);
-            requestChildrenUpdate();
-            RowAnimationUtils rowAnimationUtils = RowAnimationUtils.INSTANCE;
-            RowAnimationUtils.startTouchAnimationIfNeed(this.mModalRow, 1.0f);
-            return;
+        removeContentView();
+        ModalQSControlDetail modalQSControlDetail = (ModalQSControlDetail) LayoutInflater.from(getContext()).inflate(C0017R$layout.modal_qs_control_detail, (ViewGroup) this, false);
+        this.mContentView = modalQSControlDetail;
+        addView(modalQSControlDetail);
+        showMiPlay(true, view, str);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void showMiPlay(boolean z, View view, String str) {
+        this.mContentView.handleShowingDetail(z ? new MiPlayDetailAdapter() : null, view, null, str);
+    }
+
+    public void exitModalForMiPlay(MiPlayPluginManager miPlayPluginManager) {
+        requestChildrenUpdate();
+        this.mEntry = null;
+        removeContentView();
+    }
+
+    public void enterModal(NotificationEntry notificationEntry) {
+        if (notificationEntry != null) {
+            removeRow();
+            removeMenu();
+            removeContentView();
+            this.mEntry = notificationEntry;
+            if (!(notificationEntry.getModalRow().getIntrinsicHeight() == 0 || notificationEntry.getModalRow().getActualHeight() == 0) || this.mFirstAddUpdateRequested) {
+                addRow(notificationEntry);
+                addMenu(notificationEntry);
+                this.animationProperties.setAnimationEndAction(null);
+                requestChildrenUpdate();
+                RowAnimationUtils rowAnimationUtils = RowAnimationUtils.INSTANCE;
+                RowAnimationUtils.startTouchAnimationIfNeed(this.mModalRow, 1.0f);
+                return;
+            }
+            this.mFirstAddUpdateRequested = true;
+            addView(notificationEntry.getModalRow());
+            getViewTreeObserver().addOnPreDrawListener(this.mFirstAddUpdater);
         }
-        this.mFirstAddUpdateRequested = true;
-        addView(notificationEntry.getModalRow());
-        getViewTreeObserver().addOnPreDrawListener(this.mFirstAddUpdater);
     }
 
     public void exitModal(NotificationEntry notificationEntry) {
-        ExpandableNotificationRow row = notificationEntry.getRow();
-        this.mModalRow.getViewState().yTranslation = getRowTranslationY(row);
-        this.mMenuViewState.yTranslation = getMenuYInNss(row);
-        this.mMenuViewState.alpha = 0.0f;
-        if (((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).getAllNotifs().contains(notificationEntry) && row.isExpanded() != this.mModalRow.isExpanded()) {
-            this.mModalRow.setUserExpanded(row.isExpanded());
-            this.mModalRow.notifyHeightChanged(true);
-        }
-        requestChildrenUpdate();
-        this.animationProperties.setAnimationEndAction(new Consumer() {
-            /* class com.android.systemui.statusbar.notification.modal.$$Lambda$ModalWindowView$oI3Y_wjdyv_rwMYmm3JiEez4Jsk */
-
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ModalWindowView.this.lambda$exitModal$0$ModalWindowView((Property) obj);
+        if (notificationEntry != null) {
+            if (this.mModalRow != null) {
+                ExpandableNotificationRow row = notificationEntry.getRow();
+                this.mModalRow.getViewState().yTranslation = getRowTranslationY(row);
+                this.mMenuViewState.yTranslation = getMenuYInNss(row);
+                this.mMenuViewState.alpha = 0.0f;
+                if (((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).getAllNotifs().contains(notificationEntry) && row.isExpanded() != this.mModalRow.isExpanded()) {
+                    this.mModalRow.setUserExpanded(row.isExpanded());
+                    this.mModalRow.notifyHeightChanged(true);
+                }
+                requestChildrenUpdate();
             }
-        });
-        this.mEntry = null;
+            this.animationProperties.setAnimationEndAction(new Consumer() {
+                /* class com.android.systemui.statusbar.notification.modal.$$Lambda$ModalWindowView$oI3Y_wjdyv_rwMYmm3JiEez4Jsk */
+
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    ModalWindowView.this.lambda$exitModal$0$ModalWindowView((Property) obj);
+                }
+            });
+            this.mEntry = null;
+        }
     }
 
     /* access modifiers changed from: private */
@@ -535,6 +568,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     public /* synthetic */ void lambda$exitModal$0$ModalWindowView(Property property) {
         removeRow();
         removeMenu();
+        removeContentView();
     }
 
     /* access modifiers changed from: protected */
@@ -561,6 +595,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         if (notificationEntry != null && !this.mFirstAddUpdateRequested) {
             removeRow();
             removeMenu();
+            removeContentView();
             addRow(notificationEntry);
             addMenu(notificationEntry);
             requestChildrenUpdate();
@@ -568,21 +603,23 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     }
 
     private void addRow(NotificationEntry notificationEntry) {
-        ExpandableNotificationRow modalRow = notificationEntry.getModalRow();
-        this.mModalRow = modalRow;
-        modalRow.setOnHeightChangedListener(this.mOnHeightChangedListener);
-        if (this.mModalRow.getParent() == null) {
-            addView(this.mModalRow);
+        if (notificationEntry != null) {
+            ExpandableNotificationRow modalRow = notificationEntry.getModalRow();
+            this.mModalRow = modalRow;
+            modalRow.setOnHeightChangedListener(this.mOnHeightChangedListener);
+            if (this.mModalRow.getParent() == null) {
+                addView(this.mModalRow);
+            }
+            if (!this.mModalRow.isExpanded()) {
+                this.mModalRow.setUserExpanded(true);
+                this.mModalRow.notifyHeightChanged(false);
+            }
+            ExpandableNotificationRow row = notificationEntry.getRow();
+            row.getViewState().applyToView(this.mModalRow);
+            float rowTranslationY = getRowTranslationY(row);
+            this.mModalRow.setTranslationY(rowTranslationY);
+            this.mModalRow.getViewState().yTranslation = rowTranslationY - Math.max(0.0f, (((float) this.mModalRow.getIntrinsicHeight()) + rowTranslationY) - ((float) this.mMaxModalBottom));
         }
-        if (!this.mModalRow.isExpanded()) {
-            this.mModalRow.setUserExpanded(true);
-            this.mModalRow.notifyHeightChanged(false);
-        }
-        ExpandableNotificationRow row = notificationEntry.getRow();
-        row.getViewState().applyToView(this.mModalRow);
-        float rowTranslationY = getRowTranslationY(row);
-        this.mModalRow.setTranslationY(rowTranslationY);
-        this.mModalRow.getViewState().yTranslation = rowTranslationY - Math.max(0.0f, (((float) this.mModalRow.getIntrinsicHeight()) + rowTranslationY) - ((float) this.mMaxModalBottom));
     }
 
     public void removeRow() {
@@ -595,19 +632,21 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     }
 
     public void addMenu(NotificationEntry notificationEntry) {
-        View menuView = notificationEntry.getRow().getProvider().getMenuView();
-        this.mMenuView = menuView;
-        if (menuView.getParent() == null) {
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(-2, -2);
-            layoutParams.gravity = 1;
-            addView(this.mMenuView, layoutParams);
+        if (notificationEntry != null) {
+            View menuView = notificationEntry.getRow().getProvider().getMenuView();
+            this.mMenuView = menuView;
+            if (menuView.getParent() == null) {
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(-2, -2);
+                layoutParams.gravity = 1;
+                addView(this.mMenuView, layoutParams);
+            }
+            this.mMenuView.setTranslationY(getMenuYInNss(notificationEntry.getRow()));
+            this.mMenuView.setAlpha(0.0f);
+            this.mMenuView.setVisibility(0);
+            this.mMenuViewState.initFrom(this.mMenuView);
+            this.mMenuViewState.yTranslation = getMenuYInModal(this.mModalRow, false);
+            this.mMenuViewState.alpha = 1.0f;
         }
-        this.mMenuView.setTranslationY(getMenuYInNss(notificationEntry.getRow()));
-        this.mMenuView.setAlpha(0.0f);
-        this.mMenuView.setVisibility(0);
-        this.mMenuViewState.initFrom(this.mMenuView);
-        this.mMenuViewState.yTranslation = getMenuYInModal(this.mModalRow, false);
-        this.mMenuViewState.alpha = 1.0f;
     }
 
     public void addModalDialog(View view) {
@@ -701,6 +740,14 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         if (view != null) {
             removeView(view);
             this.mMenuView = null;
+        }
+    }
+
+    public void removeContentView() {
+        ModalQSControlDetail modalQSControlDetail = this.mContentView;
+        if (modalQSControlDetail != null) {
+            removeView(modalQSControlDetail);
+            this.mContentView = null;
         }
     }
 

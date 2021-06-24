@@ -30,11 +30,16 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
+import com.android.systemui.controlcenter.phone.controls.MiPlayPluginManager;
+import com.android.systemui.controlcenter.phone.detail.QSControlDetail;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.qs.tileview.QSBigTileView;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
+import com.android.systemui.plugins.PluginListener;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.qs.MiuiQSDetailItems;
+import com.android.systemui.qs.miplay.MiPlayDetailAdapter;
 import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.analytics.SystemUIStat;
 import com.miui.systemui.anim.PhysicBasedInterpolator;
@@ -46,13 +51,14 @@ import miuix.animation.controller.AnimState;
 import miuix.animation.listener.TransitionListener;
 import miuix.animation.listener.UpdateInfo;
 import miuix.animation.property.ViewProperty;
+import miuix.animation.utils.EaseManager;
 import miuix.slidingwidget.widget.SlidingButton;
 
 public class QSControlDetail extends FrameLayout {
     private float detailCornerRadius;
     protected IStateStyle mAnim;
     protected Runnable mAnimateHideRunnable = new Runnable() {
-        /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass4 */
+        /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass5 */
 
         public void run() {
             if (DeviceConfig.isLowGpuDevice()) {
@@ -63,7 +69,7 @@ public class QSControlDetail extends FrameLayout {
         }
     };
     protected Runnable mAnimateShowRunnable = new Runnable() {
-        /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass3 */
+        /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass4 */
 
         public void run() {
             if (DeviceConfig.isLowGpuDevice()) {
@@ -85,19 +91,19 @@ public class QSControlDetail extends FrameLayout {
     protected View mFromView;
     protected int[] mFromViewFrame = new int[4];
     protected int[] mFromViewLocation = new int[4];
-    private boolean mNeedComputeAnim = false;
+    protected boolean mIsAnimating;
     private int mOrientation;
     protected View mQsDetailHeader;
     protected SlidingButton mQsDetailHeaderSwitch;
     protected TextView mQsDetailHeaderTitle;
     private ControlCenterPanelView mQsPanel;
     protected QSPanelCallback mQsPanelCallback = new QSPanelCallback() {
-        /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass7 */
+        /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass8 */
 
         @Override // com.android.systemui.controlcenter.phone.detail.QSControlDetail.QSPanelCallback
         public void onToggleStateChanged(final boolean z) {
             QSControlDetail.this.post(new Runnable() {
-                /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass7.AnonymousClass1 */
+                /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass8.AnonymousClass1 */
 
                 public void run() {
                     QSControlDetail qSControlDetail = QSControlDetail.this;
@@ -108,13 +114,42 @@ public class QSControlDetail extends FrameLayout {
 
         @Override // com.android.systemui.controlcenter.phone.detail.QSControlDetail.QSPanelCallback
         public void onShowingDetail(DetailAdapter detailAdapter, View view, View view2) {
+            if (detailAdapter != null) {
+                QSControlDetail.this.mShowingMiPlayDetail = detailAdapter instanceof MiPlayDetailAdapter;
+            }
             QSControlDetail.this.handleShowingDetail(detailAdapter, view, view2);
+            QSControlDetail qSControlDetail = QSControlDetail.this;
+            if (qSControlDetail.mShowingMiPlayDetail) {
+                View view3 = (View) qSControlDetail.mDetailViews.get(1168);
+                boolean z = detailAdapter != null;
+                MiPlayPluginManager miPlayPluginManager = (MiPlayPluginManager) Dependency.get(MiPlayPluginManager.class);
+                if (z) {
+                    miPlayPluginManager.showMiPlayDetailView(view3, MiPlayPlugin.REF_CONTROLCENTER);
+                } else {
+                    miPlayPluginManager.hideMiPlayDetailView(view3);
+                }
+            }
+            if (detailAdapter == null) {
+                QSControlDetail.this.post(new Runnable() {
+                    /* class com.android.systemui.controlcenter.phone.detail.$$Lambda$QSControlDetail$8$mT3TXj0bjn0sWYsRuY9rdzTsXvM */
+
+                    public final void run() {
+                        QSControlDetail.AnonymousClass8.this.lambda$onShowingDetail$0$QSControlDetail$8();
+                    }
+                });
+            }
+        }
+
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onShowingDetail$0 */
+        public /* synthetic */ void lambda$onShowingDetail$0$QSControlDetail$8() {
+            QSControlDetail.this.mShowingMiPlayDetail = false;
         }
 
         @Override // com.android.systemui.controlcenter.phone.detail.QSControlDetail.QSPanelCallback
         public void onScanStateChanged(final boolean z) {
             QSControlDetail.this.post(new Runnable() {
-                /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass7.AnonymousClass2 */
+                /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass8.AnonymousClass2 */
 
                 public void run() {
                     QSControlDetail.this.handleScanStateChanged(z);
@@ -124,6 +159,7 @@ public class QSControlDetail extends FrameLayout {
     };
     private boolean mScanState;
     private boolean mSettingsClicked;
+    protected boolean mShowingMiPlayDetail;
     private String mSuffix;
     private boolean mSwitchClicked;
     private boolean mSwitchEnabled;
@@ -133,6 +169,16 @@ public class QSControlDetail extends FrameLayout {
     protected int[] mToViewLocation = new int[4];
     protected View mTranslateView;
     private int mWifiBtDetailHeight;
+    private PluginListener<MiPlayPlugin> pluginListener = new PluginListener<MiPlayPlugin>() {
+        /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass1 */
+
+        public void onPluginConnected(MiPlayPlugin miPlayPlugin, Context context) {
+        }
+
+        public void onPluginDisconnected(MiPlayPlugin miPlayPlugin) {
+            QSControlDetail.this.mDetailViews.remove(1168);
+        }
+    };
 
     public interface QSPanelCallback {
         void onScanStateChanged(boolean z);
@@ -153,13 +199,11 @@ public class QSControlDetail extends FrameLayout {
         int i;
         int i2;
         super.onConfigurationChanged(configuration);
-        if (this.mOrientation != configuration.orientation) {
-            if (isShowingDetail()) {
-                this.mNeedComputeAnim = true;
-            }
-            int i3 = configuration.orientation;
-            this.mOrientation = i3;
-            if (i3 == 1) {
+        int i3 = this.mOrientation;
+        int i4 = configuration.orientation;
+        if (i3 != i4) {
+            this.mOrientation = i4;
+            if (i4 == 1) {
                 i = 0;
                 i2 = 0;
             } else if (getLayoutDirection() == 0) {
@@ -215,7 +259,7 @@ public class QSControlDetail extends FrameLayout {
         this.detailCornerRadius = this.mContext.getResources().getDimension(C0012R$dimen.qs_control_corner_general_radius);
         this.mDetailContainer.setClipToOutline(true);
         this.mDetailContainer.setOutlineProvider(new ViewOutlineProvider() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass1 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass2 */
 
             public void getOutline(View view, Outline outline) {
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), QSControlDetail.this.detailCornerRadius);
@@ -223,7 +267,7 @@ public class QSControlDetail extends FrameLayout {
         });
         updateDetailText();
         setOnClickListener(new View.OnClickListener() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass2 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass3 */
 
             public void onClick(View view) {
                 QSControlDetail qSControlDetail = QSControlDetail.this;
@@ -234,6 +278,18 @@ public class QSControlDetail extends FrameLayout {
         });
         updateDetailLayout();
         this.mAnim = Folme.useValue(this.mDetailContent);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ((MiPlayPluginManager) Dependency.get(MiPlayPluginManager.class)).addExtraListener(this.pluginListener);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ((MiPlayPluginManager) Dependency.get(MiPlayPluginManager.class)).removeExtraListener(this.pluginListener);
     }
 
     public void setQsPanel(ControlCenterPanelView controlCenterPanelView) {
@@ -256,7 +312,9 @@ public class QSControlDetail extends FrameLayout {
     private void updateContainerHeight(String str) {
         this.mSuffix = str;
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mDetailContainer.getLayoutParams();
-        if (this.mOrientation == 2 || "Wifi".equals(str) || "Bluetooth".equals(str)) {
+        if (this.mDetailAdapter instanceof MiPlayDetailAdapter) {
+            layoutParams.height = -2;
+        } else if (this.mOrientation == 2 || "Wifi".equals(str) || "Bluetooth".equals(str)) {
             layoutParams.height = this.mWifiBtDetailHeight;
         } else {
             layoutParams.height = -2;
@@ -391,7 +449,7 @@ public class QSControlDetail extends FrameLayout {
         final Intent settingsIntent = detailAdapter.getSettingsIntent();
         this.mDetailSettingsButton.setVisibility(settingsIntent != null ? 0 : 8);
         this.mDetailSettingsButton.setOnClickListener(new View.OnClickListener() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass5 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass6 */
 
             public void onClick(View view) {
                 QSControlDetail.this.mSettingsClicked = true;
@@ -403,6 +461,11 @@ public class QSControlDetail extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void setupDetailHeader(final DetailAdapter detailAdapter) {
+        if (!detailAdapter.hasHeader()) {
+            this.mQsDetailHeader.setVisibility(8);
+            return;
+        }
+        this.mQsDetailHeader.setVisibility(0);
         this.mQsDetailHeaderTitle.setText(detailAdapter.getTitle());
         Boolean toggleState = detailAdapter.getToggleState();
         if (toggleState == null) {
@@ -412,7 +475,7 @@ public class QSControlDetail extends FrameLayout {
         this.mQsDetailHeaderSwitch.setVisibility(0);
         handleToggleStateChanged(toggleState.booleanValue(), detailAdapter.getToggleEnabled());
         this.mQsDetailHeaderSwitch.setOnPerformCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass6 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass7 */
 
             public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
                 QSControlDetail.this.mSwitchClicked = true;
@@ -486,13 +549,36 @@ public class QSControlDetail extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void animateShowDetailAndTile() {
+        EaseManager.EaseStyle easeStyle;
         computeAnimationParams();
         this.mAnim.cancel();
         IStateStyle to = this.mAnim.setTo("fromLeft", Integer.valueOf(this.mFromViewFrame[0]), "fromTop", Integer.valueOf(this.mFromViewFrame[1]), "fromRight", Integer.valueOf(this.mFromViewFrame[2]), "fromBottom", Integer.valueOf(this.mFromViewFrame[3]), "toLeft", Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]), "toTop", Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]), "toRight", Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]), "toBottom", Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]));
+        Object[] objArr = new Object[17];
+        objArr[0] = "fromLeft";
+        objArr[1] = Integer.valueOf((this.mFromViewFrame[0] + this.mToViewLocation[0]) - this.mFromViewLocation[0]);
+        objArr[2] = "fromTop";
+        objArr[3] = Integer.valueOf((this.mFromViewFrame[1] + this.mToViewLocation[1]) - this.mFromViewLocation[1]);
+        objArr[4] = "fromRight";
+        objArr[5] = Integer.valueOf((this.mFromViewFrame[2] + this.mToViewLocation[2]) - this.mFromViewLocation[2]);
+        objArr[6] = "fromBottom";
+        objArr[7] = Integer.valueOf((this.mFromViewFrame[3] + this.mToViewLocation[3]) - this.mFromViewLocation[3]);
+        objArr[8] = "toLeft";
+        objArr[9] = Integer.valueOf(this.mToViewFrame[0]);
+        objArr[10] = "toTop";
+        objArr[11] = Integer.valueOf(this.mToViewFrame[1]);
+        objArr[12] = "toRight";
+        objArr[13] = Integer.valueOf(this.mToViewFrame[2]);
+        objArr[14] = "toBottom";
+        objArr[15] = Integer.valueOf(this.mToViewFrame[3]);
         AnimConfig animConfig = new AnimConfig();
-        animConfig.setEase(-2, 0.8f, 0.3f);
+        if (this.mShowingMiPlayDetail) {
+            easeStyle = EaseManager.getStyle(-2, 0.7f, 0.3f);
+        } else {
+            easeStyle = EaseManager.getStyle(-2, 0.8f, 0.3f);
+        }
+        animConfig.setEase(easeStyle);
         animConfig.addListeners(new TransitionListener() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass8 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass9 */
             final View from;
             int[] fromFrame = new int[4];
             final View to;
@@ -548,49 +634,65 @@ public class QSControlDetail extends FrameLayout {
                 int[] iArr2 = this.toFrame;
                 view2.setLeftTopRightBottom(iArr2[0], iArr2[1], iArr2[2], iArr2[3]);
                 View view3 = this.translate;
-                int[] iArr3 = this.fromFrame;
-                int i = iArr3[2] - iArr3[0];
-                int[] iArr4 = QSControlDetail.this.mFromViewFrame;
-                view3.setTranslationX((float) (i - (iArr4[2] - iArr4[0])));
-                View view4 = this.translate;
-                int[] iArr5 = this.fromFrame;
-                int[] iArr6 = QSControlDetail.this.mFromViewFrame;
-                view4.setTranslationY((float) ((iArr5[3] - iArr5[1]) - (iArr6[3] - iArr6[1])));
+                if (view3 != null) {
+                    int[] iArr3 = this.fromFrame;
+                    int i = iArr3[2] - iArr3[0];
+                    int[] iArr4 = QSControlDetail.this.mFromViewFrame;
+                    view3.setTranslationX((float) (i - (iArr4[2] - iArr4[0])));
+                    View view4 = this.translate;
+                    int[] iArr5 = this.fromFrame;
+                    int[] iArr6 = QSControlDetail.this.mFromViewFrame;
+                    view4.setTranslationY((float) ((iArr5[3] - iArr5[1]) - (iArr6[3] - iArr6[1])));
+                }
             }
 
             @Override // miuix.animation.listener.TransitionListener
             public void onBegin(Object obj) {
                 super.onBegin(obj);
-                QSControlDetail.this.setVisibility(0);
-                ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(true);
-                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
-                View view = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
-                if (view instanceof ViewGroup) {
-                    ((ViewGroup) view).suppressLayout(true);
+                QSControlDetail qSControlDetail = QSControlDetail.this;
+                qSControlDetail.mIsAnimating = true;
+                qSControlDetail.setVisibility(0);
+                View view = QSControlDetail.this.mFromView;
+                if (view != null && (view.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(true);
                 }
-                View view2 = QSControlDetail.this.mFromView;
-                view2.setElevation(view2.getElevation() + 0.01f);
-                View view3 = QSControlDetail.this.mToView;
-                view3.setElevation(view3.getElevation() + 0.01f);
+                View view2 = QSControlDetail.this.mToView;
+                if (view2 != null && (view2.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
+                }
+                View view3 = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
+                if (view3 instanceof ViewGroup) {
+                    ((ViewGroup) view3).suppressLayout(true);
+                }
             }
 
             @Override // miuix.animation.listener.TransitionListener
             public void onComplete(Object obj) {
                 super.onComplete(obj);
                 QSControlDetail qSControlDetail = QSControlDetail.this;
+                qSControlDetail.mIsAnimating = false;
                 View view = qSControlDetail.mFromView;
                 int[] iArr = qSControlDetail.mFromViewFrame;
                 view.setLeftTopRightBottom(iArr[0], iArr[1], iArr[2], iArr[3]);
-                ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
-                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
-                View view2 = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
-                if (view2 instanceof MiuiQSDetailItems) {
-                    ((ViewGroup) view2).suppressLayout(false);
-                    ((MiuiQSDetailItems) view2).notifyData();
+                View view2 = QSControlDetail.this.mFromView;
+                if (view2 != null && (view2.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
+                }
+                View view3 = QSControlDetail.this.mToView;
+                if (view3 != null && (view3.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                }
+                View view4 = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
+                if (view4 instanceof ViewGroup) {
+                    ((ViewGroup) view4).suppressLayout(false);
+                }
+                if (view4 instanceof MiuiQSDetailItems) {
+                    ((MiuiQSDetailItems) view4).notifyData();
                 }
             }
         });
-        to.to("fromLeft", Integer.valueOf((this.mFromViewFrame[0] + this.mToViewLocation[0]) - this.mFromViewLocation[0]), "fromTop", Integer.valueOf((this.mFromViewFrame[1] + this.mToViewLocation[1]) - this.mFromViewLocation[1]), "fromRight", Integer.valueOf((this.mFromViewFrame[2] + this.mToViewLocation[2]) - this.mFromViewLocation[2]), "fromBottom", Integer.valueOf((this.mFromViewFrame[3] + this.mToViewLocation[3]) - this.mFromViewLocation[3]), "toLeft", Integer.valueOf(this.mToViewFrame[0]), "toTop", Integer.valueOf(this.mToViewFrame[1]), "toRight", Integer.valueOf(this.mToViewFrame[2]), "toBottom", Integer.valueOf(this.mToViewFrame[3]), animConfig);
+        objArr[16] = animConfig;
+        to.to(objArr);
     }
 
     /* access modifiers changed from: protected */
@@ -598,7 +700,7 @@ public class QSControlDetail extends FrameLayout {
         PhysicBasedInterpolator physicBasedInterpolator = new PhysicBasedInterpolator(0.9f, 0.35f);
         ValueAnimator duration = ValueAnimator.ofFloat(1.0f, 0.0f).setDuration(300L);
         duration.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass9 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass10 */
 
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
@@ -609,7 +711,7 @@ public class QSControlDetail extends FrameLayout {
             }
         });
         duration.addListener(new AnimatorListenerAdapter() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass10 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass11 */
 
             public void onAnimationStart(Animator animator) {
                 QSControlDetail.this.setVisibility(0);
@@ -628,16 +730,38 @@ public class QSControlDetail extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void animateHideDetailAndTile() {
-        if (this.mNeedComputeAnim) {
-            this.mNeedComputeAnim = false;
+        EaseManager.EaseStyle easeStyle;
+        if (!this.mIsAnimating) {
             computeAnimationParams();
         }
         this.mAnim.cancel();
         IStateStyle to = this.mAnim.setTo("fromLeft", Integer.valueOf((this.mFromViewFrame[0] + this.mToViewLocation[0]) - this.mFromViewLocation[0]), "fromTop", Integer.valueOf((this.mFromViewFrame[1] + this.mToViewLocation[1]) - this.mFromViewLocation[1]), "fromRight", Integer.valueOf((this.mFromViewFrame[2] + this.mToViewLocation[2]) - this.mFromViewLocation[2]), "fromBottom", Integer.valueOf((this.mFromViewFrame[3] + this.mToViewLocation[3]) - this.mFromViewLocation[3]), "toLeft", Integer.valueOf(this.mToViewFrame[0]), "toTop", Integer.valueOf(this.mToViewFrame[1]), "toRight", Integer.valueOf(this.mToViewFrame[2]), "toBottom", Integer.valueOf(this.mToViewFrame[3]));
+        Object[] objArr = new Object[17];
+        objArr[0] = "fromLeft";
+        objArr[1] = Integer.valueOf(this.mFromViewFrame[0]);
+        objArr[2] = "fromTop";
+        objArr[3] = Integer.valueOf(this.mFromViewFrame[1]);
+        objArr[4] = "fromRight";
+        objArr[5] = Integer.valueOf(this.mFromViewFrame[2]);
+        objArr[6] = "fromBottom";
+        objArr[7] = Integer.valueOf(this.mFromViewFrame[3]);
+        objArr[8] = "toLeft";
+        objArr[9] = Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]);
+        objArr[10] = "toTop";
+        objArr[11] = Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]);
+        objArr[12] = "toRight";
+        objArr[13] = Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]);
+        objArr[14] = "toBottom";
+        objArr[15] = Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]);
         AnimConfig animConfig = new AnimConfig();
-        animConfig.setEase(-2, 0.8f, 0.3f);
+        if (this.mShowingMiPlayDetail) {
+            easeStyle = EaseManager.getStyle(-2, 0.7f, 0.3f);
+        } else {
+            easeStyle = EaseManager.getStyle(-2, 0.8f, 0.3f);
+        }
+        animConfig.setEase(easeStyle);
         animConfig.addListeners(new TransitionListener() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass11 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass12 */
             final View from;
             int[] fromFrame = new int[4];
             final View to;
@@ -654,11 +778,19 @@ public class QSControlDetail extends FrameLayout {
             @Override // miuix.animation.listener.TransitionListener
             public void onBegin(Object obj) {
                 super.onBegin(obj);
-                ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(true);
-                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
-                View view = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
-                if (view instanceof ViewGroup) {
-                    ((ViewGroup) view).suppressLayout(true);
+                QSControlDetail qSControlDetail = QSControlDetail.this;
+                qSControlDetail.mIsAnimating = true;
+                View view = qSControlDetail.mFromView;
+                if (view != null && (view.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(true);
+                }
+                View view2 = QSControlDetail.this.mToView;
+                if (view2 != null && (view2.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
+                }
+                View view3 = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
+                if (view3 instanceof ViewGroup) {
+                    ((ViewGroup) view3).suppressLayout(true);
                 }
             }
 
@@ -704,25 +836,31 @@ public class QSControlDetail extends FrameLayout {
                 int[] iArr2 = this.toFrame;
                 view2.setLeftTopRightBottom(iArr2[0], iArr2[1], iArr2[2], iArr2[3]);
                 View view3 = this.translate;
-                int[] iArr3 = this.fromFrame;
-                int i = iArr3[2] - iArr3[0];
-                int[] iArr4 = QSControlDetail.this.mFromViewFrame;
-                view3.setTranslationX((float) (i - (iArr4[2] - iArr4[0])));
-                View view4 = this.translate;
-                int[] iArr5 = this.fromFrame;
-                int[] iArr6 = QSControlDetail.this.mFromViewFrame;
-                view4.setTranslationY((float) ((iArr5[3] - iArr5[1]) - (iArr6[3] - iArr6[1])));
+                if (view3 != null) {
+                    int[] iArr3 = this.fromFrame;
+                    int i = iArr3[2] - iArr3[0];
+                    int[] iArr4 = QSControlDetail.this.mFromViewFrame;
+                    view3.setTranslationX((float) (i - (iArr4[2] - iArr4[0])));
+                    View view4 = this.translate;
+                    int[] iArr5 = this.fromFrame;
+                    int[] iArr6 = QSControlDetail.this.mFromViewFrame;
+                    view4.setTranslationY((float) ((iArr5[3] - iArr5[1]) - (iArr6[3] - iArr6[1])));
+                }
             }
 
             @Override // miuix.animation.listener.TransitionListener
             public void onComplete(Object obj) {
                 super.onComplete(obj);
-                View view = QSControlDetail.this.mFromView;
-                view.setElevation(view.getElevation() - 0.01f);
+                QSControlDetail qSControlDetail = QSControlDetail.this;
+                qSControlDetail.mIsAnimating = false;
+                View view = qSControlDetail.mFromView;
+                if (view != null && (view.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
+                }
                 View view2 = QSControlDetail.this.mToView;
-                view2.setElevation(view2.getElevation() - 0.01f);
-                ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
-                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                if (view2 != null && (view2.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                }
                 View view3 = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
                 if (view3 instanceof ViewGroup) {
                     ((ViewGroup) view3).suppressLayout(false);
@@ -734,7 +872,8 @@ public class QSControlDetail extends FrameLayout {
                 }
             }
         });
-        to.to("fromLeft", Integer.valueOf(this.mFromViewFrame[0]), "fromTop", Integer.valueOf(this.mFromViewFrame[1]), "fromRight", Integer.valueOf(this.mFromViewFrame[2]), "fromBottom", Integer.valueOf(this.mFromViewFrame[3]), "toLeft", Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]), "toTop", Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]), "toRight", Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]), "toBottom", Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]), animConfig);
+        objArr[16] = animConfig;
+        to.to(objArr);
     }
 
     /* access modifiers changed from: protected */
@@ -742,7 +881,7 @@ public class QSControlDetail extends FrameLayout {
         PhysicBasedInterpolator physicBasedInterpolator = new PhysicBasedInterpolator(0.9f, 0.35f);
         ValueAnimator duration = ValueAnimator.ofFloat(1.0f, 0.0f).setDuration(300L);
         duration.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass12 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass13 */
 
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
@@ -753,14 +892,20 @@ public class QSControlDetail extends FrameLayout {
             }
         });
         duration.addListener(new AnimatorListenerAdapter() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass13 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass14 */
 
             public void onAnimationStart(Animator animator) {
-                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
+                View view = QSControlDetail.this.mToView;
+                if (view != null && (view.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
+                }
             }
 
             public void onAnimationEnd(Animator animator) {
-                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                View view = QSControlDetail.this.mToView;
+                if (view != null && (view.getParent() instanceof ViewGroup)) {
+                    ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                }
                 QSControlDetail.this.setVisibility(8);
                 QSControlDetail.this.mDetailContainer.setAlpha(0.0f);
             }
@@ -771,6 +916,8 @@ public class QSControlDetail extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void animateDetailAlphaWithRotation(boolean z, View view) {
+        EaseManager.EaseStyle easeStyle;
+        EaseManager.EaseStyle easeStyle2;
         if (z) {
             Folme.useAt(this.mDetailContainer).state().cancel();
             if (view != null) {
@@ -785,10 +932,16 @@ public class QSControlDetail extends FrameLayout {
             animState.add(ViewProperty.ROTATION_X, 0.0d);
             animState.add(ViewProperty.ROTATION_Y, 0.0d);
             animState.add(ViewProperty.TRANSLATION_Z, 0.0d);
+            AnimConfig[] animConfigArr = new AnimConfig[1];
             AnimConfig animConfig = new AnimConfig();
-            animConfig.setEase(0, 300.0f, 0.8f, 0.6666f);
+            if (this.mShowingMiPlayDetail) {
+                easeStyle2 = EaseManager.getStyle(-2, 0.95f, 0.2f);
+            } else {
+                easeStyle2 = EaseManager.getStyle(0, 300.0f, 0.8f, 0.6666f);
+            }
+            animConfig.setEase(easeStyle2);
             animConfig.addListeners(new TransitionListener() {
-                /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass14 */
+                /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass15 */
 
                 @Override // miuix.animation.listener.TransitionListener
                 public void onBegin(Object obj) {
@@ -802,7 +955,8 @@ public class QSControlDetail extends FrameLayout {
                     QSControlDetail.this.mDetailContainer.setLayerType(0, null);
                 }
             });
-            state.to(animState, animConfig);
+            animConfigArr[0] = animConfig;
+            state.to(animState, animConfigArr);
             return;
         }
         Folme.useAt(this.mDetailContainer).state().cancel();
@@ -812,10 +966,16 @@ public class QSControlDetail extends FrameLayout {
         animState2.add(ViewProperty.ROTATION_X, 0.0d);
         animState2.add(ViewProperty.ROTATION_Y, 0.0d);
         animState2.add(ViewProperty.TRANSLATION_Z, 0.0d);
+        AnimConfig[] animConfigArr2 = new AnimConfig[1];
         AnimConfig animConfig2 = new AnimConfig();
-        animConfig2.setEase(0, 300.0f, 0.8f, 0.6666f);
+        if (this.mShowingMiPlayDetail) {
+            easeStyle = EaseManager.getStyle(-2, 0.95f, 0.2f);
+        } else {
+            easeStyle = EaseManager.getStyle(0, 300.0f, 0.8f, 0.6666f);
+        }
+        animConfig2.setEase(easeStyle);
         animConfig2.addListeners(new TransitionListener() {
-            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass15 */
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass16 */
 
             @Override // miuix.animation.listener.TransitionListener
             public void onBegin(Object obj) {
@@ -829,7 +989,8 @@ public class QSControlDetail extends FrameLayout {
                 QSControlDetail.this.mDetailContainer.setLayerType(0, null);
             }
         });
-        state2.to(animState2, animConfig2);
+        animConfigArr2[0] = animConfig2;
+        state2.to(animState2, animConfigArr2);
     }
 
     /* access modifiers changed from: protected */

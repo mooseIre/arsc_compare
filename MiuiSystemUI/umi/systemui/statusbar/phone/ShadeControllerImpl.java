@@ -73,14 +73,16 @@ public class ShadeControllerImpl implements ShadeController {
             Log.v("ShadeControllerImpl", "NotificationShadeWindow: " + getNotificationShadeWindowView() + " canPanelBeCollapsed(): " + getNotificationPanelViewController().canPanelBeCollapsed());
             if (getNotificationShadeWindowView() == null || !getNotificationPanelViewController().canPanelBeCollapsed()) {
                 this.mBubbleControllerLazy.get().collapseStack();
-                return;
+            } else {
+                this.mNotificationShadeWindowController.setNotificationShadeFocusable(false);
+                getStatusBar().getNotificationShadeWindowViewController().cancelExpandHelper();
+                getStatusBarView().collapsePanel(true, z2, f);
             }
-            this.mNotificationShadeWindowController.setNotificationShadeFocusable(false);
-            getStatusBar().getNotificationShadeWindowViewController().cancelExpandHelper();
-            getStatusBarView().collapsePanel(true, z2, f);
+            ((ModalController) Dependency.get(ModalController.class)).animExitModal(ModalExitMode.OTHER.name());
             return;
         }
         runPostCollapseRunnables();
+        ((ModalController) Dependency.get(ModalController.class)).animExitModal(ModalExitMode.OTHER.name());
     }
 
     @Override // com.android.systemui.statusbar.phone.ShadeController

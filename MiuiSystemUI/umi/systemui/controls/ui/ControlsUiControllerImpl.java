@@ -223,8 +223,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void reload(ViewGroup viewGroup) {
+    public final void reload(ViewGroup viewGroup) {
         if (!this.hidden) {
             ControlsListingController controlsListingController2 = this.controlsListingController.get();
             ControlsListingController.ControlsListingCallback controlsListingCallback = this.listingCallback;
@@ -244,8 +243,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void showSeedingView(List<SelectionItem> list) {
+    public final void showSeedingView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
         int i = C0017R$layout.controls_no_favorites;
         ViewGroup viewGroup = this.parent;
@@ -265,8 +263,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void showInitialSetupView(List<SelectionItem> list) {
+    public final void showInitialSetupView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
         int i = C0017R$layout.controls_no_favorites;
         ViewGroup viewGroup = this.parent;
@@ -509,8 +506,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void updatePreferences(StructureInfo structureInfo) {
+    public final void updatePreferences(StructureInfo structureInfo) {
         if (!Intrinsics.areEqual(structureInfo, EMPTY_STRUCTURE)) {
             this.sharedPreferences.edit().putString("controls_component", structureInfo.getComponentName().flattenToString()).putString("controls_structure", structureInfo.getStructure().toString()).commit();
         }

@@ -42,6 +42,7 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.VolumeDialogController;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.qs.tiles.DndTile;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.util.RingerModeLiveData;
@@ -135,7 +136,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         } else {
             this.mStatusBarOptionalLazy = optional;
         }
-        this.mNotificationManager = (NotificationManager) this.mContext.getSystemService("notification");
+        this.mNotificationManager = (NotificationManager) this.mContext.getSystemService(MiPlayPlugin.REF_NOTIFICATION);
         Events.writeEvent(5, new Object[0]);
         HandlerThread handlerThread = new HandlerThread(VolumeDialogControllerImpl.class.getSimpleName());
         this.mWorkerThread = handlerThread;
@@ -143,7 +144,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         this.mWorker = new W(this.mWorkerThread.getLooper());
         this.mMediaSessions = createMediaSessions(this.mContext, this.mWorkerThread.getLooper(), this.mMediaSessionsCallbacksW);
         this.mAudio = (AudioManager) this.mContext.getSystemService("audio");
-        this.mNoMan = (NotificationManager) this.mContext.getSystemService("notification");
+        this.mNoMan = (NotificationManager) this.mContext.getSystemService(MiPlayPlugin.REF_NOTIFICATION);
         this.mObserver = new SettingObserver(this.mWorker);
         RingerModeObservers ringerModeObservers = new RingerModeObservers((RingerModeLiveData) ringerModeTracker.getRingerMode(), (RingerModeLiveData) ringerModeTracker.getRingerModeInternal());
         this.mRingerModeObservers = ringerModeObservers;

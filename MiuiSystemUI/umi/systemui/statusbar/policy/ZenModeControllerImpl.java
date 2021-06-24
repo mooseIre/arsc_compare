@@ -21,6 +21,7 @@ import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.qs.GlobalSetting;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.policy.ZenModeController;
@@ -141,7 +142,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
                 ZenModeControllerImpl.this.updateZenModeConfig();
             }
         };
-        this.mNoMan = (NotificationManager) context.getSystemService("notification");
+        this.mNoMan = (NotificationManager) context.getSystemService(MiPlayPlugin.REF_NOTIFICATION);
         this.mModeSetting.setListening(true);
         updateZenMode(this.mModeSetting.getValue());
         this.mConfigSetting.setListening(true);

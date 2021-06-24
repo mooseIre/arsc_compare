@@ -19,6 +19,9 @@ public interface BatteryController extends DemoMode, Dumpable, CallbackControlle
         default void onExtremePowerSaveChanged(boolean z) {
         }
 
+        default void onPerformanceModeChanged(boolean z) {
+        }
+
         default void onPowerSaveChanged(boolean z) {
         }
     }

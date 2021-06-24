@@ -52,6 +52,10 @@ public class ActivityStarterDelegate implements ActivityStarter {
         });
     }
 
+    static /* synthetic */ void lambda$startPendingIntentDismissingKeyguard$1(PendingIntent pendingIntent, Runnable runnable, Lazy lazy) {
+        ((StatusBar) lazy.get()).startPendingIntentDismissingKeyguard(pendingIntent, runnable);
+    }
+
     @Override // com.android.systemui.plugins.ActivityStarter
     public void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable, View view) {
         this.mActualStarter.ifPresent(new Consumer(pendingIntent, runnable, view) {
@@ -68,7 +72,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ActivityStarterDelegate.lambda$startPendingIntentDismissingKeyguard$2(this.f$0, this.f$1, this.f$2, (Lazy) obj);
+                ((StatusBar) ((Lazy) obj).get()).startPendingIntentDismissingKeyguard(this.f$0, this.f$1, this.f$2);
             }
         });
     }
@@ -94,6 +98,10 @@ public class ActivityStarterDelegate implements ActivityStarter {
                 ActivityStarterDelegate.lambda$startActivity$3(this.f$0, this.f$1, this.f$2, this.f$3, (Lazy) obj);
             }
         });
+    }
+
+    static /* synthetic */ void lambda$startActivity$3(Intent intent, boolean z, boolean z2, int i, Lazy lazy) {
+        ((StatusBar) lazy.get()).startActivity(intent, z, z2, i);
     }
 
     @Override // com.android.systemui.plugins.ActivityStarter
@@ -152,7 +160,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ActivityStarterDelegate.lambda$startActivity$6(this.f$0, this.f$1, this.f$2, (Lazy) obj);
+                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1, this.f$2);
             }
         });
     }
@@ -193,6 +201,10 @@ public class ActivityStarterDelegate implements ActivityStarter {
         });
     }
 
+    static /* synthetic */ void lambda$postStartActivityDismissingKeyguard$8(PendingIntent pendingIntent, Lazy lazy) {
+        ((StatusBar) lazy.get()).postStartActivityDismissingKeyguard(pendingIntent);
+    }
+
     @Override // com.android.systemui.plugins.ActivityStarter
     public void postQSRunnableDismissingKeyguard(boolean z, Runnable runnable) {
         this.mActualStarter.ifPresent(new Consumer(z, runnable) {
@@ -207,9 +219,13 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ActivityStarterDelegate.lambda$postQSRunnableDismissingKeyguard$9(this.f$0, this.f$1, (Lazy) obj);
+                ((StatusBar) ((Lazy) obj).get()).postQSRunnableDismissingKeyguard(this.f$0, this.f$1);
             }
         });
+    }
+
+    static /* synthetic */ void lambda$dismissKeyguardThenExecute$10(ActivityStarter.OnDismissAction onDismissAction, Runnable runnable, boolean z, Lazy lazy) {
+        ((StatusBar) lazy.get()).dismissKeyguardThenExecute(onDismissAction, runnable, z);
     }
 
     @Override // com.android.systemui.plugins.ActivityStarter

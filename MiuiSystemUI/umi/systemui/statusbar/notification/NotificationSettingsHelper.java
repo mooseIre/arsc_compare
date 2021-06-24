@@ -15,6 +15,7 @@ import android.util.Log;
 import android.util.Slog;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.SettingsManager;
@@ -24,7 +25,7 @@ import miui.util.NotificationFilterHelper;
 
 public class NotificationSettingsHelper {
     private static final boolean DEBUG = DebugConfig.DEBUG_NOTIFICATION;
-    static INotificationManager sINM = INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
+    static INotificationManager sINM = INotificationManager.Stub.asInterface(ServiceManager.getService(MiPlayPlugin.REF_NOTIFICATION));
 
     public static int getNotificationStyle() {
         return ((SettingsManager) Dependency.get(SettingsManager.class)).getNotifStyle();

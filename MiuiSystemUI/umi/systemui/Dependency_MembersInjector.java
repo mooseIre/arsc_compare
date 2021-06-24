@@ -46,6 +46,7 @@ import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
+import com.android.systemui.controlcenter.phone.controls.MiPlayPluginManager;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.policy.NCSwitchController;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
@@ -618,10 +619,6 @@ public final class Dependency_MembersInjector {
         dependency.mDivider = lazy;
     }
 
-    public static void injectMPerformanceTools(Dependency dependency, Lazy<PerformanceTools> lazy) {
-        dependency.mPerformanceTools = lazy;
-    }
-
     public static void injectMSettingsManager(Dependency dependency, Lazy<SettingsManager> lazy) {
         dependency.mSettingsManager = lazy;
     }
@@ -792,6 +789,10 @@ public final class Dependency_MembersInjector {
 
     public static void injectMControlsPluginManager(Dependency dependency, Lazy<ControlsPluginManager> lazy) {
         dependency.mControlsPluginManager = lazy;
+    }
+
+    public static void injectMMiPlayPluginManager(Dependency dependency, Lazy<MiPlayPluginManager> lazy) {
+        dependency.mMiPlayPluginManager = lazy;
     }
 
     public static void injectMAppMiniWindowManager(Dependency dependency, Lazy<AppMiniWindowManager> lazy) {

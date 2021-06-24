@@ -60,10 +60,6 @@ public final class MiuiVendorServices_MembersInjector {
         miuiVendorServices.mOrientationPolicy = orientationPolicy;
     }
 
-    public static void injectMPerformanceTools(MiuiVendorServices miuiVendorServices, PerformanceTools performanceTools) {
-        miuiVendorServices.mPerformanceTools = performanceTools;
-    }
-
     public static void injectMNotificationNavigationCoordinator(MiuiVendorServices miuiVendorServices, NotificationPanelNavigationBarCoordinator notificationPanelNavigationBarCoordinator) {
         miuiVendorServices.mNotificationNavigationCoordinator = notificationPanelNavigationBarCoordinator;
     }

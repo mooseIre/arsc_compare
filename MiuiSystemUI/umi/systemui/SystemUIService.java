@@ -14,6 +14,7 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dump.DumpHandler;
 import com.android.systemui.dump.LogBufferFreezer;
 import com.android.systemui.dump.SystemUIAuxiliaryDumpService;
+import com.miui.performance.PerformanceTools;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
@@ -58,9 +59,7 @@ public class SystemUIService extends Service {
 
     /* access modifiers changed from: protected */
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        if (strArr.length == 0) {
-            strArr = new String[]{"--dump-priority", "CRITICAL"};
-        }
-        this.mDumpHandler.dump(fileDescriptor, printWriter, strArr);
+        this.mDumpHandler.dump(fileDescriptor, printWriter, strArr.length == 0 ? new String[]{"--dump-priority", "CRITICAL"} : strArr);
+        PerformanceTools.INSTANCE.dump(fileDescriptor, printWriter, strArr);
     }
 }

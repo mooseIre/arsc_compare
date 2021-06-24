@@ -18,6 +18,7 @@ import com.android.systemui.dagger.ContextComponentHelper;
 import com.android.systemui.dagger.SystemUIRootComponent;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.util.NotificationChannels;
+import com.miui.performance.PerformanceTools;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import miui.core.SdkManager;
@@ -40,6 +41,7 @@ public class SystemUIApplication extends Application implements SystemUIAppCompo
         super.onCreate();
         SdkManager.start((Map) null);
         CodeBlue.Companion.startMonitoring(this);
+        PerformanceTools.INSTANCE.init(this);
         Log.v("SystemUIService", "SystemUIApplication created.");
         TimingsTraceLog timingsTraceLog = new TimingsTraceLog("SystemUIBootTiming", 4096);
         timingsTraceLog.traceBegin("DependencyInjection");

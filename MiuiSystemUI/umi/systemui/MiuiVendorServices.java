@@ -45,7 +45,6 @@ public class MiuiVendorServices extends SystemUI {
     NotificationPanelNavigationBarCoordinator mNotificationNavigationCoordinator;
     OLEDScreenHelper mOledScreenHelper;
     OrientationPolicy mOrientationPolicy;
-    PerformanceTools mPerformanceTools;
     MiuiWallpaperZoomOutService mWallpaperZoomOutService;
 
     public MiuiVendorServices(Context context) {
@@ -65,7 +64,6 @@ public class MiuiVendorServices extends SystemUI {
         this.mMiuiNotificationShadePolicy.start();
         this.mMiuiRecentProxy.start();
         this.mOrientationPolicy.start();
-        this.mPerformanceTools.start();
         this.mNotificationNavigationCoordinator.start();
         this.mHeadsetPolicy.start();
         this.mMiuiFullScreenGestureProxy.start();

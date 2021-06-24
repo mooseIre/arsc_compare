@@ -13,6 +13,10 @@ public interface StatusIconDisplayable extends DarkIconDispatcher.DarkReceiver {
 
     boolean isIconVisible();
 
+    default boolean isSignalView() {
+        return false;
+    }
+
     default void onDensityOrFontScaleChanged() {
     }
 

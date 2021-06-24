@@ -14,6 +14,7 @@ import android.widget.ToastPresenter;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.SystemUI;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.statusbar.CommandQueue;
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
     private final int mY;
 
     public ToastUI(Context context, CommandQueue commandQueue) {
-        this(context, commandQueue, INotificationManager.Stub.asInterface(ServiceManager.getService("notification")), IAccessibilityManager.Stub.asInterface(ServiceManager.getService("accessibility")));
+        this(context, commandQueue, INotificationManager.Stub.asInterface(ServiceManager.getService(MiPlayPlugin.REF_NOTIFICATION)), IAccessibilityManager.Stub.asInterface(ServiceManager.getService("accessibility")));
     }
 
     @VisibleForTesting

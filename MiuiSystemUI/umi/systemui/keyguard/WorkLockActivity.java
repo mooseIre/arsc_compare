@@ -17,6 +17,7 @@ import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 
 public class WorkLockActivity extends Activity {
     private final BroadcastDispatcher mBroadcastDispatcher;
@@ -107,7 +108,7 @@ public class WorkLockActivity extends Activity {
     /* access modifiers changed from: public */
     private KeyguardManager getKeyguardManager() {
         if (this.mKgm == null) {
-            this.mKgm = (KeyguardManager) getSystemService("keyguard");
+            this.mKgm = (KeyguardManager) getSystemService(MiPlayPlugin.REF_KEYGUARD);
         }
         return this.mKgm;
     }

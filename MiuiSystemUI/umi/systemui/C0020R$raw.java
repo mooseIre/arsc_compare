@@ -3662,6 +3662,7 @@ public final class R {
         public static final int status_bar_battery_normal_digit_dark;
         public static final int status_bar_battery_normal_digit_light;
         public static final int status_bar_battery_normal_light;
+        public static final int status_bar_battery_performance;
         public static final int status_bar_battery_power_save;
         public static final int status_bar_battery_power_save_digit_textColor;
         public static final int status_bar_battery_power_save_digit_textColor_darkmode;
@@ -5902,6 +5903,7 @@ public final class R {
         public static final int qs_media_padding;
         public static final int qs_media_panel_outer_padding;
         public static final int qs_media_width;
+        public static final int qs_miplay_entrace_view_margin_top;
         public static final int qs_notif_collapsed_space;
         public static final int qs_notification_padding;
         public static final int qs_page_indicator_dot_size;
@@ -7331,6 +7333,10 @@ public final class R {
         public static final int battery_meter_progress_normal_dark;
         public static final int battery_meter_progress_normal_digit;
         public static final int battery_meter_progress_normal_digit_dark;
+        public static final int battery_meter_progress_performance;
+        public static final int battery_meter_progress_performance_dark;
+        public static final int battery_meter_progress_performance_digit;
+        public static final int battery_meter_progress_performance_digit_dark;
         public static final int battery_meter_progress_power_save;
         public static final int battery_meter_progress_power_save_dark;
         public static final int battery_meter_progress_power_save_digit;
@@ -11038,6 +11044,7 @@ public final class R {
         public static final int minimized_dock_shadow;
         public static final int minute;
         public static final int minute_hand;
+        public static final int miplay_container;
         public static final int mirror_content;
         public static final int mirrored_text_group;
         public static final int miui_action;
@@ -11285,6 +11292,7 @@ public final class R {
         public static final int player_setup;
         public static final int playing;
         public static final int plugin_frame;
+        public static final int plugin_view_container;
         public static final int pointer_view;
         public static final int popup_arrow;
         public static final int position;
@@ -12481,6 +12489,7 @@ public final class R {
         public static final int mland;
         public static final int mland_scorefield;
         public static final int mobile_signal_group;
+        public static final int modal_qs_control_detail;
         public static final int mr_cast_dialog;
         public static final int mr_cast_group_item;
         public static final int mr_cast_group_volume_item;
@@ -12811,6 +12820,10 @@ public final class R {
         public static final int stat_sys_battery_darkmode;
         public static final int stat_sys_battery_digital;
         public static final int stat_sys_battery_digital_darkmode;
+        public static final int stat_sys_battery_performance_mode;
+        public static final int stat_sys_battery_performance_mode_darkmode;
+        public static final int stat_sys_battery_performance_mode_digit;
+        public static final int stat_sys_battery_performance_mode_digit_darkmode;
         public static final int stat_sys_battery_power_save;
         public static final int stat_sys_battery_power_save_darkmode;
         public static final int stat_sys_battery_power_save_digit;

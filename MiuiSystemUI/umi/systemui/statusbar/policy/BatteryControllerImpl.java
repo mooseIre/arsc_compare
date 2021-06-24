@@ -38,6 +38,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
     @VisibleForTesting
     boolean mHasReceivedBattery = false;
     protected boolean mIsExtremePowerSaveMode;
+    protected boolean mIsPerformanceMode;
     protected boolean mIsPowerSaveMode;
     protected int mLevel;
     private final Handler mMainHandler;
@@ -108,6 +109,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         batteryStateChangeCallback.onExtremePowerSaveChanged(this.mIsExtremePowerSaveMode);
         batteryStateChangeCallback.onBatteryStyleChanged(this.mBatteryStyle);
         batteryStateChangeCallback.onPowerSaveChanged(this.mIsPowerSaveMode);
+        batteryStateChangeCallback.onPerformanceModeChanged(this.mIsPerformanceMode);
         if (this.mHasReceivedBattery) {
             batteryStateChangeCallback.onBatteryLevelChanged(this.mLevel, this.mPluggedIn, this.mCharging);
         }

@@ -26,6 +26,7 @@ import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowView;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
+import com.android.systemui.controlcenter.phone.controls.MiPlayPluginManager;
 import com.android.systemui.controlcenter.phone.widget.QSControlFooter;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
@@ -60,6 +61,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     private ExpandInfoController mExpandInfoController;
     private Handler mHandler = new H();
     private InjectionInflationController mInjectionInflationController;
+    private MiPlayPluginManager mMiPlayPluginManager;
     private QSTileHost mQSControlTileHost;
     protected StatusBar mStatusBar;
     private ActivityStarter mStatusBarActivityStarter;
@@ -78,7 +80,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         ONLY_CORE_APPS = z;
     }
 
-    public ControlCenter(Context context, ControlPanelController controlPanelController, StatusBarIconController statusBarIconController, ExpandInfoController expandInfoController, ActivityStarter activityStarter, CommandQueue commandQueue, InjectionInflationController injectionInflationController, SuperSaveModeController superSaveModeController, ControlCenterActivityStarter controlCenterActivityStarter, QSTileHost qSTileHost, ControlPanelWindowManager controlPanelWindowManager, StatusBar statusBar, ControlsPluginManager controlsPluginManager, BroadcastDispatcher broadcastDispatcher, ConfigurationController configurationController) {
+    public ControlCenter(Context context, ControlPanelController controlPanelController, StatusBarIconController statusBarIconController, ExpandInfoController expandInfoController, ActivityStarter activityStarter, CommandQueue commandQueue, InjectionInflationController injectionInflationController, SuperSaveModeController superSaveModeController, ControlCenterActivityStarter controlCenterActivityStarter, QSTileHost qSTileHost, ControlPanelWindowManager controlPanelWindowManager, StatusBar statusBar, ControlsPluginManager controlsPluginManager, MiPlayPluginManager miPlayPluginManager, BroadcastDispatcher broadcastDispatcher, ConfigurationController configurationController) {
         super(context);
         this.mControlPanelController = controlPanelController;
         this.mExpandInfoController = expandInfoController;
@@ -91,6 +93,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mControlPanelWindowManager = controlPanelWindowManager;
         this.mStatusBar = statusBar;
         this.mControlsPluginManager = controlsPluginManager;
+        this.mMiPlayPluginManager = miPlayPluginManager;
         this.mConfigurationController = configurationController;
     }
 
@@ -111,6 +114,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             this.mDynamicVowifiController = dynamicVowifiController;
             dynamicVowifiController.registerReceiver();
         }
+        this.mMiPlayPluginManager.addControlsPluginListener();
     }
 
     /* access modifiers changed from: protected */

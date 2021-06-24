@@ -37,6 +37,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
     private int mBatteryNormalDigitDarkColor;
     private int mBatteryNormalDigitLightColor;
     private int mBatteryNormalLightColor;
+    private int mBatteryPerformanceModeColor;
     private int mBatteryPowerSaveColor;
     private int mBgTintColor;
     private boolean mCharging;
@@ -57,6 +58,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
     private boolean mMaskProgress;
     private float mMaskScale;
     private boolean mNeedRoundProgress;
+    private boolean mPerformanceMode;
     private boolean mPowerSave;
     private float mProgressCenterLeftOffset;
     private ClipDrawable mProgressClipDrawable;
@@ -89,7 +91,9 @@ public class MiuiBatteryMeterIconView extends ImageView {
         CHARGING,
         CHARGING_DIGIT,
         POWER_SAVE,
-        POWER_SAVE_DIGIT
+        POWER_SAVE_DIGIT,
+        PERFORMANCE_MODE,
+        PERFORMANCE_MODE_DIGIT
     }
 
     public MiuiBatteryMeterIconView(Context context) {
@@ -125,17 +129,18 @@ public class MiuiBatteryMeterIconView extends ImageView {
     public void setup() {
         updateResources();
         updateProgressDrawable();
-        update(this.mLevel, this.mIconId, this.mIsDigit, this.mQuickCharging, this.mCharging, this.mPowerSave, true);
+        update(this.mLevel, this.mIconId, this.mIsDigit, this.mQuickCharging, this.mCharging, this.mPowerSave, this.mPerformanceMode, true);
     }
 
-    public void update(int i, int i2, boolean z, boolean z2, boolean z3, boolean z4, boolean z5) {
-        if (this.mLevel != i || this.mIconId != i2 || this.mIsDigit != z || this.mQuickCharging != z2 || this.mCharging != z3 || this.mPowerSave != z4 || z5) {
+    public void update(int i, int i2, boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6) {
+        if (this.mLevel != i || this.mIconId != i2 || this.mIsDigit != z || this.mQuickCharging != z2 || this.mCharging != z3 || this.mPowerSave != z4 || this.mPerformanceMode != z5 || z6) {
             this.mLevel = i;
             this.mIconId = i2;
             this.mIsDigit = z;
             this.mCharging = z3;
             this.mQuickCharging = z2;
             this.mPowerSave = z4;
+            this.mPerformanceMode = z5;
             this.mLow = i <= 19;
             updateRoundProgressFlag(this.mLevel);
             onDarkChanged(this.mTintArea, this.mDarkIntensity, this.mBgTintColor, this.mLightColor, this.mDarkColor, this.mUseTint, true);
@@ -226,6 +231,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
         this.mBatteryNormalDigitDarkColor = resources.getColor(C0011R$color.status_bar_battery_normal_digit_dark);
         this.mBatteryChargingColor = resources.getColor(C0011R$color.status_bar_battery_charging);
         this.mBatteryPowerSaveColor = resources.getColor(C0011R$color.status_bar_battery_power_save);
+        this.mBatteryPerformanceModeColor = resources.getColor(C0011R$color.status_bar_battery_performance);
         this.mProgressDrawables.put(BatteryStatus.LOW, resources.getDrawable(C0013R$drawable.battery_meter_progress_low));
         this.mProgressDarkDrawables.put(BatteryStatus.LOW, resources.getDrawable(C0013R$drawable.battery_meter_progress_low_dark));
         this.mProgressDrawables.put(BatteryStatus.LOW_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_low_digit));
@@ -242,6 +248,10 @@ public class MiuiBatteryMeterIconView extends ImageView {
         this.mProgressDarkDrawables.put(BatteryStatus.POWER_SAVE, resources.getDrawable(C0013R$drawable.battery_meter_progress_power_save_dark));
         this.mProgressDrawables.put(BatteryStatus.POWER_SAVE_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_power_save_digit));
         this.mProgressDarkDrawables.put(BatteryStatus.POWER_SAVE_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_power_save_digit_dark));
+        this.mProgressDrawables.put(BatteryStatus.PERFORMANCE_MODE, resources.getDrawable(C0013R$drawable.battery_meter_progress_performance));
+        this.mProgressDarkDrawables.put(BatteryStatus.PERFORMANCE_MODE, resources.getDrawable(C0013R$drawable.battery_meter_progress_performance_dark));
+        this.mProgressDrawables.put(BatteryStatus.PERFORMANCE_MODE_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_performance_digit));
+        this.mProgressDarkDrawables.put(BatteryStatus.PERFORMANCE_MODE_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_performance_digit_dark));
     }
 
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
@@ -315,19 +325,22 @@ public class MiuiBatteryMeterIconView extends ImageView {
     public static /* synthetic */ class AnonymousClass1 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus;
 
-        /* JADX WARNING: Can't wrap try/catch for region: R(18:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|(3:17|18|20)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(22:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|(3:21|22|24)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(24:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|24) */
         /* JADX WARNING: Failed to process nested try/catch */
         /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
         /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
         /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0054 */
         /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0060 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x006c */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:21:0x0078 */
         /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
         /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
         /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
         /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
             /*
-            // Method dump skipped, instructions count: 109
+            // Method dump skipped, instructions count: 133
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.AnonymousClass1.<clinit>():void");
         }
@@ -349,6 +362,9 @@ public class MiuiBatteryMeterIconView extends ImageView {
             case 6:
             case 7:
                 return this.mBatteryChargingColor;
+            case 8:
+            case 9:
+                return this.mBatteryPerformanceModeColor;
             default:
                 if (z) {
                     return ((Integer) ArgbEvaluator.getInstance().evaluate(this.mDarkIntensity, Integer.valueOf(this.mBatteryNormalLightColor), Integer.valueOf(this.mBatteryNormalDarkColor))).intValue();
@@ -364,6 +380,8 @@ public class MiuiBatteryMeterIconView extends ImageView {
             i = BatteryStatus.CHARGING.ordinal();
         } else if (this.mPowerSave) {
             i = BatteryStatus.POWER_SAVE.ordinal();
+        } else if (this.mPerformanceMode) {
+            i = BatteryStatus.PERFORMANCE_MODE.ordinal();
         } else if (this.mLow) {
             i = BatteryStatus.LOW.ordinal();
         } else {
@@ -399,13 +417,23 @@ public class MiuiBatteryMeterIconView extends ImageView {
                 return BatteryIcon.getInstance(getContext()).getGraphicIconDarkMode(this.mLevel);
             }
             return BatteryIcon.getInstance(getContext()).getGraphicIcon(this.mLevel);
-        } else if (i != C0020R$raw.stat_sys_battery_digital) {
-            return null;
-        } else {
+        } else if (i == C0020R$raw.stat_sys_battery_digital) {
             if (z) {
                 return BatteryIcon.getInstance(getContext()).getGraphicDigitalIconDarkMode(this.mLevel);
             }
             return BatteryIcon.getInstance(getContext()).getGraphicDigitalIcon(this.mLevel);
+        } else if (i == C0020R$raw.stat_sys_battery_performance_mode) {
+            if (z) {
+                return BatteryIcon.getInstance(getContext()).getGraphicPerformanceModeIconDarkMode(this.mLevel);
+            }
+            return BatteryIcon.getInstance(getContext()).getGraphicPerformanceModeIcon(this.mLevel);
+        } else if (i != C0020R$raw.stat_sys_battery_performance_mode_digit) {
+            return null;
+        } else {
+            if (z) {
+                return BatteryIcon.getInstance(getContext()).getGraphicPerformanceModeDigitIconDarkMode(this.mLevel);
+            }
+            return BatteryIcon.getInstance(getContext()).getGraphicPerformanceModeDigitIcon(this.mLevel);
         }
     }
 

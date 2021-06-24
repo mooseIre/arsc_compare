@@ -12,6 +12,6 @@ final class ControlActionCoordinatorImpl$showDialog$1$1$$special$$inlined$also$l
     }
 
     public final void onDismiss(DialogInterface dialogInterface) {
-        ControlActionCoordinatorImpl.access$setDialog$p(this.this$0.this$0.this$0, null);
+        this.this$0.this$0.this$0.dialog = null;
     }
 }

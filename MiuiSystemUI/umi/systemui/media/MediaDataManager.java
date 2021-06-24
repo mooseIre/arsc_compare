@@ -22,9 +22,12 @@ import androidx.palette.graphics.Palette;
 import com.android.internal.graphics.ColorUtils;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dump.DumpManager;
+import com.android.systemui.plugins.MediaDataManagerInterface;
+import com.android.systemui.plugins.PluginDependencyProvider;
 import com.android.systemui.statusbar.notification.MediaNotificationProcessor;
 import com.android.systemui.statusbar.notification.row.HybridGroupManager;
 import com.android.systemui.util.Assert;
@@ -50,7 +53,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MediaDataManager.kt */
-public final class MediaDataManager implements Dumpable {
+public final class MediaDataManager implements Dumpable, MediaDataManagerInterface {
     private final MediaDataManager$appChangeReceiver$1 appChangeReceiver;
     private final Executor backgroundExecutor;
     private final BroadcastDispatcher broadcastDispatcher;
@@ -132,6 +135,7 @@ public final class MediaDataManager implements Dumpable {
         intentFilter2.addAction("android.intent.action.PACKAGE_RESTARTED");
         intentFilter2.addDataScheme("package");
         this.context.registerReceiver(this.appChangeReceiver, intentFilter2);
+        ((PluginDependencyProvider) Dependency.get(PluginDependencyProvider.class)).allowPluginDependency(MediaDataManagerInterface.class, this);
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
@@ -531,5 +535,74 @@ public final class MediaDataManager implements Dumpable {
         printWriter.println("listeners: " + this.listeners);
         printWriter.println("mediaEntries: " + this.mediaEntries);
         printWriter.println("useMediaResumption: " + this.useMediaResumption);
+    }
+
+    @Override // com.android.systemui.plugins.MediaDataManagerInterface
+    @Nullable
+    public Drawable getMediaArtDrawable(@Nullable String str) {
+        for (Map.Entry<String, MediaData> entry : this.mediaEntries.entrySet()) {
+            if (Intrinsics.areEqual(entry.getValue().getPackageName(), str)) {
+                Icon artwork = entry.getValue().getArtwork();
+                if (artwork != null) {
+                    return artwork.loadDrawable(this.context);
+                }
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /* compiled from: MediaDataManager.kt */
+    public static final class ListenerWrapper implements Listener {
+        @Nullable
+        private final MediaDataManagerInterface.ArtListener artListener;
+        @NotNull
+        private final Context context;
+
+        @Override // com.android.systemui.media.MediaDataManager.Listener
+        public void onMediaDataRemoved(@NotNull String str) {
+            Intrinsics.checkParameterIsNotNull(str, "key");
+        }
+
+        public ListenerWrapper(@NotNull Context context2, @Nullable MediaDataManagerInterface.ArtListener artListener2) {
+            Intrinsics.checkParameterIsNotNull(context2, "context");
+            this.context = context2;
+            this.artListener = artListener2;
+        }
+
+        @Nullable
+        public final MediaDataManagerInterface.ArtListener getArtListener() {
+            return this.artListener;
+        }
+
+        @Override // com.android.systemui.media.MediaDataManager.Listener
+        public void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {
+            Intrinsics.checkParameterIsNotNull(str, "key");
+            Intrinsics.checkParameterIsNotNull(mediaData, "data");
+            MediaDataManagerInterface.ArtListener artListener2 = this.artListener;
+            if (artListener2 != null) {
+                String packageName = mediaData.getPackageName();
+                Icon artwork = mediaData.getArtwork();
+                artListener2.onMediaDataLoaded(packageName, artwork != null ? artwork.loadDrawable(this.context) : null);
+            }
+        }
+    }
+
+    @Override // com.android.systemui.plugins.MediaDataManagerInterface
+    public void addArtListener(@Nullable MediaDataManagerInterface.ArtListener artListener) {
+        this.listeners.add(new ListenerWrapper(this.context, artListener));
+    }
+
+    @Override // com.android.systemui.plugins.MediaDataManagerInterface
+    public void removeArtListener(@Nullable MediaDataManagerInterface.ArtListener artListener) {
+        T t = null;
+        for (T t2 : this.listeners) {
+            if ((t2 instanceof ListenerWrapper) && Intrinsics.areEqual(t2.getArtListener(), artListener)) {
+                t = t2;
+            }
+        }
+        if (t != null) {
+            this.listeners.remove(t);
+        }
     }
 }

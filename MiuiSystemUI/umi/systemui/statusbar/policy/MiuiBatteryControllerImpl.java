@@ -12,7 +12,7 @@ import com.android.systemui.power.EnhancedEstimates;
 
 public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
     ContentObserver mBatteryExtremeSaveModeChangeObserver = new ContentObserver(new Handler()) {
-        /* class com.android.systemui.statusbar.policy.MiuiBatteryControllerImpl.AnonymousClass3 */
+        /* class com.android.systemui.statusbar.policy.MiuiBatteryControllerImpl.AnonymousClass4 */
 
         public void onChange(boolean z) {
             MiuiBatteryControllerImpl miuiBatteryControllerImpl = MiuiBatteryControllerImpl.this;
@@ -22,6 +22,19 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
             }
             miuiBatteryControllerImpl.mIsExtremePowerSaveMode = z2;
             MiuiBatteryControllerImpl.this.fireExtremePowerSaveChanged();
+        }
+    };
+    ContentObserver mBatteryPerformanceModeChangeObserver = new ContentObserver(new Handler()) {
+        /* class com.android.systemui.statusbar.policy.MiuiBatteryControllerImpl.AnonymousClass3 */
+
+        public void onChange(boolean z) {
+            MiuiBatteryControllerImpl miuiBatteryControllerImpl = MiuiBatteryControllerImpl.this;
+            boolean z2 = false;
+            if (Settings.System.getIntForUser(miuiBatteryControllerImpl.mContext.getContentResolver(), "POWER_PERFORMANCE_MODE_OPEN", 0, -2) == 1) {
+                z2 = true;
+            }
+            miuiBatteryControllerImpl.mIsPerformanceMode = z2;
+            MiuiBatteryControllerImpl.this.firePerformanceModeChanged();
         }
     };
     ContentObserver mBatterySaveModeChangeObserver = new ContentObserver(new Handler()) {
@@ -66,6 +79,8 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
         this.mBatterySaveModeChangeObserver.onChange(false);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("EXTREME_POWER_MODE_ENABLE"), false, this.mBatteryExtremeSaveModeChangeObserver, -1);
         this.mBatteryExtremeSaveModeChangeObserver.onChange(false);
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("POWER_PERFORMANCE_MODE_OPEN"), false, this.mBatteryPerformanceModeChangeObserver, -1);
+        this.mBatteryPerformanceModeChangeObserver.onChange(false);
     }
 
     /* access modifiers changed from: private */
@@ -75,6 +90,17 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
             int size = this.mChangeCallbacks.size();
             for (int i = 0; i < size; i++) {
                 this.mChangeCallbacks.get(i).onPowerSaveChanged(this.mIsPowerSaveMode);
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private void firePerformanceModeChanged() {
+        synchronized (this.mChangeCallbacks) {
+            int size = this.mChangeCallbacks.size();
+            for (int i = 0; i < size; i++) {
+                this.mChangeCallbacks.get(i).onPerformanceModeChanged(this.mIsPerformanceMode);
             }
         }
     }
@@ -96,6 +122,7 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
         this.mBatteryStyleChangeObserver.onChange(false);
         this.mBatterySaveModeChangeObserver.onChange(false);
         this.mBatteryExtremeSaveModeChangeObserver.onChange(false);
+        this.mBatteryPerformanceModeChangeObserver.onChange(false);
     }
 
     @Override // com.android.systemui.DemoMode, com.android.systemui.statusbar.policy.BatteryControllerImpl

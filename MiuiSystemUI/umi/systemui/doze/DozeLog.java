@@ -6,6 +6,7 @@ import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.systemui.Dumpable;
 import com.android.systemui.doze.DozeMachine;
 import com.android.systemui.dump.DumpManager;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.reflect.Array;
@@ -222,7 +223,7 @@ public class DozeLog implements Dumpable {
             case 0:
                 return "intent";
             case 1:
-                return "notification";
+                return MiPlayPlugin.REF_NOTIFICATION;
             case 2:
                 return "sigmotion";
             case 3:

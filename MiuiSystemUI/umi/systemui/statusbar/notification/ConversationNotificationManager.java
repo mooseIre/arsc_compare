@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.service.notification.NotificationListenerService;
 import com.android.internal.statusbar.NotificationVisibility;
 import com.android.internal.widget.ConversationLayout;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotificationContentView;
@@ -190,7 +191,7 @@ public final class ConversationNotificationManager {
 
         @NotNull
         public final ConversationState copy(int i, @NotNull Notification notification2) {
-            Intrinsics.checkParameterIsNotNull(notification2, "notification");
+            Intrinsics.checkParameterIsNotNull(notification2, MiPlayPlugin.REF_NOTIFICATION);
             return new ConversationState(i, notification2);
         }
 
@@ -217,7 +218,7 @@ public final class ConversationNotificationManager {
         }
 
         public ConversationState(int i, @NotNull Notification notification2) {
-            Intrinsics.checkParameterIsNotNull(notification2, "notification");
+            Intrinsics.checkParameterIsNotNull(notification2, MiPlayPlugin.REF_NOTIFICATION);
             this.unreadCount = i;
             this.notification = notification2;
         }

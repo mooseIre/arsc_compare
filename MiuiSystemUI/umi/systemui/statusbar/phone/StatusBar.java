@@ -122,6 +122,7 @@ import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.OverlayPlugin;
 import com.android.systemui.plugins.PluginDependencyProvider;
 import com.android.systemui.plugins.PluginListener;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -222,7 +223,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("com.android.systemui.statusbar.banner_action_cancel".equals(action) || "com.android.systemui.statusbar.banner_action_setup".equals(action)) {
-                ((NotificationManager) ((SystemUI) StatusBar.this).mContext.getSystemService("notification")).cancel(5);
+                ((NotificationManager) ((SystemUI) StatusBar.this).mContext.getSystemService(MiPlayPlugin.REF_NOTIFICATION)).cancel(5);
                 Settings.Secure.putInt(((SystemUI) StatusBar.this).mContext.getContentResolver(), "show_note_about_notification_hiding", 0);
                 if ("com.android.systemui.statusbar.banner_action_setup".equals(action)) {
                     StatusBar.this.mShadeController.animateCollapsePanels(2, true);
@@ -827,7 +828,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         AccessibilityManager accessibilityManager = (AccessibilityManager) this.mContext.getSystemService("accessibility");
         this.mKeyguardUpdateMonitor.setKeyguardBypassController(this.mKeyguardBypassController);
         this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
-        this.mKeyguardManager = (KeyguardManager) this.mContext.getSystemService("keyguard");
+        this.mKeyguardManager = (KeyguardManager) this.mContext.getSystemService(MiPlayPlugin.REF_KEYGUARD);
         this.mWallpaperSupported = ((WallpaperManager) this.mContext.getSystemService(WallpaperManager.class)).isWallpaperSupported();
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
         try {
@@ -2818,7 +2819,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
-    /* JADX WARN: Type inference failed for: r9v0, types: [int, boolean] */
+    /* JADX WARN: Type inference failed for: r9v0, types: [boolean, int] */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void logStateToEventlog() {

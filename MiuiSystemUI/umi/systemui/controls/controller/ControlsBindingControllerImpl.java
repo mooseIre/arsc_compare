@@ -157,7 +157,8 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
     }
 
     /* access modifiers changed from: private */
-    public final void unbind() {
+    /* access modifiers changed from: public */
+    private final void unbind() {
         unsubscribe();
         LoadSubscriber loadSubscriber2 = this.loadSubscriber;
         if (loadSubscriber2 != null) {
@@ -438,7 +439,8 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
 
         /* access modifiers changed from: private */
-        public final void maybeTerminateAndRun(Runnable runnable) {
+        /* access modifiers changed from: public */
+        private final void maybeTerminateAndRun(Runnable runnable) {
             if (!this.isTerminated.get()) {
                 this._loadCancelInternal = ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1.INSTANCE;
                 ControlsProviderLifecycleManager controlsProviderLifecycleManager = this.this$0.currentProvider;

@@ -141,6 +141,8 @@ public class NotificationShadeWindowViewController {
                         NotificationShadeWindowViewController.this.mTouchCancelled = false;
                     } else if (motionEvent.getActionMasked() == 1 || motionEvent.getActionMasked() == 3) {
                         NotificationShadeWindowViewController.this.setTouchActive(false);
+                    } else if (motionEvent.getActionMasked() == 5 && NotificationShadeWindowViewController.this.mStatusBarStateController.getState() == 1 && ((MiuiNotificationPanelViewController) NotificationShadeWindowViewController.this.mNotificationPanelViewController).isDefaultTheme()) {
+                        NotificationShadeWindowViewController.this.cancelCurrentTouch();
                     }
                     if (NotificationShadeWindowViewController.this.mTouchCancelled || NotificationShadeWindowViewController.this.mExpandAnimationRunning || NotificationShadeWindowViewController.this.mExpandAnimationPending) {
                         return bool;

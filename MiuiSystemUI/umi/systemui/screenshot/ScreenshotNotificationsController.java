@@ -14,6 +14,7 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.SystemUI;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.util.NotificationChannels;
 
 public class ScreenshotNotificationsController {
@@ -24,7 +25,7 @@ public class ScreenshotNotificationsController {
     ScreenshotNotificationsController(Context context, WindowManager windowManager) {
         this.mContext = context;
         this.mResources = context.getResources();
-        this.mNotificationManager = (NotificationManager) context.getSystemService("notification");
+        this.mNotificationManager = (NotificationManager) context.getSystemService(MiPlayPlugin.REF_NOTIFICATION);
         this.mResources.getDimensionPixelSize(17104902);
         windowManager.getDefaultDisplay().getRealMetrics(new DisplayMetrics());
         try {
@@ -48,6 +49,6 @@ public class ScreenshotNotificationsController {
     }
 
     static void cancelScreenshotNotification(Context context) {
-        ((NotificationManager) context.getSystemService("notification")).cancel(1);
+        ((NotificationManager) context.getSystemService(MiPlayPlugin.REF_NOTIFICATION)).cancel(1);
     }
 }

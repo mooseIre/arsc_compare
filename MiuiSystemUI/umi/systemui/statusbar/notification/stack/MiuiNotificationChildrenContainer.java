@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.NotificationUtil;
@@ -457,7 +458,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void reInflateViews(@NotNull View.OnClickListener onClickListener, @NotNull StatusBarNotification statusBarNotification) {
         Intrinsics.checkParameterIsNotNull(onClickListener, "listener");
-        Intrinsics.checkParameterIsNotNull(statusBarNotification, "notification");
+        Intrinsics.checkParameterIsNotNull(statusBarNotification, MiPlayPlugin.REF_NOTIFICATION);
         super.reInflateViews(onClickListener, statusBarNotification);
         initResources();
         updateMiuiHeader(true);

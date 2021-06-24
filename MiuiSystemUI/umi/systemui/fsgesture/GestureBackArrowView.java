@@ -20,6 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.miui.systemui.util.HapticFeedBackImpl;
 
 public class GestureBackArrowView extends View {
@@ -87,7 +88,7 @@ public class GestureBackArrowView extends View {
         Configuration configuration = new Configuration();
         this.mLastConfiguration = configuration;
         configuration.updateFrom(getResources().getConfiguration());
-        this.mKeyguardManager = (KeyguardManager) context.getSystemService("keyguard");
+        this.mKeyguardManager = (KeyguardManager) context.getSystemService(MiPlayPlugin.REF_KEYGUARD);
         this.mContentResolver = context.getContentResolver();
         this.mPosition = i3;
         Paint paint = new Paint(1);

@@ -132,8 +132,11 @@ public class MiuiQSDetailItems extends FrameLayout {
     public void setEmptyState(int i, int i2) {
         this.mIconId = i;
         this.mTextId = i2;
-        this.mEmptyIcon.removeCallbacks(this.mEmptyStateRunnable);
-        this.mEmptyIcon.post(this.mEmptyStateRunnable);
+        ImageView imageView = this.mEmptyIcon;
+        if (imageView != null) {
+            imageView.removeCallbacks(this.mEmptyStateRunnable);
+            this.mEmptyIcon.post(this.mEmptyStateRunnable);
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -188,19 +191,27 @@ public class MiuiQSDetailItems extends FrameLayout {
     private void handleSetItems(Item[] itemArr) {
         int i = 0;
         int length = itemArr != null ? itemArr.length : 0;
-        this.mEmpty.setVisibility(length == 0 ? 0 : 8);
-        RecyclerView recyclerView = this.mItemList;
-        if (length == 0) {
-            i = 8;
+        View view = this.mEmpty;
+        if (view != null) {
+            view.setVisibility(length == 0 ? 0 : 8);
         }
-        recyclerView.setVisibility(i);
+        RecyclerView recyclerView = this.mItemList;
+        if (recyclerView != null) {
+            if (length == 0) {
+                i = 8;
+            }
+            recyclerView.setVisibility(i);
+        }
         this.mItems = itemArr;
         if ((this.mIsExpanding || !this.mIsDetailShowing) && this.mControlPanelController.isUseControlCenter()) {
             Log.d("MiuiQSDetailItems", "ignore refresh items:" + this.mIsExpanding + this.mIsDetailShowing);
             return;
         }
         Log.d("MiuiQSDetailItems", "refresh detail items");
-        this.mAdapter.notifyDataSetChanged();
+        Adapter adapter = this.mAdapter;
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void notifyData() {

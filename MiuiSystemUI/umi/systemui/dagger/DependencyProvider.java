@@ -27,6 +27,7 @@ import com.android.systemui.doze.AlwaysOnDisplayPolicy;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.plugins.PluginInitializerImpl;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.shared.plugins.PluginManager;
 import com.android.systemui.shared.plugins.PluginManagerImpl;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
@@ -67,7 +68,7 @@ public class DependencyProvider {
     }
 
     public INotificationManager provideINotificationManager() {
-        return INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
+        return INotificationManager.Stub.asInterface(ServiceManager.getService(MiPlayPlugin.REF_NOTIFICATION));
     }
 
     public LayoutInflater providerLayoutInflater(Context context) {

@@ -801,6 +801,10 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         return this.mBarState == 2;
     }
 
+    public final boolean isDefaultTheme() {
+        return this.mIsDefaultTheme;
+    }
+
     /* JADX WARN: Multi-variable type inference failed */
     /* JADX WARN: Type inference failed for: r1v1, types: [com.android.systemui.statusbar.phone.MiuiNotificationPanelViewControllerKt$sam$java_util_function_BiConsumer$0] */
     /* JADX WARNING: Unknown variable types count: 1 */

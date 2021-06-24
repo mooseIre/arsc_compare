@@ -18,6 +18,10 @@ public final class ModalController$animExitModal$animatorListener$1 extends Anim
     public void onAnimationEnd(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animation");
         this.this$0.exitModal(this.$exitMode);
+        if (this.this$0.getMIsMiPlayModal()) {
+            ModalController.access$getModalWindowView$p(this.this$0).exitModalForMiPlay(this.this$0.getMiPlayPluginManager());
+        }
         this.this$0.isAnimating = false;
+        ModalController.access$getModalWindowView$p(this.this$0).removeContentView();
     }
 }

@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.ControlCenter;
+import com.android.systemui.controlcenter.phone.controls.MiPlayPluginManager;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
@@ -29,18 +32,26 @@ import kotlin.jvm.internal.Intrinsics;
 import miuix.view.animation.CubicEaseInInterpolator;
 import miuix.view.animation.CubicEaseInOutInterpolator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /* compiled from: ModalController.kt */
 public final class ModalController {
     @NotNull
     private final Context context;
+    @NotNull
+    public ControlCenter controllCenter;
     private final long defaultDuration = 300;
     private NotificationEntry entry;
     private boolean isAnimating;
     private boolean isModal;
     private boolean mDownEventInjected;
+    private boolean mIsMiPlayModal;
+    @Nullable
+    private Integer mStatusBarState;
     @NotNull
     private final StatusBarStateController mStatusBarStateController;
+    @NotNull
+    private final MiPlayPluginManager miPlayPluginManager;
     private ExpandableNotificationRow modalRow;
     @NotNull
     public ModalRowInflater modalRowInflater;
@@ -55,13 +66,15 @@ public final class ModalController {
         void onChange(boolean z);
     }
 
-    public ModalController(@NotNull Context context2, @NotNull StatusBar statusBar2, @NotNull StatusBarStateController statusBarStateController) {
+    public ModalController(@NotNull Context context2, @NotNull StatusBar statusBar2, @NotNull StatusBarStateController statusBarStateController, @NotNull MiPlayPluginManager miPlayPluginManager2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(statusBar2, "statusBar");
         Intrinsics.checkParameterIsNotNull(statusBarStateController, "mStatusBarStateController");
+        Intrinsics.checkParameterIsNotNull(miPlayPluginManager2, "miPlayPluginManager");
         this.context = context2;
         this.statusBar = statusBar2;
         this.mStatusBarStateController = statusBarStateController;
+        this.miPlayPluginManager = miPlayPluginManager2;
         this.modalWindowManager = new ModalWindowManager(context2);
         addModalWindow();
         ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).addNotificationLifetimeExtender(new ModalLifetimeExtender(this));
@@ -76,6 +89,7 @@ public final class ModalController {
 
             @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
+                this.this$0.setMStatusBarState(Integer.valueOf(i));
                 if (i == 1) {
                     ModalController.animExitModal$default(this.this$0, null, 1, null);
                 }
@@ -83,9 +97,31 @@ public final class ModalController {
         });
     }
 
+    public static final /* synthetic */ ModalWindowView access$getModalWindowView$p(ModalController modalController) {
+        ModalWindowView modalWindowView2 = modalController.modalWindowView;
+        if (modalWindowView2 != null) {
+            return modalWindowView2;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+        throw null;
+    }
+
     @NotNull
     public final StatusBar getStatusBar() {
         return this.statusBar;
+    }
+
+    @NotNull
+    public final MiPlayPluginManager getMiPlayPluginManager() {
+        return this.miPlayPluginManager;
+    }
+
+    public final boolean getMIsMiPlayModal() {
+        return this.mIsMiPlayModal;
+    }
+
+    public final void setMStatusBarState(@Nullable Integer num) {
+        this.mStatusBarState = num;
     }
 
     private final void addModalWindow() {
@@ -95,6 +131,27 @@ public final class ModalController {
         View findViewById = inflate.findViewById(C0015R$id.modal_window_view);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "view.findViewById(R.id.modal_window_view)");
         this.modalWindowView = (ModalWindowView) findViewById;
+    }
+
+    public final void tryAnimaEnterModelForMiPlay(@NotNull View view) {
+        Intrinsics.checkParameterIsNotNull(view, "fromView");
+        if (!this.isModal && !this.isAnimating) {
+            this.isModal = true;
+            this.isAnimating = true;
+            this.mIsMiPlayModal = true;
+            this.modalWindowManager.setBlurRatio(0.0f);
+            Integer num = this.mStatusBarState;
+            String str = (num != null && num.intValue() == 0) ? MiPlayPlugin.REF_NOTIFICATION : MiPlayPlugin.REF_KEYGUARD;
+            ModalWindowView modalWindowView2 = this.modalWindowView;
+            if (modalWindowView2 != null) {
+                modalWindowView2.enterModalForMiPlay(view, str);
+                this.modalWindowManager.show();
+                startAnimator$default(this, new ModalController$tryAnimaEnterModelForMiPlay$updateListener$1(this), new ModalController$tryAnimaEnterModelForMiPlay$animatorListener$1(this), 0, 4, null);
+                return;
+            }
+            Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+            throw null;
+        }
     }
 
     public final void tryAnimEnterModal(@NotNull ExpandableNotificationRow expandableNotificationRow) {
@@ -211,6 +268,17 @@ public final class ModalController {
                     }
                 }
                 this.modalWindowManager.clearFocus();
+                if (this.mIsMiPlayModal) {
+                    Integer num = this.mStatusBarState;
+                    String str2 = (num != null && num.intValue() == 0) ? MiPlayPlugin.REF_NOTIFICATION : MiPlayPlugin.REF_KEYGUARD;
+                    ModalWindowView modalWindowView4 = this.modalWindowView;
+                    if (modalWindowView4 != null) {
+                        modalWindowView4.showMiPlay(false, null, str2);
+                    } else {
+                        Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+                        throw null;
+                    }
+                }
                 ModalController$animExitModal$updateListener$1 modalController$animExitModal$updateListener$1 = new ModalController$animExitModal$updateListener$1(this);
                 ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$12 = new ModalController$animExitModal$animatorListener$1(this, str);
                 if (z) {
@@ -251,14 +319,15 @@ public final class ModalController {
     public final void exitModal(String str) {
         if (this.entry != null) {
             ((NotificationStat) Dependency.get(NotificationStat.class)).onExitModal(this.entry, str);
-            this.isModal = false;
-            this.modalWindowManager.hide();
-            this.modalRow = null;
-            this.entry = null;
-            Iterator<T> it = this.onModalChangeListeners.iterator();
-            while (it.hasNext()) {
-                it.next().onChange(false);
-            }
+        }
+        this.isModal = false;
+        this.mIsMiPlayModal = false;
+        this.modalWindowManager.hide();
+        this.modalRow = null;
+        this.entry = null;
+        Iterator<T> it = this.onModalChangeListeners.iterator();
+        while (it.hasNext()) {
+            it.next().onChange(false);
         }
     }
 

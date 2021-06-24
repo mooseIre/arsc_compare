@@ -38,12 +38,20 @@ public class BatteryIcon {
     private LevelListDrawable mGraphicDigitalIconDarkMode;
     private LevelListDrawable mGraphicIcon;
     private LevelListDrawable mGraphicIconDarkMode;
+    private LevelListDrawable mGraphicPerformanceModeDigitIcon;
+    private LevelListDrawable mGraphicPerformanceModeDigitIconDarkMode;
+    private LevelListDrawable mGraphicPerformanceModeIcon;
+    private LevelListDrawable mGraphicPerformanceModeIconDarkMode;
     private LevelListDrawable mGraphicPowerSaveDigitIcon;
     private LevelListDrawable mGraphicPowerSaveDigitIconDarkMode;
     private LevelListDrawable mGraphicPowerSaveIcon;
     private LevelListDrawable mGraphicPowerSaveIconDarkMode;
     private SparseArray<ArrayList<Drawable>> mGraphicRes2Drawables = new SparseArray<>();
     private int mLevel = -1;
+    private int mPerformanceModeDarkLevel = -1;
+    private int mPerformanceModeDigitDarkLevel = -1;
+    private int mPerformanceModeDigitLevel = -1;
+    private int mPerformanceModeLevel = -1;
     private int mPowerSaveDarkLevel = -1;
     private int mPowerSaveDigitDarkLevel = -1;
     private int mPowerSaveDigitLevel = -1;
@@ -197,6 +205,52 @@ public class BatteryIcon {
             this.mGraphicPowerSaveDigitIconDarkMode.setColorFilter(null);
         }
         return this.mGraphicPowerSaveDigitIconDarkMode;
+    }
+
+    public LevelListDrawable getGraphicPerformanceModeIcon(int i) {
+        int i2 = this.mPerformanceModeLevel;
+        if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
+            this.mGraphicPerformanceModeIcon = generateIcon(C0020R$raw.stat_sys_battery_performance_mode, i, true);
+            this.mPerformanceModeLevel = i;
+        }
+        return this.mGraphicPerformanceModeIcon;
+    }
+
+    public LevelListDrawable getGraphicPerformanceModeIconDarkMode(int i) {
+        int i2 = this.mPerformanceModeDarkLevel;
+        if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
+            this.mGraphicPerformanceModeIconDarkMode = generateIcon(C0020R$raw.stat_sys_battery_performance_mode_darkmode, i, true);
+            this.mPerformanceModeDarkLevel = i;
+        }
+        if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
+            this.mGraphicPerformanceModeIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
+        } else {
+            this.mGraphicPerformanceModeIconDarkMode.setColorFilter(null);
+        }
+        return this.mGraphicPerformanceModeIconDarkMode;
+    }
+
+    public LevelListDrawable getGraphicPerformanceModeDigitIcon(int i) {
+        int i2 = this.mPerformanceModeDigitLevel;
+        if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
+            this.mGraphicPerformanceModeDigitIcon = generateIcon(C0020R$raw.stat_sys_battery_performance_mode_digit, i, true);
+            this.mPerformanceModeDigitLevel = i;
+        }
+        return this.mGraphicPerformanceModeDigitIcon;
+    }
+
+    public LevelListDrawable getGraphicPerformanceModeDigitIconDarkMode(int i) {
+        int i2 = this.mPerformanceModeDigitDarkLevel;
+        if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
+            this.mGraphicPerformanceModeDigitIconDarkMode = generateIcon(C0020R$raw.stat_sys_battery_performance_mode_digit_darkmode, i, true);
+            this.mPerformanceModeDigitDarkLevel = i;
+        }
+        if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
+            this.mGraphicPerformanceModeDigitIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
+        } else {
+            this.mGraphicPerformanceModeDigitIconDarkMode.setColorFilter(null);
+        }
+        return this.mGraphicPerformanceModeDigitIconDarkMode;
     }
 
     private LevelListDrawable generateIcon(int i, int i2, boolean z) {

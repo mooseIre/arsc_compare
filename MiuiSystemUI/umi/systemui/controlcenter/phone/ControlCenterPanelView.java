@@ -11,11 +11,15 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowInsets;
 import android.widget.LinearLayout;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelViewController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
+import com.android.systemui.controlcenter.phone.controls.MiPlayPluginManager;
 import com.android.systemui.controlcenter.phone.detail.QSControlDetail;
 import com.android.systemui.controlcenter.phone.widget.ControlCenterBigTileGroup;
 import com.android.systemui.controlcenter.phone.widget.ControlCenterBrightnessView;
@@ -31,6 +35,7 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.plugins.qs.QSTileView;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.qs.QSTileHost;
+import com.android.systemui.qs.miplay.MiPlayDetailAdapter;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import kotlin.TypeCastException;
@@ -61,8 +66,13 @@ public final class ControlCenterPanelView extends LinearLayout {
     private QSControlCenterHeaderView header;
     private MotionEvent lastEvent;
     private boolean listening;
+    @NotNull
+    private LinearLayout miPlayContainer;
+    private final MiPlayPluginManager miPlayPluginManager;
     private final ControlPanelController panelController;
     private final ControlCenterPanelViewController panelViewController;
+    @NotNull
+    private LinearLayout pluginViewContainer;
     @NotNull
     private LinearLayout smartHomeContainer;
     @NotNull
@@ -72,16 +82,18 @@ public final class ControlCenterPanelView extends LinearLayout {
     private ControlCenterPanelViewController.TouchHandler touchHandler;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public ControlCenterPanelView(@NotNull Context context, @Nullable AttributeSet attributeSet, @NotNull Looper looper, @NotNull ConfigurationController configurationController, @NotNull ControlsPluginManager controlsPluginManager2, @NotNull ControlPanelController controlPanelController, @NotNull NCSwitchController nCSwitchController, @NotNull StatusBarStateController statusBarStateController) {
+    public ControlCenterPanelView(@NotNull Context context, @Nullable AttributeSet attributeSet, @NotNull Looper looper, @NotNull ConfigurationController configurationController, @NotNull ControlsPluginManager controlsPluginManager2, @NotNull MiPlayPluginManager miPlayPluginManager2, @NotNull ControlPanelController controlPanelController, @NotNull NCSwitchController nCSwitchController, @NotNull StatusBarStateController statusBarStateController) {
         super(context, attributeSet);
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(looper, "uiLooper");
         Intrinsics.checkParameterIsNotNull(configurationController, "configurationController");
         Intrinsics.checkParameterIsNotNull(controlsPluginManager2, "controlsPluginManager");
+        Intrinsics.checkParameterIsNotNull(miPlayPluginManager2, "miPlayPluginManager");
         Intrinsics.checkParameterIsNotNull(controlPanelController, "panelController");
         Intrinsics.checkParameterIsNotNull(nCSwitchController, "ncSwitchController");
         Intrinsics.checkParameterIsNotNull(statusBarStateController, "statusBarStateController");
         this.controlsPluginManager = controlsPluginManager2;
+        this.miPlayPluginManager = miPlayPluginManager2;
         this.panelController = controlPanelController;
         this.handler = new H(this, looper);
         Resources resources = context.getResources();
@@ -161,12 +173,12 @@ public final class ControlCenterPanelView extends LinearLayout {
     }
 
     @NotNull
-    public final LinearLayout getSmartHomeContainer() {
-        LinearLayout linearLayout = this.smartHomeContainer;
+    public final LinearLayout getPluginViewContainer() {
+        LinearLayout linearLayout = this.pluginViewContainer;
         if (linearLayout != null) {
             return linearLayout;
         }
-        Intrinsics.throwUninitializedPropertyAccessException("smartHomeContainer");
+        Intrinsics.throwUninitializedPropertyAccessException("pluginViewContainer");
         throw null;
     }
 
@@ -312,9 +324,15 @@ public final class ControlCenterPanelView extends LinearLayout {
         View requireViewById8 = requireViewById(C0015R$id.brightness_container);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById8, "requireViewById(R.id.brightness_container)");
         this.brightnessView = (ControlCenterBrightnessView) requireViewById8;
-        View requireViewById9 = requireViewById(C0015R$id.smart_home_container);
-        Intrinsics.checkExpressionValueIsNotNull(requireViewById9, "requireViewById(R.id.smart_home_container)");
-        this.smartHomeContainer = (LinearLayout) requireViewById9;
+        View requireViewById9 = requireViewById(C0015R$id.plugin_view_container);
+        Intrinsics.checkExpressionValueIsNotNull(requireViewById9, "requireViewById(R.id.plugin_view_container)");
+        this.pluginViewContainer = (LinearLayout) requireViewById9;
+        View requireViewById10 = requireViewById(C0015R$id.smart_home_container);
+        Intrinsics.checkExpressionValueIsNotNull(requireViewById10, "requireViewById(R.id.smart_home_container)");
+        this.smartHomeContainer = (LinearLayout) requireViewById10;
+        View requireViewById11 = requireViewById(C0015R$id.miplay_container);
+        Intrinsics.checkExpressionValueIsNotNull(requireViewById11, "requireViewById(R.id.miplay_container)");
+        this.miPlayContainer = (LinearLayout) requireViewById11;
         this.panelViewController.onFinishInflate();
         QSControlCenterTileLayout qSControlCenterTileLayout = this.tileLayout;
         if (qSControlCenterTileLayout != null) {
@@ -350,27 +368,77 @@ public final class ControlCenterPanelView extends LinearLayout {
     }
 
     public final void addControlsPlugin() {
-        ControlsPluginManager controlsPluginManager2 = this.controlsPluginManager;
+        View createMiPlayView;
+        MiPlayPluginManager miPlayPluginManager2 = this.miPlayPluginManager;
         if (!this.panelController.isSuperPowerMode()) {
-            LinearLayout linearLayout = this.smartHomeContainer;
+            LinearLayout linearLayout = this.miPlayContainer;
             if (linearLayout != null) {
                 linearLayout.suppressLayout(true);
-                LinearLayout linearLayout2 = this.smartHomeContainer;
+                LinearLayout linearLayout2 = this.miPlayContainer;
                 if (linearLayout2 != null) {
                     linearLayout2.removeAllViews();
+                    MiuiQSPanel$MiuiRecord miuiQSPanel$MiuiRecord = new MiuiQSPanel$MiuiRecord();
+                    miuiQSPanel$MiuiRecord.detailAdapter = new MiPlayDetailAdapter();
+                    ControlCenterPanelView$addControlsPlugin$$inlined$let$lambda$1 controlCenterPanelView$addControlsPlugin$$inlined$let$lambda$1 = new ControlCenterPanelView$addControlsPlugin$$inlined$let$lambda$1(miuiQSPanel$MiuiRecord, this);
+                    if (miPlayPluginManager2.supportMiPlayAudio() && (createMiPlayView = miPlayPluginManager2.createMiPlayView(controlCenterPanelView$addControlsPlugin$$inlined$let$lambda$1)) != null) {
+                        miuiQSPanel$MiuiRecord.wholeView = createMiPlayView;
+                        ViewParent parent = createMiPlayView.getParent();
+                        if (!(parent instanceof ViewGroup)) {
+                            parent = null;
+                        }
+                        ViewGroup viewGroup = (ViewGroup) parent;
+                        if (viewGroup != null) {
+                            viewGroup.removeView(createMiPlayView);
+                        }
+                        LinearLayout linearLayout3 = this.miPlayContainer;
+                        if (linearLayout3 != null) {
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, -2);
+                            Context context = getContext();
+                            Intrinsics.checkExpressionValueIsNotNull(context, "context");
+                            layoutParams.topMargin = context.getResources().getDimensionPixelOffset(C0012R$dimen.qs_miplay_entrace_view_margin_top);
+                            linearLayout3.addView(createMiPlayView, layoutParams);
+                        } else {
+                            Intrinsics.throwUninitializedPropertyAccessException("miPlayContainer");
+                            throw null;
+                        }
+                    }
+                    LinearLayout linearLayout4 = this.miPlayContainer;
+                    if (linearLayout4 != null) {
+                        linearLayout4.suppressLayout(false);
+                    } else {
+                        Intrinsics.throwUninitializedPropertyAccessException("miPlayContainer");
+                        throw null;
+                    }
+                } else {
+                    Intrinsics.throwUninitializedPropertyAccessException("miPlayContainer");
+                    throw null;
+                }
+            } else {
+                Intrinsics.throwUninitializedPropertyAccessException("miPlayContainer");
+                throw null;
+            }
+        }
+        ControlsPluginManager controlsPluginManager2 = this.controlsPluginManager;
+        if (!this.panelController.isSuperPowerMode()) {
+            LinearLayout linearLayout5 = this.smartHomeContainer;
+            if (linearLayout5 != null) {
+                linearLayout5.suppressLayout(true);
+                LinearLayout linearLayout6 = this.smartHomeContainer;
+                if (linearLayout6 != null) {
+                    linearLayout6.removeAllViews();
                     View controlsView = controlsPluginManager2.getControlsView();
                     if (controlsView != null) {
-                        LinearLayout linearLayout3 = this.smartHomeContainer;
-                        if (linearLayout3 != null) {
-                            linearLayout3.addView(controlsView);
+                        LinearLayout linearLayout7 = this.smartHomeContainer;
+                        if (linearLayout7 != null) {
+                            linearLayout7.addView(controlsView);
                         } else {
                             Intrinsics.throwUninitializedPropertyAccessException("smartHomeContainer");
                             throw null;
                         }
                     }
-                    LinearLayout linearLayout4 = this.smartHomeContainer;
-                    if (linearLayout4 != null) {
-                        linearLayout4.suppressLayout(false);
+                    LinearLayout linearLayout8 = this.smartHomeContainer;
+                    if (linearLayout8 != null) {
+                        linearLayout8.suppressLayout(false);
                     } else {
                         Intrinsics.throwUninitializedPropertyAccessException("smartHomeContainer");
                         throw null;
@@ -392,7 +460,15 @@ public final class ControlCenterPanelView extends LinearLayout {
         if (linearLayout != null) {
             linearLayout.removeAllViews();
             controlsPluginManager2.hideControlView();
-            return;
+            MiPlayPluginManager miPlayPluginManager2 = this.miPlayPluginManager;
+            LinearLayout linearLayout2 = this.miPlayContainer;
+            if (linearLayout2 != null) {
+                linearLayout2.removeAllViews();
+                miPlayPluginManager2.hideMiPlayView();
+                return;
+            }
+            Intrinsics.throwUninitializedPropertyAccessException("miPlayContainer");
+            throw null;
         }
         Intrinsics.throwUninitializedPropertyAccessException("smartHomeContainer");
         throw null;
@@ -525,11 +601,9 @@ public final class ControlCenterPanelView extends LinearLayout {
             return;
         }
         View view = miuiQSPanel$MiuiRecord.wholeView;
-        if (view != null && miuiQSPanel$MiuiRecord.translateView != null) {
+        if (view != null) {
             Intrinsics.checkExpressionValueIsNotNull(view, "r.wholeView");
-            View view2 = miuiQSPanel$MiuiRecord.translateView;
-            Intrinsics.checkExpressionValueIsNotNull(view2, "r.translateView");
-            handleShowDetailImpl(miuiQSPanel$MiuiRecord, z, view, view2);
+            handleShowDetailImpl(miuiQSPanel$MiuiRecord, z, view, miuiQSPanel$MiuiRecord.translateView);
         }
     }
 
@@ -547,9 +621,7 @@ public final class ControlCenterPanelView extends LinearLayout {
             miuiQSPanel$MiuiTileRecord.tile.setDetailListening(z);
             QSTileView qSTileView = miuiQSPanel$MiuiTileRecord.tileView;
             Intrinsics.checkExpressionValueIsNotNull(qSTileView, "r.tileView");
-            View view = miuiQSPanel$MiuiTileRecord.expandIndicator;
-            Intrinsics.checkExpressionValueIsNotNull(view, "r.expandIndicator");
-            handleShowDetailImpl(miuiQSPanel$MiuiTileRecord, z, qSTileView, view);
+            handleShowDetailImpl(miuiQSPanel$MiuiTileRecord, z, qSTileView, miuiQSPanel$MiuiTileRecord.expandIndicator);
         }
     }
 

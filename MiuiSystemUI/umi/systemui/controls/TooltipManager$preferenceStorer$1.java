@@ -6,9 +6,8 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
-/* access modifiers changed from: package-private */
 /* compiled from: TooltipManager.kt */
-public final class TooltipManager$preferenceStorer$1 extends Lambda implements Function1<Integer, Unit> {
+final class TooltipManager$preferenceStorer$1 extends Lambda implements Function1<Integer, Unit> {
     final /* synthetic */ Context $context;
     final /* synthetic */ TooltipManager this$0;
 
@@ -28,6 +27,6 @@ public final class TooltipManager$preferenceStorer$1 extends Lambda implements F
     }
 
     public final void invoke(int i) {
-        Prefs.putInt(this.$context, this.this$0.preferenceName, i);
+        Prefs.putInt(this.$context, TooltipManager.access$getPreferenceName$p(this.this$0), i);
     }
 }

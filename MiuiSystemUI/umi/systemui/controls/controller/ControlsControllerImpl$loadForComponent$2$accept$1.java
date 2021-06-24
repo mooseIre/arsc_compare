@@ -29,7 +29,7 @@ public final class ControlsControllerImpl$loadForComponent$2$accept$1 implements
             arrayList.add(it.next().getControlId());
         }
         if (Favorites.INSTANCE.updateControls(this.this$0.$componentName, this.$controls)) {
-            ControlsControllerImpl.access$getPersistenceWrapper$p(this.this$0.this$0).storeFavorites(Favorites.INSTANCE.getAllStructures());
+            this.this$0.this$0.persistenceWrapper.storeFavorites(Favorites.INSTANCE.getAllStructures());
         }
         Set set = this.this$0.this$0.findRemoved(CollectionsKt___CollectionsKt.toSet(arrayList), this.$controls);
         List<Control> list = this.$controls;

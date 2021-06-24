@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.notification.mediacontrol;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BlendMode;
 import android.media.MediaRoute2Info;
 import android.media.MediaRouter;
 import android.text.TextUtils;
@@ -21,13 +22,19 @@ import com.android.settingslib.media.PhoneMediaDevice;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
+import com.android.systemui.controlcenter.phone.controls.MiPlayPluginManager;
 import com.android.systemui.plugins.ActivityStarter;
+import com.android.systemui.plugins.miui.controls.MiPlayCastingCallback;
+import com.android.systemui.statusbar.notification.modal.ModalController;
+import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.util.ReflectUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MiuiMediaTransferManager implements BluetoothCallback {
+public class MiuiMediaTransferManager implements BluetoothCallback, MiPlayCastingCallback {
+    ControlPanelController controlPanelController;
     private final ActivityStarter mActivityStarter = ((ActivityStarter) Dependency.get(ActivityStarter.class));
     private ConfigurationController.ConfigurationListener mConfigurationListener = new ConfigurationController.ConfigurationListener() {
         /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass1 */
@@ -43,6 +50,7 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
         }
     };
     private String mCurRouteName = CodeInjection.MD5;
+    private boolean mIsMiPlayCasting;
     private final LocalMediaManager mLocalMediaManager;
     private final MediaRouter.SimpleCallback mMediaCallback = new MediaRouter.SimpleCallback() {
         /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass4 */
@@ -70,18 +78,28 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
         }
     };
     private final MediaRouter mMediaRouter;
+    private String mMiPlayCastDescription;
     private final View.OnClickListener mOnClickHandler = new View.OnClickListener() {
         /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass2 */
 
         public void onClick(View view) {
-            handleMediaTransfer();
+            handleMediaTransfer(view);
         }
 
-        private void handleMediaTransfer() {
-            MiuiMediaTransferManager.this.mActivityStarter.startActivity(new Intent().setAction("miui.bluetooth.mible.MiuiAudioRelayActivity"), false, true, 268435456);
+        private void handleMediaTransfer(View view) {
+            if (!MiuiMediaTransferManager.this.mSupportMiPlayAudio || !MiuiMediaTransferManager.this.controlPanelController.isUseControlCenter()) {
+                MiuiMediaTransferManager.this.mActivityStarter.startActivity(new Intent().setAction("miui.bluetooth.mible.MiuiAudioRelayActivity"), false, true, 268435456);
+                return;
+            }
+            ViewGroup viewGroup = (ViewGroup) view.getParent();
+            while (viewGroup != null && (viewGroup.getParent() instanceof ViewGroup) && !(viewGroup instanceof MiuiMediaHeaderView)) {
+                viewGroup = (ViewGroup) viewGroup.getParent();
+            }
+            ((ModalController) Dependency.get(ModalController.class)).tryAnimaEnterModelForMiPlay(viewGroup);
         }
     };
     private String mPhoneRouteName = CodeInjection.MD5;
+    private boolean mSupportMiPlayAudio;
     private List<ImageView> mViews = new ArrayList();
     private boolean sHasTransferComponent;
 
@@ -102,6 +120,11 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
 
     private void checkForTransferComponent(Context context) {
         if (context.getPackageManager().resolveActivity(new Intent("miui.bluetooth.mible.MiuiAudioRelayActivity"), 0) != null) {
+            this.sHasTransferComponent = true;
+        }
+        boolean supportMiPlayAudio = ((MiPlayPluginManager) Dependency.get(MiPlayPluginManager.class)).supportMiPlayAudio();
+        this.mSupportMiPlayAudio = supportMiPlayAudio;
+        if (supportMiPlayAudio) {
             this.sHasTransferComponent = true;
         }
     }
@@ -182,6 +205,7 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
                 Log.e("MiuiMediaTransferManager", "Tried to remove unknown view " + imageView);
             } else if (this.mViews.size() == 0) {
                 ((LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class)).getEventManager().unregisterCallback(this);
+                ((MiPlayPluginManager) Dependency.get(MiPlayPluginManager.class)).unregisterCastingCallback(this);
                 this.mLocalMediaManager.unregisterCallback(this.mMediaDeviceCallback);
                 this.mMediaRouter.removeCallback(this.mMediaCallback);
             }
@@ -189,26 +213,29 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
     }
 
     public void applyMediaTransferView(ViewGroup viewGroup) {
-        if (this.mLocalMediaManager != null && viewGroup != null && this.sHasTransferComponent) {
-            ImageView imageView = (ImageView) viewGroup.findViewById(C0015R$id.media_seamless_image);
-            if (imageView == null) {
-                Log.e("MiuiMediaTransferManager", "There is no {ImageView @media_seamless_image} in root");
-                return;
-            }
-            imageView.setVisibility(0);
-            imageView.setOnClickListener(this.mOnClickHandler);
-            if (!this.mViews.contains(imageView)) {
-                this.mViews.add(imageView);
-                if (this.mViews.size() == 1) {
-                    ((LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class)).getEventManager().registerCallback(this);
-                    this.mLocalMediaManager.registerCallback(this.mMediaDeviceCallback);
-                    this.mMediaRouter.addCallback(8388615, this.mMediaCallback, 2);
+        if (this.mLocalMediaManager != null && viewGroup != null) {
+            if (this.sHasTransferComponent || this.mSupportMiPlayAudio) {
+                ImageView imageView = (ImageView) viewGroup.findViewById(C0015R$id.media_seamless_image);
+                if (imageView == null) {
+                    Log.e("MiuiMediaTransferManager", "There is no {ImageView @media_seamless_image} in root");
+                    return;
                 }
-            }
-            if (TextUtils.isEmpty(this.mPhoneRouteName)) {
-                this.mLocalMediaManager.startScan();
-            } else {
-                updateChip(imageView);
+                imageView.setVisibility(0);
+                imageView.setOnClickListener(this.mOnClickHandler);
+                if (!this.mViews.contains(imageView)) {
+                    this.mViews.add(imageView);
+                    if (this.mViews.size() == 1) {
+                        ((LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class)).getEventManager().registerCallback(this);
+                        ((MiPlayPluginManager) Dependency.get(MiPlayPluginManager.class)).registerCastingCallback(this);
+                        this.mLocalMediaManager.registerCallback(this.mMediaDeviceCallback);
+                        this.mMediaRouter.addCallback(8388615, this.mMediaCallback, 2);
+                    }
+                }
+                if (TextUtils.isEmpty(this.mPhoneRouteName)) {
+                    this.mLocalMediaManager.startScan();
+                } else {
+                    updateChip(imageView);
+                }
             }
         }
     }
@@ -220,12 +247,34 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
     }
 
     private void updateChip(ImageView imageView) {
-        if (!TextUtils.equals(this.mPhoneRouteName, this.mCurRouteName)) {
+        if (this.mSupportMiPlayAudio) {
+            if (this.mIsMiPlayCasting) {
+                imageView.setImageResource(C0013R$drawable.ic_media_seamless_others);
+                imageView.setImageTintBlendMode(BlendMode.DST);
+            } else {
+                imageView.setImageResource(C0013R$drawable.ic_media_seamless);
+                imageView.setImageTintBlendMode(BlendMode.SRC_IN);
+            }
+            if (!TextUtils.isEmpty(this.mMiPlayCastDescription)) {
+                imageView.setContentDescription(this.mMiPlayCastDescription);
+            } else {
+                imageView.setContentDescription(this.mCurRouteName);
+            }
+        } else if (!TextUtils.equals(this.mPhoneRouteName, this.mCurRouteName)) {
             imageView.setImageResource(C0013R$drawable.ic_media_seamless_others);
+            imageView.setImageTintBlendMode(BlendMode.DST);
             imageView.setContentDescription(this.mCurRouteName);
-            return;
+        } else {
+            imageView.setImageResource(C0013R$drawable.ic_media_seamless);
+            imageView.setImageTintBlendMode(BlendMode.SRC_IN);
+            imageView.setContentDescription(this.mPhoneRouteName);
         }
-        imageView.setImageResource(C0013R$drawable.ic_media_seamless);
-        imageView.setContentDescription(this.mPhoneRouteName);
+    }
+
+    @Override // com.android.systemui.plugins.miui.controls.MiPlayCastingCallback
+    public void onCastingChanged(boolean z, String str) {
+        this.mIsMiPlayCasting = z;
+        this.mMiPlayCastDescription = str;
+        updateAllChips();
     }
 }

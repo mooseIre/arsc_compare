@@ -11,6 +11,7 @@ import com.android.systemui.C0008R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Prefs;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.miui.systemui.BuildConfig;
 import com.miui.systemui.CloudDataListener;
 import com.miui.systemui.CloudDataManager;
@@ -367,9 +368,9 @@ public class NotificationSettingsManager implements Dumpable {
 
         public static String getKeyguardKey(String str, String str2) {
             if (TextUtils.isEmpty(str2) || "miscellaneous".equals(str2)) {
-                return String.format("%s_%s", str, "keyguard");
+                return String.format("%s_%s", str, MiPlayPlugin.REF_KEYGUARD);
             }
-            return String.format("%s_%s_%s", str, str2, "keyguard");
+            return String.format("%s_%s_%s", str, str2, MiPlayPlugin.REF_KEYGUARD);
         }
 
         public static String getSoundKey(String str) {

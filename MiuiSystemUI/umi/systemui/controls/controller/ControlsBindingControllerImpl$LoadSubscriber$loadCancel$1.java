@@ -4,9 +4,8 @@ import android.util.Log;
 import com.android.systemui.controls.controller.ControlsBindingControllerImpl;
 import kotlin.jvm.functions.Function0;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsBindingControllerImpl.kt */
-public final class ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1 implements Runnable {
+final class ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1 implements Runnable {
     final /* synthetic */ ControlsBindingControllerImpl.LoadSubscriber this$0;
 
     ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1(ControlsBindingControllerImpl.LoadSubscriber loadSubscriber) {

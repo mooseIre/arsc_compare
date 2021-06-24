@@ -255,7 +255,9 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
             view.getSeekBar().setThumbTintList(valueOf);
             ColorStateList withAlpha = valueOf.withAlpha(192);
             view.getSeekBar().setProgressTintList(withAlpha);
-            view.getSeekBar().setProgressBackgroundTintList(withAlpha.withAlpha(128));
+            ColorStateList withAlpha2 = withAlpha.withAlpha(128);
+            view.getSeekBar().setProgressBackgroundTintList(withAlpha2);
+            view.getSeamlessIcon().setImageTintList(withAlpha2.withAlpha(255));
         }
     }
 

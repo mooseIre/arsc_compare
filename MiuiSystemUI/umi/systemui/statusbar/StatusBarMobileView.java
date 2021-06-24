@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ import miui.os.Build;
 
 public class StatusBarMobileView extends LinearLayout implements DarkIconDispatcher.DarkReceiver, StatusIconDisplayable, DemoMode {
     private int mColor;
-    private StatusBarIconView mDotView;
     private boolean mDrip;
     private boolean mForceUpdate;
     private boolean mInDemoMode;
@@ -67,6 +65,18 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     private int mVolteResId;
     private ImageView mVowifi;
     private int mVowifiResId;
+
+    private void initDotView() {
+    }
+
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
+    public boolean isSignalView() {
+        return true;
+    }
+
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
+    public void setDecorColor(int i) {
+    }
 
     public static StatusBarMobileView fromContext(Context context, String str) {
         StatusBarMobileView statusBarMobileView = (StatusBarMobileView) LayoutInflater.from(context).inflate(C0017R$layout.status_bar_mobile_signal_group, (ViewGroup) null);
@@ -165,44 +175,28 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         initDotView();
     }
 
-    private void initDotView() {
-        StatusBarIconView statusBarIconView = new StatusBarIconView(((LinearLayout) this).mContext, this.mSlot, null);
-        this.mDotView = statusBarIconView;
-        statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
-        layoutParams.gravity = 8388627;
-        addView(this.mDotView, layoutParams);
-    }
-
     public void applyMobileState(StatusBarSignalPolicy.MobileIconState mobileIconState) {
-        boolean z = true;
+        boolean z;
+        boolean z2 = true;
         if (mobileIconState == null) {
-            if (getVisibility() == 8) {
-                z = false;
-            }
+            z = getVisibility() != 8;
             setVisibility(8);
             this.mState = null;
         } else {
             StatusBarSignalPolicy.MobileIconState mobileIconState2 = this.mState;
             if (mobileIconState2 == null) {
                 initViewState(mobileIconState.copy());
+                z = true;
             } else {
                 z = !mobileIconState2.equals(mobileIconState) ? updateState(mobileIconState.copy()) : false;
             }
         }
-        if (z) {
-            requestLayout();
-        }
-        if (needFixVisibleState()) {
-            Log.d("StatusBarMobileView", "fix VisibleState width=" + getWidth() + " height=" + getHeight());
-            this.mVisibleState = 0;
+        if (mobileIconState == null || getVisibility() == 0) {
+            z2 = z;
+        } else {
             setVisibility(0);
-            requestLayout();
-        } else if (needFixInVisibleState()) {
-            Log.d("StatusBarMobileView", "fix InVisibleState width=" + getWidth() + " height=" + getHeight());
-            this.mVisibleState = -1;
-            setVisibility(4);
+        }
+        if (z2) {
             requestLayout();
         }
     }
@@ -423,14 +417,10 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             this.mVolte.setImageTintList(valueOf);
             this.mMobileRoaming.setImageTintList(valueOf);
             this.mVolteNoService.setImageTintList(valueOf);
-            this.mDotView.setDecorColor(this.mTint);
-            this.mDotView.setIconColor(this.mTint, false);
             return;
         }
         this.mMobileType.setTextColor(this.mColor);
         this.mMobileTypeSingle.setTextColor(this.mColor);
-        this.mDotView.setDecorColor(this.mColor);
-        this.mDotView.setIconColor(this.mColor, false);
     }
 
     @Override // com.android.systemui.statusbar.StatusIconDisplayable
@@ -457,17 +447,11 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         this.mMobileTypeSingle.setTextColor(valueOf);
         this.mVolte.setImageTintList(valueOf);
         this.mMobileRoaming.setImageTintList(valueOf);
-        this.mDotView.setDecorColor(i);
-    }
-
-    @Override // com.android.systemui.statusbar.StatusIconDisplayable
-    public void setDecorColor(int i) {
-        this.mDotView.setDecorColor(i);
     }
 
     @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public boolean isIconVisible() {
-        return this.mState.visible;
+        return getVisibility() == 0;
     }
 
     @Override // com.android.systemui.statusbar.StatusIconDisplayable
@@ -475,19 +459,12 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         if (this.mInDemoMode) {
             this.mVisibleState = i;
             this.mMobileContent.setVisibility(8);
-            this.mDotView.setVisibility(8);
         } else if (i != this.mVisibleState || this.mForceUpdate) {
             this.mForceUpdate = false;
             this.mVisibleState = i;
-            if (i == 0) {
+            if (this.mMobileContent.getVisibility() != 0) {
                 this.mMobileContent.setVisibility(0);
-                this.mDotView.setVisibility(8);
-            } else if (i != 1) {
-                this.mMobileContent.setVisibility(4);
-                this.mDotView.setVisibility(4);
-            } else {
-                this.mMobileContent.setVisibility(4);
-                this.mDotView.setVisibility(0);
+                requestLayout();
             }
         }
     }
@@ -500,14 +477,6 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     @VisibleForTesting
     public StatusBarSignalPolicy.MobileIconState getState() {
         return this.mState;
-    }
-
-    private boolean needFixVisibleState() {
-        return this.mState.visible && getVisibility() != 0;
-    }
-
-    private boolean needFixInVisibleState() {
-        return !this.mState.visible && getVisibility() == 0;
     }
 
     public void setDrip(boolean z) {

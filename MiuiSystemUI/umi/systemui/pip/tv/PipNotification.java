@@ -19,6 +19,7 @@ import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.pip.tv.PipManager;
+import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.util.NotificationChannels;
 
 public class PipNotification {
@@ -125,7 +126,7 @@ public class PipNotification {
 
     public PipNotification(Context context, BroadcastDispatcher broadcastDispatcher, PipManager pipManager) {
         this.mPackageManager = context.getPackageManager();
-        this.mNotificationManager = (NotificationManager) context.getSystemService("notification");
+        this.mNotificationManager = (NotificationManager) context.getSystemService(MiPlayPlugin.REF_NOTIFICATION);
         this.mNotificationBuilder = new Notification.Builder(context, NotificationChannels.TVPIP).setLocalOnly(true).setOngoing(DEBUG).setCategory("sys").extend(new Notification.TvExtender().setContentIntent(createPendingIntent(context, "PipNotification.menu")).setDeleteIntent(createPendingIntent(context, "PipNotification.close")));
         this.mPipManager = pipManager;
         pipManager.addListener(this.mPipListener);

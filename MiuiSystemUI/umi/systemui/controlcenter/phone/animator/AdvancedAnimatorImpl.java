@@ -191,9 +191,9 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
             AnimConfig animConfig = new AnimConfig();
             animConfig.setEase(EaseManager.getStyle(-2, 0.99f, 0.2f));
             if (z) {
-                Folme.useAt(getPanelView().getSmartHomeContainer()).state().fromTo(animState2, animState, animConfig);
+                Folme.useAt(getPanelView().getPluginViewContainer()).state().fromTo(animState2, animState, animConfig);
             } else {
-                Folme.useAt(getPanelView().getSmartHomeContainer()).state().fromTo(animState, animState2, animConfig);
+                Folme.useAt(getPanelView().getPluginViewContainer()).state().fromTo(animState, animState2, animConfig);
             }
             animateFooterIndicatorShow(z);
         }
@@ -219,7 +219,7 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         if (this.controller.isPortrait()) {
             if (f == 0.0f) {
                 getPanelView().getTileLayout().updateTransHeight(this.mTransViews, f, this.controller.getScreenHeight(), this.overFlingLines);
-                Folme.useAt(getPanelView().getSmartHomeContainer()).state().to(FolmeAnimState.mSpringBackAnim, FolmeAnimState.mSpringBackConfig);
+                Folme.useAt(getPanelView().getPluginViewContainer()).state().to(FolmeAnimState.mSpringBackAnim, FolmeAnimState.mSpringBackConfig);
                 if (!this.controller.isSuperPowerMode()) {
                     Folme.useAt(getPanelView().getFooter().getIndicator()).state().to(FolmeAnimState.mSpringBackAnim, FolmeAnimState.mSpringBackConfig);
                     return;
@@ -242,7 +242,7 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
             state.setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(ControlCenterUtils.getTranslationY(i - 1, i, f2, screenHeight)));
             int i2 = this.overFlingLines;
             float translationY2 = ControlCenterUtils.getTranslationY(i2 - 2, i2, f2, screenHeight);
-            Folme.useAt(getPanelView().getSmartHomeContainer()).state().setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(translationY2));
+            Folme.useAt(getPanelView().getPluginViewContainer()).state().setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(translationY2));
             getPanelView().getTileLayout().updateTransHeight(null, f, this.controller.getScreenHeight(), this.overFlingLines);
         }
     }
