@@ -17,9 +17,8 @@ import com.android.systemui.bubbles.BadgedImageView;
 import java.util.List;
 import java.util.function.Consumer;
 
-/* access modifiers changed from: package-private */
 /* compiled from: BubbleOverflowActivity */
-public class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
+class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
     private List<Bubble> mBubbles;
     private Context mContext;
     private int mHeight;

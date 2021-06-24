@@ -28,7 +28,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).lambda$postStartActivityDismissingKeyguard$25(this.f$0);
+                ActivityStarterDelegate.lambda$startPendingIntentDismissingKeyguard$0(this.f$0, (Lazy) obj);
             }
         });
     }
@@ -47,7 +47,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).startPendingIntentDismissingKeyguard(this.f$0, this.f$1);
+                ActivityStarterDelegate.lambda$startPendingIntentDismissingKeyguard$1(this.f$0, this.f$1, (Lazy) obj);
             }
         });
     }
@@ -68,7 +68,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).startPendingIntentDismissingKeyguard(this.f$0, this.f$1, this.f$2);
+                ActivityStarterDelegate.lambda$startPendingIntentDismissingKeyguard$2(this.f$0, this.f$1, this.f$2, (Lazy) obj);
             }
         });
     }
@@ -91,7 +91,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1, this.f$2, this.f$3);
+                ActivityStarterDelegate.lambda$startActivity$3(this.f$0, this.f$1, this.f$2, this.f$3, (Lazy) obj);
             }
         });
     }
@@ -110,7 +110,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1);
+                ActivityStarterDelegate.lambda$startActivity$4(this.f$0, this.f$1, (Lazy) obj);
             }
         });
     }
@@ -131,7 +131,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1, this.f$2);
+                ActivityStarterDelegate.lambda$startActivity$5(this.f$0, this.f$1, this.f$2, (Lazy) obj);
             }
         });
     }
@@ -152,7 +152,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1, this.f$2);
+                ActivityStarterDelegate.lambda$startActivity$6(this.f$0, this.f$1, this.f$2, (Lazy) obj);
             }
         });
     }
@@ -171,7 +171,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).postStartActivityDismissingKeyguard(this.f$0, this.f$1);
+                ActivityStarterDelegate.lambda$postStartActivityDismissingKeyguard$7(this.f$0, this.f$1, (Lazy) obj);
             }
         });
     }
@@ -188,7 +188,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).postStartActivityDismissingKeyguard(this.f$0);
+                ActivityStarterDelegate.lambda$postStartActivityDismissingKeyguard$8(this.f$0, (Lazy) obj);
             }
         });
     }
@@ -207,7 +207,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).postQSRunnableDismissingKeyguard(this.f$0, this.f$1);
+                ActivityStarterDelegate.lambda$postQSRunnableDismissingKeyguard$9(this.f$0, this.f$1, (Lazy) obj);
             }
         });
     }
@@ -226,7 +226,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).dismissKeyguardThenExecute(ActivityStarter.OnDismissAction.this, this.f$1, this.f$2);
+                ActivityStarterDelegate.lambda$dismissKeyguardThenExecute$10(ActivityStarter.OnDismissAction.this, this.f$1, this.f$2, (Lazy) obj);
             }
         });
     }
