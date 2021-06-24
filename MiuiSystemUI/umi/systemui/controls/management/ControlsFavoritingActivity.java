@@ -65,6 +65,10 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
+    public static final /* synthetic */ ControlsControllerImpl access$getController$p(ControlsFavoritingActivity controlsFavoritingActivity) {
+        return controlsFavoritingActivity.controller;
+    }
+
     public static final /* synthetic */ View access$getDoneButton$p(ControlsFavoritingActivity controlsFavoritingActivity) {
         View view = controlsFavoritingActivity.doneButton;
         if (view != null) {
@@ -72,6 +76,10 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
         Intrinsics.throwUninitializedPropertyAccessException("doneButton");
         throw null;
+    }
+
+    public static final /* synthetic */ TooltipManager access$getMTooltipManager$p(ControlsFavoritingActivity controlsFavoritingActivity) {
+        return controlsFavoritingActivity.mTooltipManager;
     }
 
     public static final /* synthetic */ View access$getOtherAppsButton$p(ControlsFavoritingActivity controlsFavoritingActivity) {

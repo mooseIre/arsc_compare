@@ -2,7 +2,6 @@ package com.android.systemui;
 
 import android.content.Context;
 import android.util.Log;
-import com.android.systemui.CodeBlue;
 import com.miui.systemui.DebugConfig;
 import java.lang.Thread;
 import kotlin.jvm.internal.Intrinsics;
@@ -27,8 +26,8 @@ public final class CodeBlue$Companion$startMonitoring$1 implements Thread.Uncaug
         }
         if (Intrinsics.areEqual(Thread.currentThread(), thread)) {
             try {
-                CodeBlue.Companion.access$updateCrashInfo(CodeBlue.Companion, this.$context);
-                CodeBlue.Companion.access$updateCrashHandler(CodeBlue.Companion, this.$context, th);
+                CodeBlue.Companion.updateCrashInfo(this.$context);
+                CodeBlue.Companion.updateCrashHandler(this.$context, th);
             } catch (Exception e) {
                 Log.e("CodeBlue", "startMonitoring", e);
             }
