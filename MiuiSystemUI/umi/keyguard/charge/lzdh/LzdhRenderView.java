@@ -18,7 +18,8 @@ import com.android.systemui.C0013R$drawable;
 import java.util.ArrayList;
 import java.util.List;
 
-class LzdhRenderView extends View {
+/* access modifiers changed from: package-private */
+public class LzdhRenderView extends View {
     private LzdhTargetLightning lightning;
     private final List<PointF> lightningEdgeList;
     private final List<PointF> lightningInnerList;

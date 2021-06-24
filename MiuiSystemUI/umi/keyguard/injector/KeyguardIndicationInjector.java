@@ -184,7 +184,7 @@ public class KeyguardIndicationInjector {
             /* class com.android.keyguard.injector.$$Lambda$KeyguardIndicationInjector$rvtW3oq3pC4W0s7s7NwIVUmWbuE */
 
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                KeyguardIndicationInjector.lambda$handlePowerIndicationAnimation$0(KeyguardIndicationTextView.this, valueAnimator);
+                KeyguardIndicationTextView.this.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
             }
         });
         this.mIndicationTVAlphaAni.setDuration(500L).start();
