@@ -58,6 +58,7 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         }
     };
     private boolean mEdited = false;
+    private boolean mForceRefreshTiles = false;
     private QSTileHost mHost;
     private SharedPreferences mMiuiQSTilesSharedPreferences;
     private MiuiQSTilePlugin mMiuiQSTilsplugin;
@@ -73,7 +74,9 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
             MiuiQSTileHostInjector miuiQSTileHostInjector2 = MiuiQSTileHostInjector.this;
             miuiQSTileHostInjector2.mQsDefaultTiles = TextUtils.isEmpty(miuiQSTileHostInjector2.mPluginDefaultTiles) ? MiuiQSTileHostInjector.this.mQsDefaultTiles : MiuiQSTileHostInjector.this.mPluginDefaultTiles;
             MiuiQSTileHostInjector.this.filterIndependentTiles();
+            MiuiQSTileHostInjector.this.mForceRefreshTiles = true;
             MiuiQSTileHostInjector.this.onTuningChanged();
+            MiuiQSTileHostInjector.this.mForceRefreshTiles = false;
         }
 
         public void onPluginDisconnected(MiuiQSTilePlugin miuiQSTilePlugin) {
@@ -308,6 +311,10 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         if (this.mUseControlCenter) {
             this.mControlPanelController.collapsePanel(true);
         }
+    }
+
+    public boolean isForceRefreshTiles() {
+        return this.mForceRefreshTiles;
     }
 
     public void switchControlCenter(boolean z) {

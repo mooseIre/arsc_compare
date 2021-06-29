@@ -32,6 +32,7 @@ public class StackStateAnimator {
     public NotificationStackScrollLayout mHostLayout;
     private ArrayList<View> mNewAddChildren = new ArrayList<>();
     private ArrayList<NotificationStackScrollLayout.AnimationEvent> mNewEvents = new ArrayList<>();
+    private ArrayList<View> mNewRemoveChildren = new ArrayList<>();
     private boolean mShadeExpanded;
     private NotificationShelf mShelf;
     private int[] mTmpLocation = new int[2];
@@ -70,6 +71,11 @@ public class StackStateAnimator {
             }
 
             @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
+            public boolean wasRemoved(View view) {
+                return StackStateAnimator.this.mNewRemoveChildren.contains(view);
+            }
+
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public Interpolator getCustomInterpolator(View view, Property property) {
                 if (!StackStateAnimator.this.mHeadsUpAppearChildren.contains(view) || !View.TRANSLATION_Y.equals(property)) {
                     return StackStateAnimator.this.getCustomInterpolator(view, property);
@@ -101,6 +107,18 @@ public class StackStateAnimator {
                 viewState.animateTo(expandableView, this.mAnimationProperties);
             }
         }
+        int i3 = 0;
+        for (int i4 = 0; i4 < this.mNewRemoveChildren.size(); i4++) {
+            ExpandableView expandableView2 = (ExpandableView) this.mNewRemoveChildren.get(i4);
+            ExpandableViewState viewState2 = expandableView2.getViewState();
+            if (!(viewState2 == null || expandableView2.getVisibility() == 8 || applyWithoutAnimation(expandableView2, viewState2))) {
+                if (this.mAnimationProperties.wasRemoved(expandableView2) && i3 < 5) {
+                    i3++;
+                }
+                initAnimationProperties(expandableView2, viewState2, i3);
+                viewState2.animateTo(expandableView2, this.mAnimationProperties);
+            }
+        }
         if (!isRunning()) {
             onAnimationFinished();
         }
@@ -108,20 +126,26 @@ public class StackStateAnimator {
         this.mHeadsUpDisappearChildren.clear();
         this.mNewEvents.clear();
         this.mNewAddChildren.clear();
+        this.mNewRemoveChildren.clear();
     }
 
     private void initAnimationProperties(ExpandableView expandableView, ExpandableViewState expandableViewState, int i) {
         boolean wasAdded = this.mAnimationProperties.wasAdded(expandableView);
+        boolean wasRemoved = this.mAnimationProperties.wasRemoved(expandableView);
         this.mAnimationProperties.duration = this.mCurrentLength;
         adaptDurationWhenGoingToFullShade(expandableView, expandableViewState, wasAdded, i);
         this.mAnimationProperties.delay = 0;
-        if (!wasAdded) {
+        if (!wasAdded && !wasRemoved) {
             if (!this.mAnimationFilter.hasDelays) {
                 return;
             }
             if (expandableViewState.yTranslation == expandableView.getTranslationY() && expandableViewState.zTranslation == expandableView.getTranslationZ() && expandableViewState.alpha == expandableView.getAlpha() && expandableViewState.height == expandableView.getActualHeight() && expandableViewState.clipTopAmount == expandableView.getClipTopAmount()) {
                 return;
             }
+        }
+        if (wasRemoved) {
+            this.mAnimationProperties.removeDelay = this.mCurrentAdditionalDelay + calculateChildAnimationDelay(expandableViewState, i);
+            return;
         }
         this.mAnimationProperties.delay = this.mCurrentAdditionalDelay + calculateChildAnimationDelay(expandableViewState, i);
     }
@@ -237,12 +261,12 @@ public class StackStateAnimator {
         this.mTransientViewsToRemove.clear();
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:70:0x01a9  */
-    /* JADX WARNING: Removed duplicated region for block: B:71:0x01c3  */
+    /* JADX WARNING: Removed duplicated region for block: B:77:0x01bd  */
+    /* JADX WARNING: Removed duplicated region for block: B:78:0x01d9  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void processAnimationEvents(java.util.ArrayList<com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnimationEvent> r15) {
         /*
-        // Method dump skipped, instructions count: 464
+        // Method dump skipped, instructions count: 605
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.StackStateAnimator.processAnimationEvents(java.util.ArrayList):void");
     }

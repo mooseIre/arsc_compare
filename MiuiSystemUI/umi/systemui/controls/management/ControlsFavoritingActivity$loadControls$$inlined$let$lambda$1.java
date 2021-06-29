@@ -21,8 +21,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritingActivity.kt */
-final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> implements Consumer<ControlsController.LoadData> {
+public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> implements Consumer<ControlsController.LoadData> {
     final /* synthetic */ CharSequence $emptyZoneString;
     final /* synthetic */ ControlsFavoritingActivity this$0;
 

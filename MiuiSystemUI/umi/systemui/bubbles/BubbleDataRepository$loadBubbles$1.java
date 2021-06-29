@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Set;
 import kotlin.ResultKt;
 import kotlin.Unit;
+import kotlin.collections.CollectionsKt;
 import kotlin.collections.CollectionsKt__CollectionsKt;
 import kotlin.collections.CollectionsKt__IterablesKt;
 import kotlin.collections.CollectionsKt__MutableCollectionsKt;
-import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsKt;
 import kotlin.coroutines.jvm.internal.Boxing;
@@ -73,7 +73,7 @@ public final class BubbleDataRepository$loadBubbles$1 extends SuspendLambda impl
             for (T t : readFromDisk) {
                 arrayList.add(new ShortcutKey(t.getUserId(), t.getPackageName()));
             }
-            Set<ShortcutKey> set = CollectionsKt___CollectionsKt.toSet(arrayList);
+            Set<ShortcutKey> set = CollectionsKt.toSet(arrayList);
             ArrayList arrayList2 = new ArrayList();
             for (ShortcutKey shortcutKey : set) {
                 List<ShortcutInfo> shortcuts = this.this$0.launcherApps.getShortcuts(new LauncherApps.ShortcutQuery().setPackage(shortcutKey.getPkg()).setQueryFlags(1041), UserHandle.of(shortcutKey.getUserId()));

@@ -90,7 +90,7 @@ public class ControlPanelWindowView extends FrameLayout {
             @Override // miuix.animation.listener.TransitionListener
             public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                 ControlPanelWindowView.this.mBlurRatio = f;
-                ControlPanelWindowView.this.setAlpha(f);
+                ControlPanelWindowView.this.mBottomArea.setAlpha(f);
                 if (ControlPanelWindowView.this.mControlPanelWindowManager != null && !ControlPanelWindowView.this.mControlPanelController.isNCSwitching()) {
                     ControlPanelWindowView.this.mControlPanelWindowManager.setBlurRatio(ControlPanelWindowView.this.mBlurRatio);
                 }
@@ -559,12 +559,5 @@ public class ControlPanelWindowView extends FrameLayout {
         this.mBottomArea.getLocationOnScreen(this.mLocation);
         int[] iArr = this.mLocation;
         return f >= ((float) iArr[1]) && f <= ((float) (iArr[1] + this.mBottomArea.getHeight()));
-    }
-
-    public void refreshAllTiles() {
-        QSControlCenterTileLayout qSControlCenterTileLayout = this.mControlCenterTileLayout;
-        if (qSControlCenterTileLayout != null) {
-            qSControlCenterTileLayout.refreshAllTiles();
-        }
     }
 }

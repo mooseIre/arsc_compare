@@ -113,6 +113,10 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         this.mHost = qSTileHost;
     }
 
+    public boolean isShow() {
+        return !this.mForceHide && this.mIsVisible;
+    }
+
     public void setListening(boolean z) {
         if (z) {
             this.mSecurityController.addCallback(this.mCallback);

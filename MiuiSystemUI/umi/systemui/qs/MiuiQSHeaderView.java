@@ -19,6 +19,7 @@ import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.phone.MiuiLightDarkIconManager;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.MiuiClock;
@@ -30,8 +31,10 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
     private CarrierText mCarrierText;
     private NetworkSpeedView mFullscreenNetworkSpeedView;
     private MiuiLightDarkIconManager mIconManager;
+    private float mNormalHeightLandscape;
     private LinearLayout mStatusIcons;
     private boolean mSuperSave;
+    private float mUnimportantHeightLandscape;
 
     public boolean hasOverlappingRendering() {
         return false;
@@ -67,6 +70,57 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         this.mBattery = (MiuiBatteryMeterView) findViewById(C0015R$id.battery);
         this.mLastOrientation = getResources().getConfiguration().orientation;
         updateLayout();
+        updateHeight();
+    }
+
+    private void updateHeight() {
+        post(new Runnable() {
+            /* class com.android.systemui.qs.$$Lambda$MiuiQSHeaderView$FJsLk97tMocNR4cViAP_V_hWlic */
+
+            public final void run() {
+                MiuiQSHeaderView.this.lambda$updateHeight$0$MiuiQSHeaderView();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateHeight$0 */
+    public /* synthetic */ void lambda$updateHeight$0$MiuiQSHeaderView() {
+        int i;
+        boolean isShowingUnimportant = FoldManager.Companion.isShowingUnimportant();
+        if (showCarrier()) {
+            i = getContext().getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height_with_carrier);
+        } else {
+            i = getContext().getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height);
+        }
+        setNormalHeight((float) i);
+        setUnimportantHeight((float) getContext().getResources().getDimensionPixelSize(C0012R$dimen.unimportant_miui_header_height));
+        int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(C0012R$dimen.unimportant_miui_qs_dif);
+        this.mNormalHeightLandscape = (float) getContext().getResources().getDimensionPixelSize(17105490);
+        this.mUnimportantHeightLandscape = super.getUnimportantHeight();
+        FoldManager.Companion.setNormalTarget(getNormalHeight());
+        FoldManager.Companion.setUnimportantTarget(getUnimportantHeight());
+        FoldManager.Companion.setHeaderDif((getNormalHeight() + ((float) dimensionPixelSize)) - getUnimportantHeight());
+        initFolme();
+        if (isShowingUnimportant) {
+            showUnimportantWithoutAnim();
+        }
+    }
+
+    @Override // com.android.systemui.qs.MiuiHeaderView
+    public float getNormalHeight() {
+        if (this.mLastOrientation == 2) {
+            return this.mNormalHeightLandscape;
+        }
+        return super.getNormalHeight();
+    }
+
+    @Override // com.android.systemui.qs.MiuiHeaderView
+    public float getUnimportantHeight() {
+        if (this.mLastOrientation == 2) {
+            return this.mUnimportantHeightLandscape;
+        }
+        return super.getUnimportantHeight();
     }
 
     /* access modifiers changed from: protected */
@@ -91,7 +145,11 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         if (i != i2) {
             this.mLastOrientation = i2;
             updateLayout();
+        } else {
+            setNormalHeight(0.0f);
+            this.mNormalHeightLandscape = 0.0f;
         }
+        updateHeight();
     }
 
     /* access modifiers changed from: protected */

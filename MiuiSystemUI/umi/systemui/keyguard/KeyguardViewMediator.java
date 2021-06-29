@@ -2005,4 +2005,8 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         }
         return z;
     }
+
+    public boolean isLidShowing() {
+        return this.mSmartCoverHelper.isLidShowing();
+    }
 }

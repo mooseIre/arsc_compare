@@ -171,6 +171,8 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
+import com.android.systemui.statusbar.notification.unimportant.FoldListener;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.phone.NotificationShadeWindowController;
 import com.android.systemui.statusbar.phone.ScrimController;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -204,7 +206,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.inject.Provider;
 
-public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, KeyguardStateController.Callback, OnHeadsUpChangedListener, CommandQueue.Callbacks, ColorExtractor.OnColorsChangedListener, ConfigurationController.ConfigurationListener, StatusBarStateController.StateListener, ActivityLaunchAnimator.Callback, ControlPanelController.UseControlPanelChangeListener {
+public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, KeyguardStateController.Callback, OnHeadsUpChangedListener, CommandQueue.Callbacks, ColorExtractor.OnColorsChangedListener, ConfigurationController.ConfigurationListener, StatusBarStateController.StateListener, ActivityLaunchAnimator.Callback, ControlPanelController.UseControlPanelChangeListener, FoldListener {
     public static final boolean ONLY_CORE_APPS;
     private static final AudioAttributes VIBRATION_ATTRIBUTES = new AudioAttributes.Builder().setContentType(4).setUsage(13).build();
     private static boolean sBootCompleted = false;
@@ -1002,6 +1004,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         });
         ((ToggleManagerController) Dependency.get(ToggleManagerController.class)).start();
         SettingsJobSchedulerService.schedule(this.mContext);
+        FoldManager.Companion.addListener(this);
     }
 
     /* access modifiers changed from: private */
@@ -1520,8 +1523,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x003c, code lost:
-        if (r0 == false) goto L_0x0040;
+    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0044, code lost:
+        if (com.android.systemui.statusbar.notification.unimportant.FoldManager.Companion.isShowingUnimportant() == false) goto L_0x0048;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateQsExpansionEnabled() {
@@ -1532,33 +1535,36 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             com.android.systemui.statusbar.policy.DeviceProvisionedController r1 = r4.mDeviceProvisionedController
             boolean r1 = r1.isDeviceProvisioned()
             r2 = 1
-            if (r1 == 0) goto L_0x003f
+            if (r1 == 0) goto L_0x0047
             boolean r1 = r4.mUserSetup
             if (r1 != 0) goto L_0x001d
             com.android.systemui.statusbar.policy.UserSwitcherController r1 = r4.mUserSwitcherController
             if (r1 == 0) goto L_0x001d
             boolean r1 = r1.isSimpleUserSwitcher()
-            if (r1 != 0) goto L_0x003f
+            if (r1 != 0) goto L_0x0047
         L_0x001d:
             int r1 = r4.mDisabled2
             r3 = r1 & 4
-            if (r3 != 0) goto L_0x003f
+            if (r3 != 0) goto L_0x0047
             r1 = r1 & r2
-            if (r1 != 0) goto L_0x003f
+            if (r1 != 0) goto L_0x0047
             boolean r1 = r4.mDozing
-            if (r1 != 0) goto L_0x003f
+            if (r1 != 0) goto L_0x0047
             boolean r1 = com.android.systemui.statusbar.phone.StatusBar.ONLY_CORE_APPS
-            if (r1 != 0) goto L_0x003f
+            if (r1 != 0) goto L_0x0047
             java.lang.Class<com.android.systemui.controlcenter.policy.SuperSaveModeController> r1 = com.android.systemui.controlcenter.policy.SuperSaveModeController.class
             java.lang.Object r1 = com.android.systemui.Dependency.get(r1)
             com.android.systemui.controlcenter.policy.SuperSaveModeController r1 = (com.android.systemui.controlcenter.policy.SuperSaveModeController) r1
             boolean r1 = r1.isActive()
-            if (r1 != 0) goto L_0x003f
-            if (r0 != 0) goto L_0x003f
-            goto L_0x0040
-        L_0x003f:
+            if (r1 != 0) goto L_0x0047
+            if (r0 != 0) goto L_0x0047
+            com.android.systemui.statusbar.notification.unimportant.FoldManager$Companion r0 = com.android.systemui.statusbar.notification.unimportant.FoldManager.Companion
+            boolean r0 = r0.isShowingUnimportant()
+            if (r0 != 0) goto L_0x0047
+            goto L_0x0048
+        L_0x0047:
             r2 = 0
-        L_0x0040:
+        L_0x0048:
             com.android.systemui.statusbar.phone.NotificationPanelViewController r4 = r4.mNotificationPanelViewController
             r4.setQsExpansionEnabled(r2)
             java.lang.StringBuilder r4 = new java.lang.StringBuilder
@@ -2399,7 +2405,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return "[(" + view.getLeft() + "," + view.getTop() + ")(" + view.getRight() + "," + view.getBottom() + ") " + view.getWidth() + "x" + view.getHeight() + "]";
     }
 
-    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
+    @Override // com.android.systemui.Dumpable, com.android.systemui.SystemUI
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         synchronized (this.mQueueLock) {
             printWriter.println("Current Status Bar state:");
@@ -3177,6 +3183,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     public boolean hideKeyguardImpl() {
+        MiuiQSContainer miuiQSContainer;
         this.mIsKeyguard = false;
         Trace.beginSection("StatusBar#hideKeyguard");
         boolean leaveOpenOnKeyguardHide = this.mStatusBarStateController.leaveOpenOnKeyguardHide();
@@ -3199,13 +3206,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         } else if (!this.mNotificationPanelViewController.isCollapsing()) {
             instantCollapseNotificationPanel();
         }
-        if (this.mControlPanelController.isUseControlCenter()) {
-            this.mControlPanelController.refreshAllTiles();
-        } else {
-            MiuiQSContainer miuiQSContainer = this.mQSContainer;
-            if (!(miuiQSContainer == null || miuiQSContainer.getQsPanel() == null)) {
-                this.mQSContainer.getQsPanel().refreshAllTiles();
-            }
+        if (!(this.mControlPanelController.isUseControlCenter() || (miuiQSContainer = this.mQSContainer) == null || miuiQSContainer.getQsPanel() == null)) {
+            this.mQSContainer.getQsPanel().refreshAllTiles();
         }
         this.mHandler.removeMessages(1003);
         releaseGestureWakeLock();
@@ -3981,5 +3983,15 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void onBootCompleted() {
         super.onBootCompleted();
         sBootCompleted = true;
+    }
+
+    @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
+    public void showUnimportantNotifications() {
+        updateQsExpansionEnabled();
+    }
+
+    @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
+    public void resetAll(boolean z) {
+        updateQsExpansionEnabled();
     }
 }

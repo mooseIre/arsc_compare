@@ -235,10 +235,12 @@ public final class LogMessageImpl implements LogMessage {
         this.long2 = j;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public double getDouble1() {
         return this.double1;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setDouble1(double d) {
         this.double1 = d;
     }

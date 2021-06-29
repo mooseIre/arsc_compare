@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import kotlin.collections.CollectionsKt;
 import kotlin.collections.CollectionsKt__IterablesKt;
 import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
@@ -29,14 +30,14 @@ final class ControlsControllerImpl$listingCallback$1$onServicesUpdated$1 impleme
         for (ControlsServiceInfo controlsServiceInfo : list) {
             arrayList.add(controlsServiceInfo.componentName);
         }
-        Set<ComponentName> set = CollectionsKt___CollectionsKt.toSet(arrayList);
+        Set<ComponentName> set = CollectionsKt.toSet(arrayList);
         List<StructureInfo> allStructures = Favorites.INSTANCE.getAllStructures();
         ArrayList arrayList2 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(allStructures, 10));
         Iterator<T> it = allStructures.iterator();
         while (it.hasNext()) {
             arrayList2.add(it.next().getComponentName());
         }
-        Set set2 = CollectionsKt___CollectionsKt.toSet(arrayList2);
+        Set set2 = CollectionsKt.toSet(arrayList2);
         boolean z = false;
         SharedPreferences sharedPreferences = this.this$0.this$0.userStructure.getUserContext().getSharedPreferences("controls_prefs", 0);
         Set<String> stringSet = sharedPreferences.getStringSet("SeedingCompleted", new LinkedHashSet());

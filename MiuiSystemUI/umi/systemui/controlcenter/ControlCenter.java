@@ -400,13 +400,6 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
     }
 
-    public void refreshAllTiles() {
-        ControlPanelWindowView controlPanelWindowView = this.mControlPanelWindowView;
-        if (controlPanelWindowView != null) {
-            controlPanelWindowView.refreshAllTiles();
-        }
-    }
-
     public void showDeviceMonitoringDialog() {
         ControlPanelWindowView controlPanelWindowView = this.mControlPanelWindowView;
         if (controlPanelWindowView != null) {

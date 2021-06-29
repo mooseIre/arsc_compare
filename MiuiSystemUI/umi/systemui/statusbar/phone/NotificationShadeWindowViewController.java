@@ -29,6 +29,7 @@ import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiKeyguardMediaController;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.phone.NotificationShadeWindowView;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.tuner.TunerService;
@@ -260,7 +261,11 @@ public class NotificationShadeWindowViewController {
                     return false;
                 }
                 if (!z) {
-                    NotificationShadeWindowViewController.this.mService.onBackPressed();
+                    if (FoldManager.Companion.isShowingUnimportant()) {
+                        FoldManager.Companion.notifyListeners(5);
+                    } else {
+                        NotificationShadeWindowViewController.this.mService.onBackPressed();
+                    }
                 }
                 return true;
             }

@@ -195,21 +195,22 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
             } else {
                 Folme.useAt(getPanelView().getPluginViewContainer()).state().fromTo(animState, animState2, animConfig);
             }
-            animateFooterIndicatorShow(z);
+            Intrinsics.checkExpressionValueIsNotNull(animConfig, "animConfig");
+            animateFooterIndicatorShow(z, animConfig);
         }
     }
 
-    private final void animateFooterIndicatorShow(boolean z) {
+    private final void animateFooterIndicatorShow(boolean z, AnimConfig animConfig) {
         if (this.controller.isPortrait()) {
             AnimState animState = new AnimState("footer_indicator_show");
             animState.add(ViewProperty.ALPHA, 1.0f, new long[0]);
             AnimState animState2 = new AnimState("footer_indicator_show");
             animState2.add(ViewProperty.ALPHA, 0.0f, new long[0]);
             if (z) {
-                Folme.useAt(getPanelView().getFooter().getIndicator()).state().fromTo(animState2, animState, getAnimConfig());
+                Folme.useAt(getPanelView().getFooter().getIndicator()).state().fromTo(animState2, animState, animConfig);
                 return;
             }
-            Folme.useAt(getPanelView().getFooter().getIndicator()).state().to(animState2, getAnimConfig());
+            Folme.useAt(getPanelView().getFooter().getIndicator()).state().to(animState2, animConfig);
         }
     }
 

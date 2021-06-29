@@ -382,8 +382,7 @@ public class MiuiQSDetailItems extends FrameLayout {
         }
     }
 
-    /* access modifiers changed from: private */
-    public class H extends Handler {
+    private class H extends Handler {
         public H() {
             super(Looper.getMainLooper());
         }

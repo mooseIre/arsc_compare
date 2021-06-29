@@ -2,6 +2,8 @@ package com.android.systemui;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import com.android.keyguard.charge.MiuiChargeManager;
@@ -9,6 +11,7 @@ import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
 import com.android.systemui.recents.MiuiFullScreenGestureProxy;
 import com.android.systemui.recents.MiuiRecentProxy;
+import com.android.systemui.statusbar.notification.MiuiNotificationCenter;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -27,6 +30,7 @@ import com.miui.systemui.util.MiuiActivityUtil;
 
 public class MiuiVendorServices extends SystemUI {
     CodeBlueService mCodeBlueService;
+    private Handler mHandler;
     HeadsetPolicy mHeadsetPolicy;
     MiuiActivityUtil mMiuiActivityUtil;
     MiuiChargeManager mMiuiChargeManager;
@@ -47,8 +51,9 @@ public class MiuiVendorServices extends SystemUI {
     OrientationPolicy mOrientationPolicy;
     MiuiWallpaperZoomOutService mWallpaperZoomOutService;
 
-    public MiuiVendorServices(Context context) {
+    public MiuiVendorServices(Context context, Looper looper) {
         super(context);
+        this.mHandler = new Handler(looper);
     }
 
     @Override // com.android.systemui.SystemUI
@@ -84,6 +89,17 @@ public class MiuiVendorServices extends SystemUI {
         });
         this.mMiuiFaceUnlockManager.start();
         this.mMiuiActivityUtil.start();
+        this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.$$Lambda$STXITD0Q7qRl8C244EtJAhAaoyY */
+
+            public final void run() {
+                MiuiVendorServices.this.startBg();
+            }
+        });
+    }
+
+    public void startBg() {
+        MiuiNotificationCenter.start(this.mContext);
     }
 
     private void setSettingsDefault() {

@@ -14,6 +14,8 @@ public interface LogMessage {
 
     boolean getBool4();
 
+    double getDouble1();
+
     int getInt1();
 
     int getInt2();
@@ -49,6 +51,8 @@ public interface LogMessage {
     void setBool3(boolean z);
 
     void setBool4(boolean z);
+
+    void setDouble1(double d);
 
     void setInt1(int i);
 

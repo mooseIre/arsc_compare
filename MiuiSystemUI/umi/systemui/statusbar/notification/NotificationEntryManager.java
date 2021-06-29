@@ -47,13 +47,13 @@ import java.util.Set;
 
 public class NotificationEntryManager implements CommonNotifCollection, Dumpable, VisualStabilityManager.Callback {
     private static final boolean DEBUG = Log.isLoggable("NotificationEntryMgr", 3);
-    private final ArrayMap<String, NotificationEntry> mActiveNotifications = new ArrayMap<>();
+    protected final ArrayMap<String, NotificationEntry> mActiveNotifications = new ArrayMap<>();
     private final Set<NotificationEntry> mAllNotifications;
     private final FeatureFlags mFeatureFlags;
     private final ForegroundServiceDismissalFeatureController mFgsFeatureController;
     private final NotificationGroupManager mGroupManager;
     private final NotificationRowContentBinder.InflationCallback mInflationCallback;
-    private final KeyguardEnvironment mKeyguardEnvironment;
+    protected final KeyguardEnvironment mKeyguardEnvironment;
     private NotificationListenerService.RankingMap mLatestRankingMap;
     private final LeakDetector mLeakDetector;
     private final NotificationEntryManagerLogger mLogger;
@@ -290,9 +290,8 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void addActiveNotification(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: protected */
+    public void addActiveNotification(NotificationEntry notificationEntry) {
         Assert.isMainThread();
         this.mActiveNotifications.put(notificationEntry.getKey(), notificationEntry);
         this.mGroupManager.onEntryAdded(notificationEntry);
@@ -553,7 +552,8 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
         }
     }
 
-    private void removeVisibleNotification(String str) {
+    /* access modifiers changed from: protected */
+    public void removeVisibleNotification(String str) {
         Assert.isMainThread();
         NotificationEntry remove = this.mActiveNotifications.remove(str);
         if (remove != null) {
@@ -578,7 +578,8 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
         updateRankingAndSort(this.mRankingManager.getRankingMap(), str);
     }
 
-    private void updateRankingAndSort(NotificationListenerService.RankingMap rankingMap, String str) {
+    /* access modifiers changed from: protected */
+    public void updateRankingAndSort(NotificationListenerService.RankingMap rankingMap, String str) {
         this.mSortedAndFiltered.clear();
         this.mSortedAndFiltered.addAll(this.mRankingManager.updateRanking(rankingMap, this.mActiveNotifications.values(), str));
     }

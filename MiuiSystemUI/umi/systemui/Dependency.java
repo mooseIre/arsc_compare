@@ -100,6 +100,8 @@ import com.android.systemui.statusbar.notification.policy.NotificationSensitiveC
 import com.android.systemui.statusbar.notification.policy.UsbNotificationController;
 import com.android.systemui.statusbar.notification.row.NotificationBlockingHelperManager;
 import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
+import com.android.systemui.statusbar.notification.unimportant.FoldNotifController;
+import com.android.systemui.statusbar.notification.unimportant.UnimportantSdk;
 import com.android.systemui.statusbar.phone.AutoHideController;
 import com.android.systemui.statusbar.phone.DozeParameters;
 import com.android.systemui.statusbar.phone.KeyguardDismissUtil;
@@ -234,6 +236,7 @@ public class Dependency {
     Lazy<ExtensionController> mExtensionController;
     Lazy<FiveGControllerImpl> mFiveGControllerImpl;
     Lazy<FlashlightController> mFlashlightController;
+    Lazy<FoldNotifController> mFoldNotifController;
     Lazy<ForceBlackObserver> mForceBlackObserver;
     Lazy<ForegroundServiceController> mForegroundServiceController;
     Lazy<ForegroundServiceNotificationListener> mForegroundServiceNotificationListener;
@@ -351,6 +354,7 @@ public class Dependency {
     Lazy<TunablePadding.TunablePaddingService> mTunablePaddingService;
     Lazy<TunerService> mTunerService;
     Lazy<UiOffloadThread> mUiOffloadThread;
+    Lazy<UnimportantSdk> mUnimportantSdk;
     Lazy<WallpaperCommandSender> mUpdateWallpaperCommand;
     Lazy<UsbNotificationController> mUsbNotificationController;
     Lazy<UserInfoController> mUserInfoController;
@@ -2326,6 +2330,28 @@ public class Dependency {
         Lazy<MiuiActivityUtil> lazy177 = this.mMiuiActivityUtil;
         Objects.requireNonNull(lazy177);
         arrayMap177.put(MiuiActivityUtil.class, new LazyDependencyCreator() {
+            /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
+
+            @Override // com.android.systemui.Dependency.LazyDependencyCreator
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        ArrayMap<Object, LazyDependencyCreator> arrayMap178 = this.mProviders;
+        Lazy<UnimportantSdk> lazy178 = this.mUnimportantSdk;
+        Objects.requireNonNull(lazy178);
+        arrayMap178.put(UnimportantSdk.class, new LazyDependencyCreator() {
+            /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
+
+            @Override // com.android.systemui.Dependency.LazyDependencyCreator
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        ArrayMap<Object, LazyDependencyCreator> arrayMap179 = this.mProviders;
+        Lazy<FoldNotifController> lazy179 = this.mFoldNotifController;
+        Objects.requireNonNull(lazy179);
+        arrayMap179.put(FoldNotifController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator

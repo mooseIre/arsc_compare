@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
+import kotlin.collections.CollectionsKt;
 import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -75,7 +76,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
                 this.mediaEntries.remove(str2);
             }
             this.mediaEntries.put(str, mediaData);
-            for (MediaDataManager.Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
+            for (MediaDataManager.Listener listener : CollectionsKt.toSet(this.listeners)) {
                 listener.onMediaDataLoaded(str, str2, mediaData);
             }
         }
@@ -85,7 +86,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
     public void onMediaDataRemoved(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "key");
         if (this.mediaEntries.remove(str) != null) {
-            for (MediaDataManager.Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
+            for (MediaDataManager.Listener listener : CollectionsKt.toSet(this.listeners)) {
                 listener.onMediaDataRemoved(str);
             }
         }
@@ -93,7 +94,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
 
     @VisibleForTesting
     public final void handleUserSwitched$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(int i) {
-        Set<MediaDataManager.Listener> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
+        Set<MediaDataManager.Listener> set = CollectionsKt.toSet(this.listeners);
         Set<String> keySet = this.mediaEntries.keySet();
         Intrinsics.checkExpressionValueIsNotNull(keySet, "mediaEntries.keys");
         List<String> list = CollectionsKt___CollectionsKt.toMutableList((Collection) keySet);
@@ -121,7 +122,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
     public final void onSwipeToDismiss() {
         Set<String> keySet = this.mediaEntries.keySet();
         Intrinsics.checkExpressionValueIsNotNull(keySet, "mediaEntries.keys");
-        for (String str : CollectionsKt___CollectionsKt.toSet(keySet)) {
+        for (String str : CollectionsKt.toSet(keySet)) {
             MediaDataManager mediaDataManager2 = this.mediaDataManager;
             Intrinsics.checkExpressionValueIsNotNull(str, "it");
             mediaDataManager2.setTimedOut$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(str, true);

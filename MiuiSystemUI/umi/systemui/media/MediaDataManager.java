@@ -44,8 +44,8 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import kotlin.Unit;
 import kotlin.collections.ArraysKt___ArraysKt;
+import kotlin.collections.CollectionsKt;
 import kotlin.collections.CollectionsKt__CollectionsJVMKt;
-import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref$ObjectRef;
@@ -183,7 +183,7 @@ public final class MediaDataManager implements Dumpable, MediaDataManagerInterfa
     /* access modifiers changed from: private */
     public final void removeAllForPackage(String str) {
         Assert.isMainThread();
-        Set<Listener> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
+        Set<Listener> set = CollectionsKt.toSet(this.listeners);
         LinkedHashMap<String, MediaData> linkedHashMap = this.mediaEntries;
         LinkedHashMap linkedHashMap2 = new LinkedHashMap();
         for (Map.Entry<String, MediaData> entry : linkedHashMap.entrySet()) {
@@ -455,7 +455,7 @@ public final class MediaDataManager implements Dumpable, MediaDataManagerInterfa
         Assert.isMainThread();
         if (this.mediaEntries.containsKey(str)) {
             this.mediaEntries.put(str, mediaData);
-            for (Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
+            for (Listener listener : CollectionsKt.toSet(this.listeners)) {
                 listener.onMediaDataLoaded(str, str2, mediaData);
             }
         }
@@ -479,7 +479,7 @@ public final class MediaDataManager implements Dumpable, MediaDataManagerInterfa
                     if (this.mediaEntries.put(str2, copy$default) == null) {
                         z = true;
                     }
-                    Set<Listener> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
+                    Set<Listener> set = CollectionsKt.toSet(this.listeners);
                     if (z) {
                         for (Listener listener : set) {
                             listener.onMediaDataLoaded(str2, str, copy$default);
@@ -499,7 +499,7 @@ public final class MediaDataManager implements Dumpable, MediaDataManagerInterfa
             }
         }
         if (remove != null) {
-            for (Listener listener4 : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
+            for (Listener listener4 : CollectionsKt.toSet(this.listeners)) {
                 listener4.onMediaDataRemoved(str);
             }
         }
@@ -509,7 +509,7 @@ public final class MediaDataManager implements Dumpable, MediaDataManagerInterfa
         if (this.useMediaResumption != z) {
             this.useMediaResumption = z;
             if (!z) {
-                Set<Listener> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
+                Set<Listener> set = CollectionsKt.toSet(this.listeners);
                 LinkedHashMap<String, MediaData> linkedHashMap = this.mediaEntries;
                 LinkedHashMap linkedHashMap2 = new LinkedHashMap();
                 for (Map.Entry<String, MediaData> entry : linkedHashMap.entrySet()) {

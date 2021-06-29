@@ -7,6 +7,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController;
 import com.android.systemui.statusbar.phone.NotificationPanelViewController;
@@ -55,7 +56,7 @@ public final class NCSwitchController {
 
     public final boolean onNCSwitchIntercept(@NotNull MotionEvent motionEvent, boolean z) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "ev");
-        if (this.mControlPanelController.isUseControlCenter() && this.mControlPanelController.isExpandable() && this.mStatusBarStateController.getState() == 0) {
+        if (this.mControlPanelController.isUseControlCenter() && this.mControlPanelController.isExpandable() && this.mStatusBarStateController.getState() == 0 && !skip()) {
             int actionMasked = motionEvent.getActionMasked();
             if (actionMasked == 0) {
                 this.mInitialTouchX = motionEvent.getRawX();
@@ -155,6 +156,10 @@ public final class NCSwitchController {
 
     private final boolean isLeftSlide(MotionEvent motionEvent) {
         return this.mInitialTouchX - motionEvent.getRawX() > Math.abs(this.mInitialTouchY - motionEvent.getRawY());
+    }
+
+    private final boolean skip() {
+        return FoldManager.Companion.isShowingUnimportant();
     }
 
     public final void switchBlur(boolean z) {

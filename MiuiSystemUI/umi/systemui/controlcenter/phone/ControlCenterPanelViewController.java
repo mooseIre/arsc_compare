@@ -27,6 +27,7 @@ import com.android.systemui.controlcenter.phone.widget.ControlCenterFooterPanel;
 import com.android.systemui.controlcenter.phone.widget.ControlCenterTilesContainer;
 import com.android.systemui.controlcenter.phone.widget.QCToggleSliderView;
 import com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView;
+import com.android.systemui.controlcenter.phone.widget.QSControlFooter;
 import com.android.systemui.controlcenter.policy.NCSwitchController;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
@@ -211,6 +212,9 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
             }
             this.panelView.getFooter().getDivider().setAlpha(this.transRatio);
             this.panelView.getPluginViewContainer().setAlpha(1.0f - this.transRatio);
+            if (this.panelView.getFooter().getSettingsFooter().isShow()) {
+                this.panelView.getFooter().getSettingsFooter().setAlpha(1.0f - this.transRatio);
+            }
             if (shouldHideIndicatorWhenExpand()) {
                 float f2 = RangesKt___RangesKt.coerceIn(1.0f - this.transRatio, 0.0f, 1.0f);
                 ImageView indicator = this.panelView.getFooter().getIndicator();
@@ -220,7 +224,15 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 indicator.setAlpha(f2 * f2);
             }
             boolean z2 = this.transRatio >= 1.0f;
+            int i = 8;
             this.panelView.getPluginViewContainer().setVisibility(z2 ? 8 : 0);
+            if (this.panelView.getFooter().getSettingsFooter().isShow()) {
+                QSControlFooter settingsFooter = this.panelView.getFooter().getSettingsFooter();
+                if (!z2) {
+                    i = 0;
+                }
+                settingsFooter.setVisibility(i);
+            }
             this.panelView.getContentContainer().setSpringBackEnable(!z2);
             this.panelView.getContentContainer().suppressLayout(false);
         }

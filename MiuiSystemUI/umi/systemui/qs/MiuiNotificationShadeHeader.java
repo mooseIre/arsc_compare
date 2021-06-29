@@ -11,10 +11,12 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
+import com.android.systemui.statusbar.notification.unimportant.FoldListener;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.policy.RegionController;
 import com.miui.systemui.util.CommonUtil;
 
-public class MiuiNotificationShadeHeader extends RelativeLayout implements ControlPanelController.UseControlPanelChangeListener, RegionController.Callback, View.OnLayoutChangeListener {
+public class MiuiNotificationShadeHeader extends RelativeLayout implements ControlPanelController.UseControlPanelChangeListener, RegionController.Callback, View.OnLayoutChangeListener, FoldListener {
     private boolean mExpanded;
     private MiuiHeaderView mHeaderView;
     private Configuration mLastConfiguration;
@@ -54,6 +56,7 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         super.onAttachedToWindow();
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback((ControlPanelController.UseControlPanelChangeListener) this);
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
+        FoldManager.Companion.addListener(this);
     }
 
     /* access modifiers changed from: protected */
@@ -61,6 +64,17 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         super.onDetachedFromWindow();
         ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).removeCallback((ControlPanelController.UseControlPanelChangeListener) this);
+        FoldManager.Companion.removeListener(this);
+    }
+
+    public int getNormalHeight() {
+        MiuiHeaderView miuiHeaderView = this.mHeaderView;
+        return miuiHeaderView == null ? getHeight() : (int) miuiHeaderView.getNormalHeight();
+    }
+
+    public int getUnimportantHeight() {
+        MiuiHeaderView miuiHeaderView = this.mHeaderView;
+        return miuiHeaderView == null ? getHeight() : (int) miuiHeaderView.getUnimportantHeight();
     }
 
     public void setExpanded(boolean z) {
@@ -74,35 +88,35 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         this.mQsContainerImpl = miuiQSContainer;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateEverything$0 */
+    public /* synthetic */ void lambda$updateEverything$0$MiuiNotificationShadeHeader() {
+        setClickable(false);
+    }
+
     public void updateEverything() {
         post(new Runnable() {
-            /* class com.android.systemui.qs.MiuiNotificationShadeHeader.AnonymousClass1 */
+            /* class com.android.systemui.qs.$$Lambda$MiuiNotificationShadeHeader$rVXRgv1G66m6D_R1f3iaRyrAas */
 
-            public void run() {
-                MiuiNotificationShadeHeader.this.setClickable(false);
+            public final void run() {
+                MiuiNotificationShadeHeader.this.lambda$updateEverything$0$MiuiNotificationShadeHeader();
             }
         });
     }
 
     private void updateHeaderView() {
+        FoldManager.Companion.removeListener(this.mHeaderView);
         removeAllViews();
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (!this.mUseControlPanel || this.mOrientation != 1) {
-            MiuiHeaderView miuiHeaderView = (MiuiHeaderView) LayoutInflater.from(((RelativeLayout) this).mContext).inflate(C0017R$layout.miui_ns_qs_header_view, (ViewGroup) this, false);
-            this.mHeaderView = miuiHeaderView;
-            if (this.mOrientation != 1) {
-                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105490);
-            } else if (((MiuiQSHeaderView) miuiHeaderView).showCarrier()) {
-                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height_with_carrier);
-            } else {
-                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height);
-            }
+            this.mHeaderView = (MiuiHeaderView) LayoutInflater.from(((RelativeLayout) this).mContext).inflate(C0017R$layout.miui_ns_qs_header_view, (ViewGroup) this, false);
         } else {
             this.mHeaderView = (MiuiHeaderView) LayoutInflater.from(((RelativeLayout) this).mContext).inflate(C0017R$layout.miui_ns_notification_header_view, (ViewGroup) this, false);
-            layoutParams.height = -2;
         }
+        resetHeight();
         setLayoutParams(layoutParams);
         addView(this.mHeaderView);
+        FoldManager.Companion.addListener(this.mHeaderView);
         themeChanged();
         regionChanged();
     }
@@ -139,5 +153,34 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         if (miuiQSContainer != null && i4 - i2 != i8 - i6) {
             miuiQSContainer.updateResources();
         }
+    }
+
+    @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
+    public void showUnimportantNotifications() {
+        resetHeight();
+    }
+
+    @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
+    public void resetAll(boolean z) {
+        resetHeight();
+    }
+
+    private void resetHeight() {
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        if (!this.mUseControlPanel || this.mOrientation != 1) {
+            if (this.mOrientation != 1) {
+                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105490);
+            } else if (((MiuiQSHeaderView) this.mHeaderView).showCarrier()) {
+                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height_with_carrier);
+            } else {
+                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height);
+            }
+            if (FoldManager.Companion.isShowingUnimportant()) {
+                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.unimportant_miui_header_height);
+            }
+        } else {
+            layoutParams.height = -2;
+        }
+        setLayoutParams(layoutParams);
     }
 }

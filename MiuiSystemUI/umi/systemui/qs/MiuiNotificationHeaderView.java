@@ -9,12 +9,14 @@ import android.widget.ImageView;
 import com.android.keyguard.CarrierText;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.phone.MiuiLightDarkIconManager;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.MiuiClock;
@@ -53,7 +55,14 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        int i = this.mLastOrientation;
+        int i2 = configuration.orientation;
+        if (i != i2) {
+            this.mLastOrientation = i2;
+        }
         updateTimeColor();
+        setNormalHeight(0.0f);
+        updateHeight();
     }
 
     /* access modifiers changed from: protected */
@@ -71,6 +80,33 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
         networkSpeedView.setVisibilityByStatusBar(true);
         this.mIconManager = new MiuiLightDarkIconManager((ViewGroup) findViewById(C0015R$id.statusIcons), this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
         updateTimeColor();
+        updateHeight();
+    }
+
+    private void updateHeight() {
+        post(new Runnable() {
+            /* class com.android.systemui.qs.$$Lambda$MiuiNotificationHeaderView$kMf2cGXZXYM32b4C6ygGCgqSW4I */
+
+            public final void run() {
+                MiuiNotificationHeaderView.this.lambda$updateHeight$0$MiuiNotificationHeaderView();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateHeight$0 */
+    public /* synthetic */ void lambda$updateHeight$0$MiuiNotificationHeaderView() {
+        if (getNormalHeight() == 0.0f) {
+            setNormalHeight((float) getHeight());
+            setUnimportantHeight((float) getContext().getResources().getDimensionPixelSize(C0012R$dimen.unimportant_miui_header_height));
+        }
+        FoldManager.Companion.setNormalTarget(getNormalHeight());
+        FoldManager.Companion.setUnimportantTarget(getUnimportantHeight());
+        FoldManager.Companion.setHeaderDif(getNormalHeight() - getUnimportantHeight());
+        initFolme();
+        if (FoldManager.Companion.isShowingUnimportant()) {
+            showUnimportantWithoutAnim();
+        }
     }
 
     private void updateTimeColor() {

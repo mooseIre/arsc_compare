@@ -21,6 +21,8 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.ForegroundServiceSectionController;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
+import com.android.systemui.statusbar.notification.stack.StackStateAnimator;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.android.systemui.util.Assert;
@@ -147,10 +149,10 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
         Iterator it = arrayList2.iterator();
         while (it.hasNext()) {
             ExpandableNotificationRow expandableNotificationRow2 = (ExpandableNotificationRow) it.next();
-            if (this.mEntryManager.getPendingOrActiveNotif(expandableNotificationRow2.getEntry().getKey()) != null) {
+            if (this.mEntryManager.getPendingOrActiveNotif(expandableNotificationRow2.getEntry().getKey()) != null && !FoldManager.Companion.isUnimportantTransfering()) {
                 this.mListContainer.setChildTransferInProgress(true);
             }
-            if (expandableNotificationRow2.isSummaryWithChildren()) {
+            if (!FoldManager.Companion.isUnimportantTransfering() && expandableNotificationRow2.isSummaryWithChildren()) {
                 expandableNotificationRow2.removeAllChildren();
             }
             this.mListContainer.removeContainerView(expandableNotificationRow2);
@@ -159,12 +161,18 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
         removeNotificationChildren();
         int i3 = 0;
         while (i3 < arrayList.size()) {
-            View view = (View) arrayList.get(i3);
-            if (view.getParent() == null) {
-                this.mVisualStabilityManager.notifyViewAddition(view);
-                this.mListContainer.addContainerView(view);
-            } else if (!this.mListContainer.containsView(view)) {
-                arrayList.remove(view);
+            ExpandableNotificationRow expandableNotificationRow3 = (ExpandableNotificationRow) arrayList.get(i3);
+            if (FoldManager.Companion.isUnimportantTransfering()) {
+                StackStateAnimator.removeTransientView(expandableNotificationRow3);
+                expandableNotificationRow3.setHeadsUp(false);
+                expandableNotificationRow3.setTransitionAlpha(1.0f);
+                expandableNotificationRow3.setTranslationX(0.0f);
+            }
+            if (expandableNotificationRow3.getParent() == null) {
+                this.mVisualStabilityManager.notifyViewAddition(expandableNotificationRow3);
+                this.mListContainer.addContainerView(expandableNotificationRow3);
+            } else if (!this.mListContainer.containsView(expandableNotificationRow3)) {
+                arrayList.remove(expandableNotificationRow3);
                 i3--;
             }
             i3++;
@@ -174,10 +182,10 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
         for (int i5 = 0; i5 < this.mListContainer.getContainerChildCount(); i5++) {
             View containerChildAt2 = this.mListContainer.getContainerChildAt(i5);
             if ((containerChildAt2 instanceof ExpandableNotificationRow) && !((ExpandableNotificationRow) containerChildAt2).isBlockingHelperShowing()) {
-                ExpandableNotificationRow expandableNotificationRow3 = (ExpandableNotificationRow) arrayList.get(i4);
-                if (containerChildAt2 != expandableNotificationRow3) {
-                    if (this.mVisualStabilityManager.canReorderNotification(expandableNotificationRow3)) {
-                        this.mListContainer.changeViewPosition(expandableNotificationRow3, i5);
+                ExpandableNotificationRow expandableNotificationRow4 = (ExpandableNotificationRow) arrayList.get(i4);
+                if (containerChildAt2 != expandableNotificationRow4) {
+                    if (this.mVisualStabilityManager.canReorderNotification(expandableNotificationRow4)) {
+                        this.mListContainer.changeViewPosition(expandableNotificationRow4, i5);
                     } else {
                         this.mVisualStabilityManager.addReorderingAllowedCallback(this.mEntryManager, false);
                     }
@@ -200,6 +208,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
             View containerChildAt = this.mListContainer.getContainerChildAt(i);
             if (containerChildAt instanceof ExpandableNotificationRow) {
                 ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) containerChildAt;
+                expandableNotificationRow.setClipBottomAmount(0);
                 List<ExpandableNotificationRow> attachedChildren = expandableNotificationRow.getAttachedChildren();
                 List<NotificationEntry> list = this.mTmpChildOrderMap.get(expandableNotificationRow.getEntry());
                 if (list != null) {
@@ -284,7 +293,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
             expandableNotificationRow2.setOnKeyguard(z);
             if (!z) {
                 expandableNotificationRow2.setSystemExpanded(this.mAlwaysExpandNonGroupedNotification || (i2 == 0 && !isChildInGroupWithSummary && !expandableNotificationRow2.isLowPriority()));
-                if (expandableNotificationRow != null) {
+                if (!FoldManager.Companion.isShowingUnimportant() && expandableNotificationRow != null) {
                     expandableNotificationRow2.setSystemExpanded(expandableNotificationRow.getEntry().getBucket() != expandableNotificationRow2.getEntry().getBucket() && !this.mGroupManager.isChildInGroupWithSummary(expandableNotificationRow2.getEntry().getSbn()));
                 }
                 expandableNotificationRow = expandableNotificationRow2;

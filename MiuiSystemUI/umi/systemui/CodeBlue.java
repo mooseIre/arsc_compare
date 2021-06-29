@@ -7,14 +7,11 @@ import com.miui.systemui.BuildConfig;
 import com.miui.systemui.DebugConfig;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: CodeBlue.kt */
 public final class CodeBlue {
     public static final Companion Companion = new Companion(null);
     private static boolean triggered;
 
-    /* compiled from: CodeBlue.kt */
     public static final class Companion {
 
         public final /* synthetic */ class WhenMappings {
@@ -45,7 +42,7 @@ public final class CodeBlue {
             CodeBlue.triggered = z;
         }
 
-        public final void triggerCodeBlue(@NotNull Context context) {
+        public final void triggerCodeBlue(Context context) {
             Intrinsics.checkParameterIsNotNull(context, "context");
             if (BuildConfig.IS_DEVELOPMENT_VERSION && !getTriggered()) {
                 setTriggered(true);
@@ -70,14 +67,13 @@ public final class CodeBlue {
             }
         }
 
-        public final void startMonitoring(@NotNull Context context) {
+        public final void startMonitoring(Context context) {
             Intrinsics.checkParameterIsNotNull(context, "context");
             if (BuildConfig.IS_DEVELOPMENT_VERSION) {
                 Thread.setUncaughtExceptionPreHandler(new CodeBlue$Companion$startMonitoring$1(context, Thread.getUncaughtExceptionPreHandler()));
             }
         }
 
-        /* access modifiers changed from: private */
         /* access modifiers changed from: public */
         private final void updateCrashHandler(Context context, Throwable th) {
             ExceptionHandler exceptionHandler = getExceptionHandler(th);
@@ -107,7 +103,6 @@ public final class CodeBlue {
             return latestNotificationPkgName;
         }
 
-        /* access modifiers changed from: private */
         /* access modifiers changed from: public */
         private final void updateCrashInfo(Context context) {
             if (DebugConfig.DEBUG_CODE_BLUE) {

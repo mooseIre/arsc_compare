@@ -110,6 +110,7 @@ import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
 import com.android.systemui.statusbar.notification.row.NotificationSnooze;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
 import com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.notification.zen.ZenModeViewController;
 import com.android.systemui.statusbar.phone.HeadsUpAppearanceController;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
@@ -2682,6 +2683,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     private void onViewRemovedInternal(ExpandableView expandableView, ViewGroup viewGroup) {
         if (!this.mChangePositionInProgress) {
+            if (FoldManager.Companion.isUnimportantTransfering()) {
+                FoldManager.Companion.setUnimportantAnimating(true);
+            }
             expandableView.setOnHeightChangedListener(null);
             updateScrollStateForRemovedChild(expandableView);
             if (!generateRemoveAnimation(expandableView)) {
@@ -3037,6 +3041,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         } else {
             applyCurrentState();
         }
+        FoldManager.Companion.setUnimportantAnimating(false);
         this.mGoToFullShadeDelay = 0;
     }
 
@@ -4730,7 +4735,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return canChildBeDismissed(expandableNotificationRow) && matchesSelection(expandableNotificationRow, i);
     }
 
-    private void performDismissAllAnimations(ArrayList<View> arrayList, boolean z, Runnable runnable) {
+    public void performDismissAllAnimations(ArrayList<View> arrayList, boolean z, Runnable runnable) {
         $$Lambda$NotificationStackScrollLayout$Pgdm3okNKpoXRCoL8Bp8PnrMtvc r0 = new Runnable(z, runnable) {
             /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$Pgdm3okNKpoXRCoL8Bp8PnrMtvc */
             public final /* synthetic */ boolean f$1;
@@ -5159,7 +5164,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
     }
 
-    /* access modifiers changed from: private */
     public static boolean canChildBeDismissed(View view) {
         if (view instanceof ExpandableNotificationRow) {
             ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
@@ -5197,7 +5201,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return this.mEntryManager.hasActiveNotifications();
     }
 
-    /* access modifiers changed from: private */
     /* renamed from: onDismissAllAnimationsEnd */
     public void lambda$clearNotifications$9(List<ExpandableNotificationRow> list, int i) {
         if (!this.mFeatureFlags.isNewNotifPipelineRenderingEnabled()) {

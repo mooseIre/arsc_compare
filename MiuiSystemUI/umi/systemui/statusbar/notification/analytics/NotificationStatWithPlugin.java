@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-/* access modifiers changed from: package-private */
 public class NotificationStatWithPlugin implements PluginListener<MiuiNotificationStatPlugin>, MiuiNotificationStatPlugin {
     protected List<MiuiNotificationStatPlugin> mPlugins = new ArrayList();
 

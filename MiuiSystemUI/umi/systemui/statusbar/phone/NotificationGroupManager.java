@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.phone;
 
 import android.service.notification.StatusBarNotification;
+import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
 import codeinjection.CodeInjection;
@@ -19,6 +20,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -91,7 +93,7 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
         }
     }
 
-    private void setGroupExpanded(NotificationGroup notificationGroup, boolean z) {
+    public void setGroupExpanded(NotificationGroup notificationGroup, boolean z) {
         notificationGroup.expanded = z;
         if (notificationGroup.summary != null) {
             Iterator<OnGroupChangeListener> it = this.mListeners.iterator();
@@ -194,7 +196,7 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
         updateIsolation(notificationEntry);
     }
 
-    private void updateSuppression(NotificationGroup notificationGroup) {
+    public void updateSuppression(NotificationGroup notificationGroup) {
         if (notificationGroup != null) {
             boolean z = false;
             int i = 0;
@@ -225,6 +227,16 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
                 }
             }
         }
+    }
+
+    public List<NotificationGroup> getAllGroups(String str) {
+        ArrayList arrayList = new ArrayList();
+        for (NotificationGroup notificationGroup : this.mGroupMap.values()) {
+            if (notificationGroup.summary != null && (TextUtils.equals("UNIMPORTANT", str) || TextUtils.equals(notificationGroup.summary.getSbn().getTargetPackageName(), str))) {
+                arrayList.add(notificationGroup);
+            }
+        }
+        return arrayList;
     }
 
     private boolean hasIsolatedChildren(NotificationGroup notificationGroup) {

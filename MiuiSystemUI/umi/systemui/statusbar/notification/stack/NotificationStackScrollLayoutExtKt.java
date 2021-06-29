@@ -3,7 +3,10 @@ package com.android.systemui.statusbar.notification.stack;
 import android.view.View;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
+import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
 import com.android.systemui.util.ConvenienceExtensionsKt;
+import java.util.ArrayList;
+import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
@@ -96,5 +99,27 @@ public final class NotificationStackScrollLayoutExtKt {
     public static final void setStaticTopPadding(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, int i) {
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$setStaticTopPadding");
         notificationStackScrollLayout.getAmbientState().setStaticTopPadding(i);
+    }
+
+    public static final void clearUnimportantNotifications(@NotNull NotificationStackScrollLayout notificationStackScrollLayout) {
+        Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$clearUnimportantNotifications");
+        ArrayList<View> arrayList = new ArrayList<>();
+        ArrayList arrayList2 = new ArrayList();
+        int childCount = notificationStackScrollLayout.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = notificationStackScrollLayout.getChildAt(i);
+            if (childAt != null) {
+                ExpandableView expandableView = (ExpandableView) childAt;
+                if (expandableView.getVisibility() != 8 && !(expandableView instanceof StackScrollerDecorView) && expandableView != notificationStackScrollLayout.getNotificationShelf() && NotificationStackScrollLayout.canChildBeDismissed(expandableView)) {
+                    arrayList.add(expandableView);
+                    if (expandableView instanceof ExpandableNotificationRow) {
+                        arrayList2.add(expandableView);
+                    }
+                }
+            } else {
+                throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.statusbar.notification.row.ExpandableView");
+            }
+        }
+        notificationStackScrollLayout.performDismissAllAnimations(arrayList, false, new NotificationStackScrollLayoutExtKt$clearUnimportantNotifications$1(notificationStackScrollLayout, arrayList2));
     }
 }

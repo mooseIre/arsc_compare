@@ -8,6 +8,7 @@ import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.os.AsyncTask;
 import android.util.ArraySet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
@@ -165,8 +166,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
                         }
 
                         public final void onClick(View view) {
-                            Notification.Action action;
-                            ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class)).getRemoteViewsOnClickHandler().onClickHandler(this.f$1, action.actionIntent, RemoteViews.RemoteResponse.fromPendingIntent(this.f$0.actionIntent));
+                            MiuiMediaControlPanel.lambda$setMediaActions$1(this.f$0, this.f$1, view);
                         }
                     });
                 } else if (action2 != null) {
@@ -179,7 +179,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
                         }
 
                         public final void onClick(View view) {
-                            this.f$0.run();
+                            MiuiMediaControlPanel.lambda$setMediaActions$2(this.f$0, view);
                         }
                     });
                 } else {
@@ -205,6 +205,16 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         if (z) {
             this.mMediaViewController.refreshState();
         }
+    }
+
+    static /* synthetic */ void lambda$setMediaActions$1(Notification.Action action, ImageButton imageButton, View view) {
+        Log.d("MiuiMediaControlPanel", "media_btn_click: pendingIntent=" + action.actionIntent);
+        ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class)).getRemoteViewsOnClickHandler().onClickHandler(imageButton, action.actionIntent, RemoteViews.RemoteResponse.fromPendingIntent(action.actionIntent));
+    }
+
+    static /* synthetic */ void lambda$setMediaActions$2(Runnable runnable, View view) {
+        Log.d("MiuiMediaControlPanel", "media_btn_click: runnable");
+        runnable.run();
     }
 
     private void enableActionButton(ImageButton imageButton, View.OnClickListener onClickListener) {

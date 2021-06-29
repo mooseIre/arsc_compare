@@ -12,6 +12,7 @@ import com.android.systemui.shared.plugins.PluginManager;
 import com.android.systemui.statusbar.NotificationMediaManager;
 import com.android.systemui.statusbar.NotificationRemoteInputManager;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
+import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.modal.ModalController;
 import com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifier;
@@ -128,22 +129,25 @@ public class ExpandableNotificationRowController {
             return true;
         }
         StatusBar statusBar = (StatusBar) Dependency.get(StatusBar.class);
-        boolean z = false;
         if (statusBar.isKeyguardShowing()) {
             statusBar.dismissKeyguardThenExecute($$Lambda$ExpandableNotificationRowController$A0pf9AyYTRXRQWgbW6MeQ5pFtak.INSTANCE, null, false);
             return true;
         }
         ExpandedNotification sbn = this.mView.getEntry().getSbn();
         if (sbn.getLongPressIntent() != null) {
-            z = true;
-        }
-        if (z) {
             Log.d("NotificationLongPress", sbn.getKey() + " LongPressJump");
             PendingIntent longPressIntent = sbn.getLongPressIntent();
             PendingIntent pendingIntent = sbn.getNotification().contentIntent;
             sbn.getNotification().contentIntent = longPressIntent;
+            boolean booleanValue = NotificationUtil.isFoldEntrance(sbn).booleanValue();
+            if (booleanValue) {
+                NotificationUtil.setClickType(sbn, 1);
+            }
             this.mView.performClick();
             sbn.getNotification().contentIntent = pendingIntent;
+            if (booleanValue) {
+                NotificationUtil.setClickType(sbn, 0);
+            }
             return true;
         }
         ((ModalController) Dependency.get(ModalController.class)).tryAnimEnterModal(this.mView);

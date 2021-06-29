@@ -62,6 +62,7 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
             return;
         }
         setTransitionAlpha(0.0f);
+        getMFolme().cancel();
         getMFolme().fromTo(STATE_HIDDEN, STATE_VISIBLE, this.mAnimConfig);
     }
 
@@ -70,6 +71,7 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
         if (z) {
             return super.performRemoveAnimation(j, j2, f, z, f2, runnable, animatorListenerAdapter);
         }
+        getMFolme().cancel();
         IStateStyle mFolme = getMFolme();
         AnimState animState = STATE_HIDDEN;
         AnimConfig[] animConfigArr = new AnimConfig[1];
@@ -87,6 +89,7 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
     public void cancelAppearDrawing() {
         super.cancelAppearDrawing();
         getMFolme().cancel();
+        getMFolme().setTo(STATE_VISIBLE);
         setTransitionAlpha(1.0f);
     }
 }

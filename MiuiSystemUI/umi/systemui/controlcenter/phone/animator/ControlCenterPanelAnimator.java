@@ -115,8 +115,7 @@ public abstract class ControlCenterPanelAnimator {
         setPanelHideAnim(animState2);
         AnimConfig animConfig2 = new AnimConfig();
         animConfig2.setEase(EaseManager.getStyle(0, 300.0f, 0.99f, 0.6666f));
-        animConfig2.addListeners(new ControlCenterPanelAnimator$onFinishInflate$1(this));
-        Intrinsics.checkExpressionValueIsNotNull(animConfig2, "AnimConfig().setEase(Eas…     }\n                })");
+        Intrinsics.checkExpressionValueIsNotNull(animConfig2, "AnimConfig().setEase(Eas…G, 300f, 0.99f, 0.6666f))");
         setAnimConfig(animConfig2);
     }
 

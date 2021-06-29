@@ -498,9 +498,6 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             while (it.hasNext()) {
                 it.next().tile.setListening(this, z);
             }
-            if (this.mListening) {
-                refreshAllTiles();
-            }
         }
     }
 

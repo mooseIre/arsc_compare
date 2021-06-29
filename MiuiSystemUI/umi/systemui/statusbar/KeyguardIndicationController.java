@@ -23,6 +23,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import androidx.constraintlayout.widget.R$styleable;
 import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.app.IBatteryStats;
@@ -802,7 +803,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void handleFaceUnlockBouncerMessage(String str) {
-        String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint() : getTitle();
+        String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint(R$styleable.Constraint_layout_goneMarginLeft) : getTitle();
         if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
             if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceTemporarilyLockout()) {
                 str = this.mResources.getString(C0021R$string.face_unlock_fail);
@@ -830,7 +831,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             str = this.mResources.getString(C0021R$string.fingerprint_try_again_msg);
         } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR) {
             str2 = getTitle();
-            str = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
+            str = getTitleWithFingerprint(R$styleable.Constraint_layout_goneMarginRight);
         } else {
             if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED) {
                 if (this.mFingerprintAuthUserId != KeyguardUpdateMonitor.getCurrentUser()) {
@@ -849,7 +850,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                 }
             } else if (this.mLastFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR && miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET) {
                 str2 = getTitle();
-                str = this.mResources.getString(C0021R$string.fingerprint_again_identified_msg);
+                str = getTitleWithFingerprint(R$styleable.Constraint_layout_goneMarginStart);
             }
             str = str2;
         }
@@ -875,11 +876,11 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void handleShowBouncerMessage() {
-        String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint() : getTitle();
+        String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint(R$styleable.Constraint_layout_goneMarginLeft) : getTitle();
         boolean isFingerprintTemporarilyLockout = this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout();
         String str = CodeInjection.MD5;
         if (isFingerprintTemporarilyLockout) {
-            str = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
+            str = getTitleWithFingerprint(R$styleable.Constraint_layout_goneMarginRight);
         } else if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
             if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceTemporarilyLockout()) {
                 str = this.mResources.getString(C0021R$string.face_unlock_fail);
@@ -892,7 +893,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                     str = this.mResources.getString(C0021R$string.fingerprint_try_again_msg);
                 } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR) {
                     titleWithFingerprint = getTitle();
-                    str = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
+                    str = getTitleWithFingerprint(R$styleable.Constraint_layout_goneMarginRight);
                 } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED) {
                     if (this.mFingerprintAuthUserId != KeyguardUpdateMonitor.getCurrentUser()) {
                         if (MiuiKeyguardUtils.isGreenKidActive(this.mContext)) {
@@ -908,7 +909,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                     }
                 } else if (this.mLastFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR && miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET) {
                     titleWithFingerprint = getTitle();
-                    str = this.mResources.getString(C0021R$string.fingerprint_again_identified_msg);
+                    str = getTitleWithFingerprint(R$styleable.Constraint_layout_goneMarginStart);
                 }
             }
         }
@@ -982,15 +983,35 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         }
     }
 
-    private String getTitleWithFingerprint() {
-        int i = AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()];
-        if (i == 1) {
-            return this.mContext.getResources().getString(C0021R$string.face_unlock_pattern_and_fingerprint);
+    private String getTitleWithFingerprint(int i) {
+        String str;
+        String str2;
+        String str3;
+        int i2 = AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()];
+        if (i2 == 1) {
+            str3 = this.mContext.getResources().getString(C0021R$string.face_unlock_pattern_and_fingerprint);
+            str2 = this.mContext.getResources().getString(C0021R$string.fingerprint_not_identified_msg_pattern);
+            str = this.mContext.getResources().getString(C0021R$string.fingerprint_again_identified_msg_pattern);
+        } else if (i2 == 2) {
+            str3 = this.mContext.getResources().getString(C0021R$string.face_unlock_pin_and_fingerprint);
+            str2 = this.mContext.getResources().getString(C0021R$string.fingerprint_not_identified_msg_pin);
+            str = this.mContext.getResources().getString(C0021R$string.fingerprint_again_identified_msg_pin);
+        } else if (i2 != 3) {
+            str3 = this.mContext.getResources().getString(C0021R$string.face_unlock_passwork_and_fingerprint);
+            str2 = this.mContext.getResources().getString(C0021R$string.fingerprint_not_identified_msg);
+            str = this.mContext.getResources().getString(C0021R$string.fingerprint_again_identified_msg);
+        } else {
+            str3 = this.mContext.getResources().getString(C0021R$string.face_unlock_password_and_fingerprint);
+            str2 = this.mContext.getResources().getString(C0021R$string.fingerprint_not_identified_msg_password);
+            str = this.mContext.getResources().getString(C0021R$string.fingerprint_again_identified_msg_password);
         }
-        if (i != 2) {
-            return i != 3 ? this.mContext.getResources().getString(C0021R$string.face_unlock_passwork_and_fingerprint) : this.mContext.getResources().getString(C0021R$string.face_unlock_password_and_fingerprint);
+        if (i == 101) {
+            return str3;
         }
-        return this.mContext.getResources().getString(C0021R$string.face_unlock_pin_and_fingerprint);
+        if (i == 102) {
+            return str2;
+        }
+        return i == 103 ? str : CodeInjection.MD5;
     }
 
     private String getTitle() {

@@ -1,13 +1,16 @@
 package com.android.systemui.statusbar.notification.stack;
 
+import android.content.Context;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import kotlin.collections.CollectionsKt__IterablesKt;
@@ -19,17 +22,22 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: MiuiNotificationAnimationExtensions.kt */
 public final class MiuiStackStateAnimator extends StackStateAnimator {
     private final ArrayList<ExpandableView> mChangePositionViews = new ArrayList<>();
+    private int mGapHeight;
     private boolean mHasPanelAppearDisappearEvent;
     private boolean mHasSpringAnimationEvent;
     private int mHeadsUpAppearHeightBottom;
     private final ArrayList<ExpandableView> mHeadsUpAppearView = new ArrayList<>();
     private final ArrayList<ExpandableView> mHeadsUpDisappearView = new ArrayList<>();
     private final ArrayList<ExpandableView> mHeadsUpPositionView = new ArrayList<>();
+    private int tagId = FoldManager.Companion.getTagId();
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiStackStateAnimator(@NotNull NotificationStackScrollLayout notificationStackScrollLayout) {
         super(notificationStackScrollLayout);
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "hostLayout");
+        Context context = notificationStackScrollLayout.getContext();
+        Intrinsics.checkExpressionValueIsNotNull(context, "hostLayout.context");
+        this.mGapHeight = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_divider_height);
     }
 
     @Override // com.android.systemui.statusbar.notification.stack.StackStateAnimator
@@ -133,6 +141,83 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
         }
     }
 
+    private final void processAddRemoveAnimationEvents(ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList) {
+        float f;
+        if (FoldManager.Companion.isUnimportantAnimating()) {
+            ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList2 = new ArrayList();
+            for (T t : arrayList) {
+                if (isUnimportAnimationType(t)) {
+                    arrayList2.add(t);
+                }
+            }
+            arrayList.removeAll(arrayList2);
+            ArrayList arrayList3 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(arrayList2, 10));
+            for (NotificationStackScrollLayout.AnimationEvent animationEvent : arrayList2) {
+                arrayList3.add(mapUnimportantAnimationEvent(animationEvent));
+            }
+            arrayList.addAll(arrayList3);
+            ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList4 = new ArrayList();
+            for (T t2 : arrayList) {
+                T t3 = t2;
+                if (isUnimportantTransferedType(t3) && t3.mChangingView != null) {
+                    arrayList4.add(t2);
+                }
+            }
+            float f2 = 0.0f;
+            int i = 0;
+            int i2 = 0;
+            float f3 = 0.0f;
+            for (NotificationStackScrollLayout.AnimationEvent animationEvent2 : arrayList4) {
+                ExpandableView expandableView = animationEvent2.mChangingView;
+                if (isUnimportantAppearType(animationEvent2)) {
+                    if (i2 < 12) {
+                        i2++;
+                        Intrinsics.checkExpressionValueIsNotNull(expandableView, "view");
+                        f2 += (float) (expandableView.getActualHeight() + this.mGapHeight);
+                    }
+                } else if (i < 12) {
+                    i++;
+                    Intrinsics.checkExpressionValueIsNotNull(expandableView, "view");
+                    f3 += (float) (expandableView.getActualHeight() + this.mGapHeight);
+                }
+            }
+            float min = Math.min(f2 + ((float) this.mGapHeight), 300.0f);
+            float min2 = Math.min(f3 + ((float) this.mGapHeight), 300.0f);
+            ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList5 = new ArrayList();
+            for (T t4 : arrayList) {
+                T t5 = t4;
+                if (isUnimportantTransferedType(t5) && t5.mChangingView != null) {
+                    arrayList5.add(t4);
+                }
+            }
+            for (NotificationStackScrollLayout.AnimationEvent animationEvent3 : arrayList5) {
+                ExpandableView expandableView2 = animationEvent3.mChangingView;
+                expandableView2.clearAnimation();
+                if (isUnimportantUpEvent(animationEvent3)) {
+                    f = isUnimportantAppearType(animationEvent3) ? FoldManager.Companion.getHeaderDif() + min2 : min2;
+                } else if (isUnimportantAppearType(animationEvent3)) {
+                    f = -min;
+                } else {
+                    f = (-min) - FoldManager.Companion.getHeaderDif();
+                }
+                expandableView2.setTag(this.tagId, Float.valueOf(f));
+            }
+        }
+        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList6 = new ArrayList();
+        for (T t6 : arrayList) {
+            T t7 = t6;
+            if (t7.animationType == 6 && t7.mChangingView != null) {
+                arrayList6.add(t6);
+            }
+        }
+        ArrayList<ExpandableView> arrayList7 = this.mChangePositionViews;
+        for (NotificationStackScrollLayout.AnimationEvent animationEvent4 : arrayList6) {
+            ExpandableView expandableView3 = animationEvent4.mChangingView;
+            Intrinsics.checkExpressionValueIsNotNull(expandableView3, "it.mChangingView");
+            arrayList7.add(expandableView3);
+        }
+    }
+
     private final void clearAnimationState() {
         this.mHasPanelAppearDisappearEvent = false;
         this.mHasSpringAnimationEvent = false;
@@ -210,19 +295,47 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
         return animationEvent2;
     }
 
-    private final void processAddRemoveAnimationEvents(ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList) {
-        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList2 = new ArrayList();
-        for (T t : arrayList) {
-            T t2 = t;
-            if (t2.animationType == 6 && t2.mChangingView != null) {
-                arrayList2.add(t);
+    private final boolean isUnimportAnimationType(NotificationStackScrollLayout.AnimationEvent animationEvent) {
+        int i = animationEvent.animationType;
+        return i == 0 || 1 == i;
+    }
+
+    private final boolean isUnimportantTransferedType(NotificationStackScrollLayout.AnimationEvent animationEvent) {
+        return isUnimportantAppearType(animationEvent) || isUnimportantDisappearType(animationEvent);
+    }
+
+    private final boolean isUnimportantAppearType(NotificationStackScrollLayout.AnimationEvent animationEvent) {
+        int i = animationEvent.animationType;
+        return 23 == i || 25 == i;
+    }
+
+    private final boolean isUnimportantDisappearType(NotificationStackScrollLayout.AnimationEvent animationEvent) {
+        int i = animationEvent.animationType;
+        return 24 == i || 26 == i;
+    }
+
+    private final boolean isUnimportantUpEvent(NotificationStackScrollLayout.AnimationEvent animationEvent) {
+        int i = animationEvent.animationType;
+        return 23 == i || 24 == i;
+    }
+
+    private final NotificationStackScrollLayout.AnimationEvent mapUnimportantAnimationEvent(NotificationStackScrollLayout.AnimationEvent animationEvent) {
+        NotificationStackScrollLayout.AnimationEvent animationEvent2;
+        int i = animationEvent.animationType;
+        if (i != 0) {
+            if (i != 1) {
+                return animationEvent;
             }
+            if (FoldManager.Companion.isShowingUnimportant()) {
+                animationEvent2 = new UnimportantUpRemoveEvent(animationEvent);
+            } else {
+                animationEvent2 = new UnimportantDownRemoveEvent(animationEvent);
+            }
+        } else if (FoldManager.Companion.isShowingUnimportant()) {
+            animationEvent2 = new UnimportantUpAddEvent(animationEvent);
+        } else {
+            animationEvent2 = new UnimportantDownAddEvent(animationEvent);
         }
-        ArrayList<ExpandableView> arrayList3 = this.mChangePositionViews;
-        for (NotificationStackScrollLayout.AnimationEvent animationEvent : arrayList2) {
-            ExpandableView expandableView = animationEvent.mChangingView;
-            Intrinsics.checkExpressionValueIsNotNull(expandableView, "it.mChangingView");
-            arrayList3.add(expandableView);
-        }
+        return animationEvent2;
     }
 }

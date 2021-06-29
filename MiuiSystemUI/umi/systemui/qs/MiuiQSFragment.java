@@ -29,6 +29,7 @@ import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.customize.MiuiQSCustomizer;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.notification.stack.PanelAppearDisappearEvent;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.RemoteInputQuickSettingsDisabler;
@@ -1240,6 +1241,7 @@ public final class MiuiQSFragment extends LifecycleFragment implements QS, Comma
         MiuiQSContainer miuiQSContainer = this.qsContainer;
         if (miuiQSContainer != null) {
             miuiQSContainer.setShowQSPanel(!z);
+            FoldManager.Companion.setUsingControlPanel(z);
             if (z) {
                 removeQSContent();
             } else {

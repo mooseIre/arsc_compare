@@ -72,7 +72,8 @@ public final class CodeBlueService {
     }
 
     /* access modifiers changed from: private */
-    public final void trackCodeBlueEvent() {
+    /* access modifiers changed from: public */
+    private final void trackCodeBlueEvent() {
         EventTracker eventTracker2 = this.eventTracker;
         int crashCount = CodeBlueConfig.Companion.getCrashCount(this.context);
         String exceptionHandler = CodeBlueConfig.Companion.getExceptionHandler(this.context);

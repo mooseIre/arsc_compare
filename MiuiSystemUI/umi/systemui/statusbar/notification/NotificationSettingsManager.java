@@ -44,7 +44,7 @@ public class NotificationSettingsManager implements Dumpable {
     private List<String> mPreInstallPackages;
     private List<String> mPrioritizedPackages;
     private List<String> mSubstitutePackages;
-    private ArrayMap<String, Boolean> mSystemApps = new ArrayMap<>();
+    private final ArrayMap<String, Boolean> mSystemApps = new ArrayMap<>();
 
     public NotificationSettingsManager(Context context, CloudDataManager cloudDataManager) {
         this.mContext = context;
@@ -216,15 +216,10 @@ public class NotificationSettingsManager implements Dumpable {
         if (notif.contains(floatKey)) {
             return notif.getInt(floatKey, 1) == 2;
         }
-        boolean isXmsfChannel = NotificationUtil.isXmsfChannel(str, str2);
         if (USE_WHITE_LISTS) {
-            if (!isXmsfChannel) {
-                return this.mAllowFloatPackages.contains(str);
-            }
-        } else if (this.mBlockFloatPackages.contains(str)) {
-            return false;
+            return this.mAllowFloatPackages.contains(str);
         }
-        return true;
+        return !this.mBlockFloatPackages.contains(str);
     }
 
     private boolean canFloat(Context context, String str) {
@@ -255,15 +250,13 @@ public class NotificationSettingsManager implements Dumpable {
         if (notif.contains(keyguardKey)) {
             return notif.getBoolean(keyguardKey, false);
         }
-        boolean isXmsfChannel = NotificationUtil.isXmsfChannel(str, str2);
         if (USE_WHITE_LISTS) {
-            if (!isXmsfChannel) {
-                return this.mAllowKeyguardPackages.contains(str);
-            }
-        } else if (this.mBlockKeyguardPackages.contains(str)) {
-            return false;
+            return this.mAllowKeyguardPackages.contains(str);
         }
-        return true;
+        if (!this.mBlockKeyguardPackages.contains(str)) {
+            return true;
+        }
+        return false;
     }
 
     private boolean canShowOnKeyguard(Context context, String str) {
@@ -286,34 +279,70 @@ public class NotificationSettingsManager implements Dumpable {
         Prefs.getNotif(context).edit().putBoolean(keyguardKey, z).apply();
     }
 
-    public boolean canSound(Context context, String str) {
-        String soundKey = FilterHelperCompat.getSoundKey(str);
+    private boolean canSound(Context context, String str) {
+        return Prefs.getNotif(context).getBoolean(FilterHelperCompat.getSoundKey(str, null), true);
+    }
+
+    public boolean canSound(Context context, String str, String str2) {
+        boolean canSound = canSound(context, str);
+        if (!canSound || TextUtils.isEmpty(str2)) {
+            return canSound;
+        }
+        String soundKey = FilterHelperCompat.getSoundKey(str, str2);
         SharedPreferences notif = Prefs.getNotif(context);
         return notif.contains(soundKey) ? notif.getBoolean(soundKey, false) : this.mAllowFloatPackages.contains(str);
     }
 
-    public void setSound(Context context, String str, boolean z) {
-        Prefs.getNotif(context).edit().putBoolean(FilterHelperCompat.getSoundKey(str), z).apply();
+    public void setSound(Context context, String str, String str2, boolean z) {
+        String soundKey = FilterHelperCompat.getSoundKey(str, str2);
+        if (DEBUG) {
+            Log.d("NotifiSettingsManager", String.format("setSound key=%s enabled=%s", soundKey, Boolean.valueOf(z)));
+        }
+        Prefs.getNotif(context).edit().putBoolean(soundKey, z).apply();
     }
 
-    public boolean canVibrate(Context context, String str) {
-        String vibrateKey = FilterHelperCompat.getVibrateKey(str);
+    private boolean canVibrate(Context context, String str) {
+        return Prefs.getNotif(context).getBoolean(FilterHelperCompat.getVibrateKey(str, null), true);
+    }
+
+    public boolean canVibrate(Context context, String str, String str2) {
+        boolean canVibrate = canVibrate(context, str);
+        if (!canVibrate || TextUtils.isEmpty(str2)) {
+            return canVibrate;
+        }
+        String vibrateKey = FilterHelperCompat.getVibrateKey(str, str2);
         SharedPreferences notif = Prefs.getNotif(context);
         return notif.contains(vibrateKey) ? notif.getBoolean(vibrateKey, false) : this.mAllowFloatPackages.contains(str);
     }
 
-    public void setVibrate(Context context, String str, boolean z) {
-        Prefs.getNotif(context).edit().putBoolean(FilterHelperCompat.getVibrateKey(str), z).apply();
+    public void setVibrate(Context context, String str, String str2, boolean z) {
+        String vibrateKey = FilterHelperCompat.getVibrateKey(str, str2);
+        if (DEBUG) {
+            Log.d("NotifiSettingsManager", String.format("setVibrate key=%s enabled=%s", vibrateKey, Boolean.valueOf(z)));
+        }
+        Prefs.getNotif(context).edit().putBoolean(vibrateKey, z).apply();
     }
 
-    public boolean canLights(Context context, String str) {
-        String lightsKey = FilterHelperCompat.getLightsKey(str);
+    private boolean canLights(Context context, String str) {
+        return Prefs.getNotif(context).getBoolean(FilterHelperCompat.getLightsKey(str, null), true);
+    }
+
+    public boolean canLights(Context context, String str, String str2) {
+        boolean canLights = canLights(context, str);
+        if (!canLights || TextUtils.isEmpty(str2)) {
+            return canLights;
+        }
+        String lightsKey = FilterHelperCompat.getLightsKey(str, str2);
         SharedPreferences notif = Prefs.getNotif(context);
         return notif.contains(lightsKey) ? notif.getBoolean(lightsKey, false) : this.mAllowFloatPackages.contains(str);
     }
 
-    public void setLights(Context context, String str, boolean z) {
-        Prefs.getNotif(context).edit().putBoolean(FilterHelperCompat.getLightsKey(str), z).apply();
+    public void setLights(Context context, String str, String str2, boolean z) {
+        String lightsKey = FilterHelperCompat.getLightsKey(str, str2);
+        if (DEBUG) {
+            Log.d("NotifiSettingsManager", String.format("setLights key=%s enabled=%s", lightsKey, Boolean.valueOf(z)));
+        }
+        Prefs.getNotif(context).edit().putBoolean(lightsKey, z).apply();
     }
 
     public boolean isSystemApp(String str) {
@@ -373,16 +402,25 @@ public class NotificationSettingsManager implements Dumpable {
             return String.format("%s_%s_%s", str, str2, MiPlayPlugin.REF_KEYGUARD);
         }
 
-        public static String getSoundKey(String str) {
-            return String.format("%s_%s", str, "sound");
+        public static String getSoundKey(String str, String str2) {
+            if (TextUtils.isEmpty(str2) || "miscellaneous".equals(str2)) {
+                return String.format("%s_%s", str, "sound");
+            }
+            return String.format("%s_%s_%s", str, str2, "sound");
         }
 
-        public static String getVibrateKey(String str) {
-            return String.format("%s_%s", str, "vibrate");
+        public static String getVibrateKey(String str, String str2) {
+            if (TextUtils.isEmpty(str2) || "miscellaneous".equals(str2)) {
+                return String.format("%s_%s", str, "vibrate");
+            }
+            return String.format("%s_%s_%s", str, str2, "vibrate");
         }
 
-        public static String getLightsKey(String str) {
-            return String.format("%s_%s", str, "led");
+        public static String getLightsKey(String str, String str2) {
+            if (TextUtils.isEmpty(str2) || "miscellaneous".equals(str2)) {
+                return String.format("%s_%s", str, "led");
+            }
+            return String.format("%s_%s_%s", str, str2, "led");
         }
     }
 }

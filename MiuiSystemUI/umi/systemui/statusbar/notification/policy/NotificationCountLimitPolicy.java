@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.notification.policy;
 import android.util.Log;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.miui.systemui.DebugConfig;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class NotificationCountLimitPolicy {
-    private NotificationEntryManager mEntryManager;
+    private final NotificationEntryManager mEntryManager;
 
     public NotificationCountLimitPolicy(NotificationEntryManager notificationEntryManager) {
         this.mEntryManager = notificationEntryManager;
@@ -72,6 +73,16 @@ public class NotificationCountLimitPolicy {
             }
             if (isGroupSummary2) {
                 return notificationEntry;
+            }
+        }
+        boolean isFold = NotificationUtil.isFold(notificationEntry.getSbn());
+        boolean isFold2 = NotificationUtil.isFold(notificationEntry2.getSbn());
+        if (isFold != isFold2) {
+            if (isFold) {
+                return notificationEntry;
+            }
+            if (isFold2) {
+                return notificationEntry2;
             }
         }
         return notificationEntry.getSbn().getNotification().when < notificationEntry2.getSbn().getNotification().when ? notificationEntry : notificationEntry2;

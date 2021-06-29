@@ -13,8 +13,15 @@ public class AnimationProperties {
     public long duration;
     private Consumer<Property> mAnimationEndAction;
     private ArrayMap<Property, Interpolator> mInterpolatorMap;
+    public long removeDelay;
+    public long removeDuration;
+    public float translationDirection;
 
     public boolean wasAdded(View view) {
+        return false;
+    }
+
+    public boolean wasRemoved(View view) {
         return false;
     }
 

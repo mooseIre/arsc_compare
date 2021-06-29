@@ -326,13 +326,6 @@ public class ControlPanelController implements CallbackController<UseControlPane
         }
     }
 
-    public void refreshAllTiles() {
-        ControlCenter controlCenter = this.mControlCenter;
-        if (controlCenter != null) {
-            controlCenter.refreshAllTiles();
-        }
-    }
-
     public void showDeviceMonitoringDialog() {
         ControlCenter controlCenter = this.mControlCenter;
         if (controlCenter != null) {

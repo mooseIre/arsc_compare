@@ -952,13 +952,13 @@ public abstract class PanelViewController {
         public TouchHandler() {
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:59:0x0147, code lost:
-            if (r3.mHintAnimationRunning == false) goto L_0x0151;
+        /* JADX WARNING: Code restructure failed: missing block: B:61:0x0155, code lost:
+            if (r3.mHintAnimationRunning == false) goto L_0x015f;
          */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public boolean onInterceptTouchEvent(android.view.MotionEvent r9) {
             /*
-            // Method dump skipped, instructions count: 425
+            // Method dump skipped, instructions count: 439
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PanelViewController.TouchHandler.onInterceptTouchEvent(android.view.MotionEvent):boolean");
         }

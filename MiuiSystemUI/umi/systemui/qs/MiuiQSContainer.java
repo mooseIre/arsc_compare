@@ -23,6 +23,7 @@ import com.android.systemui.Interpolators;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.qs.customize.MiuiQSCustomizer;
 import com.android.systemui.settings.ToggleSliderView;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.policy.BrightnessMirrorController;
 import com.android.systemui.statusbar.policy.MiuiBrightnessController;
 import com.android.systemui.tuner.TunerService;
@@ -35,6 +36,12 @@ import kotlin.TypeCastException;
 import kotlin.collections.CollectionsKt__CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt__MathJVMKt;
+import miuix.animation.Folme;
+import miuix.animation.IFolme;
+import miuix.animation.IStateStyle;
+import miuix.animation.base.AnimConfig;
+import miuix.animation.controller.AnimState;
+import miuix.animation.property.ViewProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,10 +71,13 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     @NotNull
     private MiuiNotificationShadeHeader header;
     private int heightOverride;
+    private AnimState hiddenState;
     private IndicatorDrawable indicatorDrawable;
     private float indicatorProgress;
     private final InjectionInflationController inflationController;
     private LayoutInflater layoutInflater;
+    private IFolme mContainerFolme;
+    private AnimConfig mItemConfig;
     private View qsBackground;
     private QSContent qsContent;
     @Nullable
@@ -84,6 +94,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     @Nullable
     private QuickQSPanel quickQSPanel;
     private boolean showQsPanel;
+    private AnimState showState;
     private int sideMargins;
     private final Point sizePoint;
     private View statusBarBackground;
@@ -194,6 +205,24 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
         return this.contentAdded;
     }
 
+    private final void initFolme() {
+        this.mContainerFolme = Folme.useAt(this.qsContent);
+        AnimState animState = new AnimState("qs_content_hidden");
+        animState.add(ViewProperty.SCALE_X, 0.9f, new long[0]);
+        animState.add(ViewProperty.SCALE_Y, 0.9f, new long[0]);
+        animState.add(ViewProperty.ALPHA, 0.0f, new long[0]);
+        this.hiddenState = animState;
+        AnimState animState2 = new AnimState("qs_content_show");
+        animState2.add(ViewProperty.SCALE_X, 1.0f, new long[0]);
+        animState2.add(ViewProperty.SCALE_Y, 1.0f, new long[0]);
+        animState2.add(ViewProperty.ALPHA, 1.0f, new long[0]);
+        this.showState = animState2;
+        AnimConfig animConfig = new AnimConfig();
+        animConfig.setEase(-2, 0.95f, 0.6f);
+        this.mItemConfig = animConfig;
+        new AnimConfig().setEase(-2, 0.95f, 0.6f);
+    }
+
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
@@ -272,6 +301,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
                         setBrightnessMirror(this.brightnessMirrorController);
                         updateQSDataUsage(this.qsDataUsageEnabled);
                         this.contentAdded = true;
+                        initFolme();
                         return;
                     }
                     Intrinsics.throwNpe();
@@ -545,8 +575,15 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
         }
         ViewGroup viewGroup = this.footerBundle;
         if (viewGroup != null) {
-            viewGroup.setTranslationY(((float) calculateContainerHeight) - ((float) viewGroup.getHeight()));
-            updateBackgroundBottom((calculateContainerHeight - viewGroup.getHeight()) + getDataUsageHeight(), z);
+            MiuiNotificationShadeHeader miuiNotificationShadeHeader = this.header;
+            if (miuiNotificationShadeHeader != null) {
+                int max = Math.max(miuiNotificationShadeHeader.getHeight(), calculateContainerHeight - viewGroup.getHeight());
+                viewGroup.setTranslationY((float) max);
+                updateBackgroundBottom(max + getDataUsageHeight(), z);
+                return;
+            }
+            Intrinsics.throwUninitializedPropertyAccessException("header");
+            throw null;
         }
     }
 
@@ -873,6 +910,65 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
         if (qSContent != null) {
             qSContent.setVisibility(z ? 0 : 8);
         }
+    }
+
+    public int setShowQSPanelAnimate(boolean z) {
+        int i;
+        IStateStyle state;
+        IStateStyle state2;
+        MiuiNotificationShadeHeader miuiNotificationShadeHeader = this.header;
+        if (miuiNotificationShadeHeader != null) {
+            int i2 = 0;
+            if (miuiNotificationShadeHeader.getNormalHeight() != 0) {
+                MiuiNotificationShadeHeader miuiNotificationShadeHeader2 = this.header;
+                if (miuiNotificationShadeHeader2 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("header");
+                    throw null;
+                } else if (miuiNotificationShadeHeader2.getUnimportantHeight() != 0) {
+                    if (z) {
+                        IFolme iFolme = this.mContainerFolme;
+                        if (!(iFolme == null || (state2 = iFolme.state()) == null)) {
+                            state2.to(this.showState, this.mItemConfig);
+                        }
+                        QuickQSPanel quickQSPanel2 = this.quickQSPanel;
+                        int height = quickQSPanel2 != null ? quickQSPanel2.getHeight() : 0;
+                        ViewGroup viewGroup = this.footerBundle;
+                        if (viewGroup != null) {
+                            i2 = viewGroup.getHeight();
+                        }
+                        int i3 = height + i2;
+                        MiuiNotificationShadeHeader miuiNotificationShadeHeader3 = this.header;
+                        if (miuiNotificationShadeHeader3 != null) {
+                            i = i3 + miuiNotificationShadeHeader3.getNormalHeight();
+                        } else {
+                            Intrinsics.throwUninitializedPropertyAccessException("header");
+                            throw null;
+                        }
+                    } else {
+                        IFolme iFolme2 = this.mContainerFolme;
+                        if (!(iFolme2 == null || (state = iFolme2.state()) == null)) {
+                            state.to(this.hiddenState, this.mItemConfig);
+                        }
+                        MiuiNotificationShadeHeader miuiNotificationShadeHeader4 = this.header;
+                        if (miuiNotificationShadeHeader4 != null) {
+                            i = miuiNotificationShadeHeader4.getUnimportantHeight();
+                        } else {
+                            Intrinsics.throwUninitializedPropertyAccessException("header");
+                            throw null;
+                        }
+                    }
+                    if (z) {
+                        FoldManager.Companion.setNormalTarget((float) i);
+                    } else {
+                        FoldManager.Companion.setUnimportantTarget((float) i);
+                    }
+                    return i;
+                }
+            }
+            return 0;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("header");
+        throw null;
     }
 
     public final void setDetailAnimatedViews(@NotNull View... viewArr) {

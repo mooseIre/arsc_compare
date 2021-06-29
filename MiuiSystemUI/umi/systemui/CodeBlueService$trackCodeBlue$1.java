@@ -1,8 +1,7 @@
 package com.android.systemui;
 
-/* access modifiers changed from: package-private */
 /* compiled from: CodeBlueService.kt */
-public final class CodeBlueService$trackCodeBlue$1 implements Runnable {
+final class CodeBlueService$trackCodeBlue$1 implements Runnable {
     final /* synthetic */ CodeBlueService this$0;
 
     CodeBlueService$trackCodeBlue$1(CodeBlueService codeBlueService) {

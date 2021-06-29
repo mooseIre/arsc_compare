@@ -23,9 +23,7 @@ import com.miui.systemui.events.MiniWindowEvents;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt___RangesKt;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: AppMiniWindowRowTouchHelper.kt */
 public final class AppMiniWindowRowTouchHelper {
     private boolean mAbandonMiniWindowTracks;
     private final Context mContext;
@@ -52,7 +50,7 @@ public final class AppMiniWindowRowTouchHelper {
     private final VelocityTracker mVelocityTracker = VelocityTracker.obtain();
     private final MiniWindowEventSource source;
 
-    public AppMiniWindowRowTouchHelper(@NotNull AppMiniWindowRowTouchCallback appMiniWindowRowTouchCallback, @NotNull NotificationEntryManager notificationEntryManager, @NotNull EventTracker eventTracker, @NotNull MiniWindowEventSource miniWindowEventSource) {
+    public AppMiniWindowRowTouchHelper(AppMiniWindowRowTouchCallback appMiniWindowRowTouchCallback, NotificationEntryManager notificationEntryManager, EventTracker eventTracker, MiniWindowEventSource miniWindowEventSource) {
         Intrinsics.checkParameterIsNotNull(appMiniWindowRowTouchCallback, "touchCallback");
         Intrinsics.checkParameterIsNotNull(notificationEntryManager, "notificationEntryManager");
         Intrinsics.checkParameterIsNotNull(eventTracker, "eventTracker");
@@ -69,7 +67,11 @@ public final class AppMiniWindowRowTouchHelper {
         this.mHandler = new AppMiniWindowRowTouchHelper$mHandler$1(this, Looper.getMainLooper());
     }
 
-    public final boolean onInterceptTouchEvent(@NotNull MotionEvent motionEvent) {
+    public static final /* synthetic */ AppMiniWindowRowTouchHelper$mHandler$1 access$getMHandler$p(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper) {
+        return appMiniWindowRowTouchHelper.mHandler;
+    }
+
+    public final boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if ((!this.mTouchingMiniWindowRow || this.mAbandonMiniWindowTracks) && motionEvent.getActionMasked() == 2) {
             return false;
@@ -116,7 +118,7 @@ public final class AppMiniWindowRowTouchHelper {
         return this.mTrackingMiniWindowRow;
     }
 
-    public final boolean onTouchEvent(@NotNull MotionEvent motionEvent) {
+    public final boolean onTouchEvent(MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         this.mVelocityTracker.addMovement(motionEvent);
         if ((!this.mTrackingMiniWindowRow || this.mAbandonMiniWindowTracks) && motionEvent.getActionMasked() == 2) {
@@ -206,8 +208,6 @@ public final class AppMiniWindowRowTouchHelper {
         this.mTouchCallback.onMiniWindowTrackingEnd();
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void onMiniWindowReset() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
@@ -222,8 +222,6 @@ public final class AppMiniWindowRowTouchHelper {
         this.mTouchCallback.onMiniWindowReset();
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void onExpandedParamsUpdated() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
@@ -350,7 +348,6 @@ public final class AppMiniWindowRowTouchHelper {
         return 0;
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private final void handleHideNotificationPanel() {
         ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);

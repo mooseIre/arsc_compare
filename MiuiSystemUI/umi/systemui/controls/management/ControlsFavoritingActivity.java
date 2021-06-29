@@ -65,10 +65,6 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
-    public static final /* synthetic */ ControlsControllerImpl access$getController$p(ControlsFavoritingActivity controlsFavoritingActivity) {
-        return controlsFavoritingActivity.controller;
-    }
-
     public static final /* synthetic */ View access$getDoneButton$p(ControlsFavoritingActivity controlsFavoritingActivity) {
         View view = controlsFavoritingActivity.doneButton;
         if (view != null) {

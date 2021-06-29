@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.UserHandle;
+import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.Slog;
 import android.view.View;
@@ -22,13 +23,33 @@ import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.media.MediaDataManagerKt;
 import com.miui.systemui.BuildConfig;
+import com.miui.systemui.DebugConfig;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.graphics.AppIconsManager;
 import miui.os.SystemProperties;
 import miui.securityspace.CrossUserUtils;
 import miui.securityspace.XSpaceUserHandle;
+import miui.util.Log;
 
 public class NotificationUtil {
+    public static String getTargetPkg(StatusBarNotification statusBarNotification) {
+        if (statusBarNotification == null) {
+            return CodeInjection.MD5;
+        }
+        String packageName = statusBarNotification.getPackageName();
+        if ("com.miui.hybrid".equals(packageName) && statusBarNotification.getNotification().extras != null) {
+            String string = statusBarNotification.getNotification().extras.getString("miui.category");
+            if (!TextUtils.isEmpty(string)) {
+                return string;
+            }
+        }
+        if (!((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canSendSubstituteNotification(packageName)) {
+            return packageName;
+        }
+        CharSequence targetPkg = MiuiNotificationCompat.getTargetPkg(statusBarNotification.getNotification());
+        return !TextUtils.isEmpty(targetPkg) ? targetPkg.toString() : packageName;
+    }
+
     public static boolean isInCallNotification(ExpandedNotification expandedNotification) {
         return InCallUtils.isInCallNotification(expandedNotification);
     }
@@ -67,6 +88,26 @@ public class NotificationUtil {
 
     public static String getCategory(ExpandedNotification expandedNotification) {
         return expandedNotification.getNotification().extras.getString("miui.category");
+    }
+
+    public static boolean isFold(StatusBarNotification statusBarNotification) {
+        return statusBarNotification.getNotification().extras.getBoolean("miui.unimportant", false);
+    }
+
+    public static void setFold(StatusBarNotification statusBarNotification, boolean z) {
+        statusBarNotification.getNotification().extras.putBoolean("miui.unimportant", z);
+    }
+
+    public static Boolean isFoldEntrance(StatusBarNotification statusBarNotification) {
+        return Boolean.valueOf(statusBarNotification.getNotification().extras.getBoolean("miui_unimportant", false));
+    }
+
+    public static int getClickType(StatusBarNotification statusBarNotification) {
+        return statusBarNotification.getNotification().extras.getInt("miui_unimportant_click_type", 0);
+    }
+
+    public static void setClickType(StatusBarNotification statusBarNotification, int i) {
+        statusBarNotification.getNotification().extras.putInt("miui_unimportant_click_type", i);
     }
 
     private static boolean hasLargeIcon(Notification notification) {
@@ -111,8 +152,8 @@ public class NotificationUtil {
         return null;
     }
 
-    public static boolean isSystemNotification(ExpandedNotification expandedNotification) {
-        String packageName = expandedNotification.getPackageName();
+    public static boolean isSystemNotification(StatusBarNotification statusBarNotification) {
+        String packageName = statusBarNotification.getPackageName();
         return "android".equals(packageName) || "com.android.systemui".equals(packageName);
     }
 
@@ -127,8 +168,8 @@ public class NotificationUtil {
         return false;
     }
 
-    public static boolean hasProgressbar(ExpandedNotification expandedNotification) {
-        Bundle bundle = expandedNotification.getNotification().extras;
+    public static boolean hasProgressbar(StatusBarNotification statusBarNotification) {
+        Bundle bundle = statusBarNotification.getNotification().extras;
         int i = bundle.getInt("android.progressMax", 0);
         boolean z = bundle.getBoolean("android.progressIndeterminate");
         if (i != 0 || z) {
@@ -191,8 +232,8 @@ public class NotificationUtil {
     }
 
     @Deprecated
-    public static boolean isMediaNotification(ExpandedNotification expandedNotification) {
-        return MediaDataManagerKt.isMediaNotification(expandedNotification);
+    public static boolean isMediaNotification(StatusBarNotification statusBarNotification) {
+        return MediaDataManagerKt.isMediaNotification(statusBarNotification);
     }
 
     public static boolean isCustomViewNotification(ExpandedNotification expandedNotification) {
@@ -238,6 +279,11 @@ public class NotificationUtil {
     public static boolean isUidSystem(int i) {
         int appId = UserHandle.getAppId(i);
         return appId == 1000 || appId == 1001 || i == 0;
+    }
+
+    public static boolean isUidXmsf(Context context, int i) {
+        Log.d("NotificationUtil", "isUidXmsf uid=" + i + ", xmsfuid=" + getPackageUid(context, "com.xiaomi.xmsf"));
+        return DebugConfig.DEBUG || (i != 0 && i == getPackageUid(context, "com.xiaomi.xmsf"));
     }
 
     public static int getPackageUid(Context context, String str) {

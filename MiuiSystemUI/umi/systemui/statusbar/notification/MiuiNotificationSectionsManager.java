@@ -17,6 +17,7 @@ import com.android.systemui.statusbar.notification.stack.NotificationSectionsMan
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.notification.stack.PeopleHubView;
 import com.android.systemui.statusbar.notification.stack.SectionHeaderView;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.notification.zen.ZenModeView;
 import com.android.systemui.statusbar.notification.zen.ZenModeViewController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
@@ -185,10 +186,11 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
 
     private final void updateSectionHeadersVisibility(ViewGroup viewGroup) {
         if (!(viewGroup == null || viewGroup.getChildCount() == 0)) {
+            boolean isShowingUnimportant = FoldManager.Companion.isShowingUnimportant();
             boolean z = false;
             for (View view : ConvenienceExtensionsKt.getChildren(viewGroup)) {
                 if ((view instanceof SectionHeaderView) || (view instanceof PeopleHubView)) {
-                    view.setVisibility(z ? 0 : 8);
+                    view.setVisibility((!z || isShowingUnimportant) ? 8 : 0);
                     if (z) {
                     }
                 } else if (!z) {

@@ -130,6 +130,24 @@ public class NotificationSettingsHelper {
         return false;
     }
 
+    public static int getFoldImportance(String str) {
+        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
+        if (NotificationUtil.isUserOwner(contextForUser)) {
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).getFoldImportance(contextForUser, str);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString("package", str);
+        try {
+            Bundle call = contextForUser.getContentResolver().call(Uri.parse("content://statusbar.notification"), "getFoldImportance", (String) null, bundle);
+            if (call != null) {
+                return call.getInt("foldImportance", 0);
+            }
+        } catch (Exception e) {
+            Log.e("NotifiSettingsHelper", "getFoldImportance " + str, e);
+        }
+        return 0;
+    }
+
     public static void setFoldImportance(String str, int i) {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         NotificationFilterHelper.setImportance(contextForUser, str, i);
@@ -190,7 +208,7 @@ public class NotificationSettingsHelper {
     public static boolean checkVibrate(String str, String str2) {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (NotificationUtil.isUserOwner(contextForUser)) {
-            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canVibrate(contextForUser, str);
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canVibrate(contextForUser, str, str2);
         }
         Bundle bundle = new Bundle();
         bundle.putString("package", str);
@@ -210,7 +228,7 @@ public class NotificationSettingsHelper {
     public static boolean checkSound(String str, String str2) {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (NotificationUtil.isUserOwner(contextForUser)) {
-            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canSound(contextForUser, str);
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canSound(contextForUser, str, str2);
         }
         Bundle bundle = new Bundle();
         bundle.putString("package", str);
@@ -230,7 +248,7 @@ public class NotificationSettingsHelper {
     public static boolean checkLights(String str, String str2) {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (NotificationUtil.isUserOwner(contextForUser)) {
-            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canLights(contextForUser, str);
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canLights(contextForUser, str, str2);
         }
         Bundle bundle = new Bundle();
         bundle.putString("package", str);

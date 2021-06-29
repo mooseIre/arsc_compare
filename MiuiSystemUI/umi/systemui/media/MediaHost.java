@@ -2,6 +2,8 @@ package com.android.systemui.media;
 
 import android.graphics.Rect;
 import android.util.ArraySet;
+import com.android.systemui.statusbar.notification.unimportant.FoldListener;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.util.animation.DisappearParameters;
 import com.android.systemui.util.animation.MeasurementInput;
 import com.android.systemui.util.animation.UniqueObjectHostView;
@@ -15,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MediaHost.kt */
-public final class MediaHost implements MediaHostState {
+public final class MediaHost implements MediaHostState, FoldListener {
     @NotNull
     private final Rect currentBounds = new Rect();
     @NotNull
@@ -196,6 +198,7 @@ public final class MediaHost implements MediaHostState {
             if (uniqueObjectHostView != null) {
                 uniqueObjectHostView.setMeasurementManager(new MediaHost$init$2(this, i));
                 this.state.setChangedListener(new MediaHost$init$3(this, i));
+                FoldManager.Companion.addListener(this);
                 updateViewVisibility();
                 return;
             }
@@ -215,7 +218,7 @@ public final class MediaHost implements MediaHostState {
             z = this.mediaDataFilter.hasAnyMedia();
         }
         setVisible(z);
-        int i = getVisible() ? 0 : 8;
+        int i = (!getVisible() || FoldManager.Companion.isShowingUnimportant()) ? 8 : 0;
         UniqueObjectHostView uniqueObjectHostView = this.hostView;
         if (uniqueObjectHostView == null) {
             Intrinsics.throwUninitializedPropertyAccessException("hostView");
@@ -233,6 +236,16 @@ public final class MediaHost implements MediaHostState {
             Intrinsics.throwUninitializedPropertyAccessException("hostView");
             throw null;
         }
+    }
+
+    @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
+    public void showUnimportantNotifications() {
+        updateViewVisibility();
+    }
+
+    @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
+    public void resetAll(boolean z) {
+        updateViewVisibility();
     }
 
     /* compiled from: MediaHost.kt */

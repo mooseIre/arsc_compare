@@ -97,6 +97,8 @@ import com.android.systemui.statusbar.notification.policy.NotificationSensitiveC
 import com.android.systemui.statusbar.notification.policy.UsbNotificationController;
 import com.android.systemui.statusbar.notification.row.NotificationBlockingHelperManager;
 import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
+import com.android.systemui.statusbar.notification.unimportant.FoldNotifController;
+import com.android.systemui.statusbar.notification.unimportant.UnimportantSdk;
 import com.android.systemui.statusbar.phone.AutoHideController;
 import com.android.systemui.statusbar.phone.DozeParameters;
 import com.android.systemui.statusbar.phone.KeyguardDismissUtil;
@@ -885,5 +887,13 @@ public final class Dependency_MembersInjector {
 
     public static void injectMMiuiActivityUtil(Dependency dependency, Lazy<MiuiActivityUtil> lazy) {
         dependency.mMiuiActivityUtil = lazy;
+    }
+
+    public static void injectMUnimportantSdk(Dependency dependency, Lazy<UnimportantSdk> lazy) {
+        dependency.mUnimportantSdk = lazy;
+    }
+
+    public static void injectMFoldNotifController(Dependency dependency, Lazy<FoldNotifController> lazy) {
+        dependency.mFoldNotifController = lazy;
     }
 }

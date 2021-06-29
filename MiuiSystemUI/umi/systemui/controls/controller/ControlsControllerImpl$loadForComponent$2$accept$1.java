@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import kotlin.collections.CollectionsKt;
 import kotlin.collections.CollectionsKt__IterablesKt;
 import kotlin.collections.CollectionsKt___CollectionsKt;
 
@@ -31,7 +32,7 @@ public final class ControlsControllerImpl$loadForComponent$2$accept$1 implements
         if (Favorites.INSTANCE.updateControls(this.this$0.$componentName, this.$controls)) {
             this.this$0.this$0.persistenceWrapper.storeFavorites(Favorites.INSTANCE.getAllStructures());
         }
-        Set set = this.this$0.this$0.findRemoved(CollectionsKt___CollectionsKt.toSet(arrayList), this.$controls);
+        Set set = this.this$0.this$0.findRemoved(CollectionsKt.toSet(arrayList), this.$controls);
         List<Control> list = this.$controls;
         ArrayList arrayList2 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(list, 10));
         for (Control control : list) {

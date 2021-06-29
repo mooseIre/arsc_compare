@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayoutExtKt;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.views.DismissView;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import kotlin.jvm.internal.Intrinsics;
@@ -20,8 +22,13 @@ public final class MiuiNotificationPanelViewController$initDismissView$1 impleme
     }
 
     public final void onClick(View view) {
-        MetricsLogger.action(this.this$0.getPanelView().getContext(), 148);
-        this.this$0.getMNotificationStackScroller().clearNotifications(0, true);
+        if (FoldManager.Companion.isShowingUnimportant()) {
+            MetricsLogger.action(this.this$0.getPanelView().getContext(), 147);
+            NotificationStackScrollLayoutExtKt.clearUnimportantNotifications(this.this$0.getMNotificationStackScroller());
+        } else {
+            MetricsLogger.action(this.this$0.getPanelView().getContext(), 148);
+            this.this$0.getMNotificationStackScroller().clearNotifications(0, true);
+        }
         DismissView dismissView = this.this$0.mDismissView;
         if (dismissView != null) {
             dismissView.animatorStart(new AnimatorListenerAdapter() {

@@ -82,6 +82,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
+import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.phone.KeyguardAffordanceHelper;
 import com.android.systemui.statusbar.phone.KeyguardClockPositionAlgorithm;
 import com.android.systemui.statusbar.phone.LockscreenGestureLogger;
@@ -287,7 +288,7 @@ public class NotificationPanelViewController extends PanelViewController {
     private ValueAnimator mQsExpansionAnimator;
     protected boolean mQsExpansionEnabled = true;
     private boolean mQsExpansionFromOverscroll;
-    private float mQsExpansionHeight;
+    public float mQsExpansionHeight;
     private int mQsFalsingThreshold;
     public FrameLayout mQsFrame;
     private boolean mQsFullyExpanded;
@@ -1523,15 +1524,17 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: protected */
     public void setQsExpansion(float f) {
-        float min = Math.min(Math.max(f, (float) this.mQsMinExpansionHeight), (float) this.mQsMaxExpansionHeight);
+        if (!FoldManager.Companion.needToSkipHeightLimit()) {
+            f = Math.min(Math.max(f, (float) this.mQsMinExpansionHeight), (float) this.mQsMaxExpansionHeight);
+        }
         int i = this.mQsMaxExpansionHeight;
-        this.mQsFullyExpanded = min == ((float) i) && i != 0;
-        if (min > ((float) this.mQsMinExpansionHeight) && !this.mQsExpanded && !this.mStackScrollerOverscrolling && !this.mDozing) {
+        this.mQsFullyExpanded = f == ((float) i) && i != 0;
+        if (f > ((float) this.mQsMinExpansionHeight) && !this.mQsExpanded && !this.mStackScrollerOverscrolling && !this.mDozing) {
             setQsExpanded(true);
-        } else if (min <= ((float) this.mQsMinExpansionHeight) && this.mQsExpanded) {
+        } else if (f <= ((float) this.mQsMinExpansionHeight) && this.mQsExpanded) {
             setQsExpanded(false);
         }
-        this.mQsExpansionHeight = min;
+        this.mQsExpansionHeight = f;
         updateQsExpansion();
         requestScrollerTopPaddingUpdate(false);
         updateHeaderKeyguardAlpha();
@@ -2216,7 +2219,11 @@ public class NotificationPanelViewController extends PanelViewController {
     public boolean onMiddleClicked() {
         int i = this.mBarState;
         if (i == 0) {
-            this.mView.post(this.mPostCollapseRunnable);
+            if (FoldManager.Companion.isShowingUnimportant()) {
+                FoldManager.Companion.notifyListeners(5);
+            } else {
+                this.mView.post(this.mPostCollapseRunnable);
+            }
             return false;
         } else if (i != 1) {
             if (i == 2 && !this.mQsExpanded) {
@@ -2964,7 +2971,7 @@ public class NotificationPanelViewController extends PanelViewController {
             if (notificationPanelViewController2.mQsExpanded && notificationPanelViewController2.mQsFullyExpanded) {
                 NotificationPanelViewController notificationPanelViewController3 = NotificationPanelViewController.this;
                 notificationPanelViewController3.mQsExpansionHeight = (float) notificationPanelViewController3.mQsMaxExpansionHeight;
-                NotificationPanelViewController.this.requestScrollerTopPaddingUpdate(false);
+                notificationPanelViewController3.requestScrollerTopPaddingUpdate(false);
                 NotificationPanelViewController.this.requestPanelHeightUpdate();
             }
             if (NotificationPanelViewController.this.mAccessibilityManager.isEnabled()) {
@@ -3126,45 +3133,43 @@ public class NotificationPanelViewController extends PanelViewController {
         @Override // com.android.systemui.statusbar.phone.PanelViewController.OnLayoutChangeListener
         public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
             QS qs;
+            NotificationPanelViewController notificationPanelViewController;
+            int i9;
             DejankUtils.startDetectingBlockingIpcs("NVP#onLayout");
             super.onLayoutChange(view, i, i2, i3, i4, i5, i6, i7, i8);
-            NotificationPanelViewController notificationPanelViewController = NotificationPanelViewController.this;
-            notificationPanelViewController.setIsFullWidth(notificationPanelViewController.mNotificationStackScroller.getWidth() == NotificationPanelViewController.this.mView.getWidth());
+            NotificationPanelViewController notificationPanelViewController2 = NotificationPanelViewController.this;
+            notificationPanelViewController2.setIsFullWidth(notificationPanelViewController2.mNotificationStackScroller.getWidth() == NotificationPanelViewController.this.mView.getWidth());
             NotificationPanelViewController.this.mKeyguardStatusView.setPivotX((float) (NotificationPanelViewController.this.mView.getWidth() / 2));
             NotificationPanelViewController.this.mKeyguardStatusView.setPivotY(NotificationPanelViewController.this.mKeyguardStatusView.getClockTextSize() * 0.34521484f);
-            NotificationPanelViewController notificationPanelViewController2 = NotificationPanelViewController.this;
-            int i9 = notificationPanelViewController2.mQsMaxExpansionHeight;
-            if (notificationPanelViewController2.mQs != null) {
-                float f = (float) notificationPanelViewController2.mQsMinExpansionHeight;
-                NotificationPanelViewController notificationPanelViewController3 = NotificationPanelViewController.this;
-                notificationPanelViewController3.mQsMinExpansionHeight = notificationPanelViewController3.mKeyguardShowing ? 0 : notificationPanelViewController3.mQs.getQsMinExpansionHeight();
-                if (NotificationPanelViewController.this.mQsExpansionHeight == f) {
-                    NotificationPanelViewController notificationPanelViewController4 = NotificationPanelViewController.this;
-                    notificationPanelViewController4.mQsExpansionHeight = (float) notificationPanelViewController4.mQsMinExpansionHeight;
-                }
+            NotificationPanelViewController notificationPanelViewController3 = NotificationPanelViewController.this;
+            int i10 = notificationPanelViewController3.mQsMaxExpansionHeight;
+            if (notificationPanelViewController3.mQs != null) {
+                float f = (float) notificationPanelViewController3.mQsMinExpansionHeight;
+                NotificationPanelViewController notificationPanelViewController4 = NotificationPanelViewController.this;
+                notificationPanelViewController4.mQsMinExpansionHeight = notificationPanelViewController4.mKeyguardShowing ? 0 : notificationPanelViewController4.mQs.getQsMinExpansionHeight();
                 NotificationPanelViewController notificationPanelViewController5 = NotificationPanelViewController.this;
-                notificationPanelViewController5.mQsMaxExpansionHeight = notificationPanelViewController5.mQs.getDesiredHeight();
-                NotificationStackScrollLayout notificationStackScrollLayout = NotificationPanelViewController.this.mNotificationStackScroller;
+                if (notificationPanelViewController5.mQsExpansionHeight == f) {
+                    notificationPanelViewController5.mQsExpansionHeight = (float) notificationPanelViewController5.mQsMinExpansionHeight;
+                }
                 NotificationPanelViewController notificationPanelViewController6 = NotificationPanelViewController.this;
-                notificationStackScrollLayout.setMaxTopPadding(notificationPanelViewController6.mQsMaxExpansionHeight + notificationPanelViewController6.mQsNotificationTopPadding);
+                notificationPanelViewController6.mQsMaxExpansionHeight = notificationPanelViewController6.mQs.getDesiredHeight();
+                NotificationStackScrollLayout notificationStackScrollLayout = NotificationPanelViewController.this.mNotificationStackScroller;
+                NotificationPanelViewController notificationPanelViewController7 = NotificationPanelViewController.this;
+                notificationStackScrollLayout.setMaxTopPadding(notificationPanelViewController7.mQsMaxExpansionHeight + notificationPanelViewController7.mQsNotificationTopPadding);
             }
             NotificationPanelViewController.this.positionClockAndNotifications();
-            NotificationPanelViewController notificationPanelViewController7 = NotificationPanelViewController.this;
-            if (!notificationPanelViewController7.mQsExpanded || !notificationPanelViewController7.mQsFullyExpanded) {
-                NotificationPanelViewController notificationPanelViewController8 = NotificationPanelViewController.this;
-                if (!notificationPanelViewController8.mQsExpanded) {
-                    notificationPanelViewController8.setQsExpansion(((float) notificationPanelViewController8.mQsMinExpansionHeight) + NotificationPanelViewController.this.mLastOverscroll);
-                }
-            } else {
+            NotificationPanelViewController notificationPanelViewController8 = NotificationPanelViewController.this;
+            if (notificationPanelViewController8.mQsExpanded && notificationPanelViewController8.mQsFullyExpanded) {
                 NotificationPanelViewController notificationPanelViewController9 = NotificationPanelViewController.this;
                 notificationPanelViewController9.mQsExpansionHeight = (float) notificationPanelViewController9.mQsMaxExpansionHeight;
-                NotificationPanelViewController.this.requestScrollerTopPaddingUpdate(false);
+                notificationPanelViewController9.requestScrollerTopPaddingUpdate(false);
                 NotificationPanelViewController.this.requestPanelHeightUpdate();
-                NotificationPanelViewController notificationPanelViewController10 = NotificationPanelViewController.this;
-                int i10 = notificationPanelViewController10.mQsMaxExpansionHeight;
-                if (i10 != i9) {
-                    notificationPanelViewController10.startQsSizeChangeAnimation(i9, i10);
+                if (!FoldManager.Companion.isUsingControlPanel() && (i9 = (notificationPanelViewController = NotificationPanelViewController.this).mQsMaxExpansionHeight) != i10) {
+                    notificationPanelViewController.startQsSizeChangeAnimation(i10, i9);
                 }
+            } else if (!NotificationPanelViewController.this.mQsExpanded && !FoldManager.Companion.isUsingControlPanel() && !FoldManager.Companion.isShowingUnimportant()) {
+                NotificationPanelViewController notificationPanelViewController10 = NotificationPanelViewController.this;
+                notificationPanelViewController10.setQsExpansion(((float) notificationPanelViewController10.mQsMinExpansionHeight) + NotificationPanelViewController.this.mLastOverscroll);
             }
             NotificationPanelViewController notificationPanelViewController11 = NotificationPanelViewController.this;
             notificationPanelViewController11.updateExpandedHeight(notificationPanelViewController11.getExpandedHeight());

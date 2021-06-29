@@ -221,7 +221,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
                     autoTileManager.lambda$changeUser$0(UserHandle.of(currentUser));
                 }
             }
-            if (!loadTileSpecs.equals(this.mTileSpecs) || currentUser != this.mCurrentUser) {
+            if (!loadTileSpecs.equals(this.mTileSpecs) || currentUser != this.mCurrentUser || this.mMiuiHostInjector.isForceRefreshTiles()) {
                 this.mTiles.entrySet().stream().filter(new Predicate(loadTileSpecs) {
                     /* class com.android.systemui.qs.$$Lambda$QSTileHost$tL3GWCpuevDvXg1noj_yj7fk3Y */
                     public final /* synthetic */ List f$0;

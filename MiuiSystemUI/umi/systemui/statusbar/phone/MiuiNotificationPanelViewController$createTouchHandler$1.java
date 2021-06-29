@@ -123,11 +123,11 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
         return false;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:24:0x0078 A[RETURN] */
+    /* JADX WARNING: Removed duplicated region for block: B:26:0x0080 A[RETURN] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final boolean handleSlideState(float r3, float r4, float r5) {
         /*
-        // Method dump skipped, instructions count: 121
+        // Method dump skipped, instructions count: 129
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController$createTouchHandler$1.handleSlideState(float, float, float):boolean");
     }
