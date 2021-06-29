@@ -3182,7 +3182,8 @@ public class NotificationPanelViewController extends PanelViewController {
         }
     }
 
-    protected class OnConfigurationChangedListener extends PanelViewController.OnConfigurationChangedListener {
+    /* access modifiers changed from: protected */
+    public class OnConfigurationChangedListener extends PanelViewController.OnConfigurationChangedListener {
         protected OnConfigurationChangedListener() {
             super();
         }

@@ -8,9 +8,8 @@ import com.android.systemui.statusbar.policy.NetworkController;
 import kotlin.TypeCastException;
 import miuix.appcompat.app.AlertDialog;
 
-/* access modifiers changed from: package-private */
 /* compiled from: SlaveWifiHelper.kt */
-public final class SlaveWifiHelper$showAlertDialog$2 implements DialogInterface.OnClickListener {
+final class SlaveWifiHelper$showAlertDialog$2 implements DialogInterface.OnClickListener {
     final /* synthetic */ NetworkController.AccessPointController $accessPointController;
     final /* synthetic */ AccessPoint $ap;
     final /* synthetic */ Context $context;
