@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/custom_aggregate_notification" android:paddingTop="@dimen/custom_notification_layout_padding_top_fold" android:paddingBottom="@dimen/custom_notification_layout_padding_bottom_fold" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/custom_notification_layout_padding_start"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textAppearance="@android:style/TextAppearance.Material.Notification.Title" android:id="@id/aggregate_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" />
+    <ImageView android:id="@id/aggregate_title_icons" android:layout_width="wrap_content" android:layout_height="@dimen/custom_notification_content_ic_size" android:layout_centerVertical="true" android:layout_toStartOf="@id/aggregate_title_icon_more" />
+    <ImageView android:layout_gravity="center_vertical" android:id="@id/aggregate_title_icon_more" android:background="@drawable/unimportant_icon_more" android:visibility="gone" android:layout_width="@dimen/custom_notification_title_icon_more_width_fold" android:layout_height="@dimen/custom_notification_title_icon_more_height_fold" android:layout_centerVertical="true" android:layout_marginStart="@dimen/custom_notification_title_icon_more_margin_start_fold" android:layout_marginEnd="@dimen/custom_notification_title_icon_margin_fold" android:layout_alignParentEnd="true" />
+</RelativeLayout>
