@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.ServiceInfo;
 import android.os.UserHandle;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.applications.ServiceListing;
 import com.android.systemui.controls.ControlsServiceInfo;
 import com.android.systemui.controls.management.ControlsListingController;
@@ -22,10 +21,7 @@ import kotlin.collections.CollectionsKt__IterablesKt;
 import kotlin.collections.SetsKt__SetsKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: ControlsListingControllerImpl.kt */
 public final class ControlsListingControllerImpl implements ControlsListingController {
     private Set<ComponentName> availableComponents;
     private List<? extends ServiceInfo> availableServices;
@@ -38,8 +34,7 @@ public final class ControlsListingControllerImpl implements ControlsListingContr
 
     /* JADX DEBUG: Multi-variable search result rejected for r4v0, resolved type: kotlin.jvm.functions.Function1<? super android.content.Context, ? extends com.android.settingslib.applications.ServiceListing> */
     /* JADX WARN: Multi-variable type inference failed */
-    @VisibleForTesting
-    public ControlsListingControllerImpl(@NotNull Context context2, @NotNull Executor executor, @NotNull Function1<? super Context, ? extends ServiceListing> function1) {
+    public ControlsListingControllerImpl(Context context2, Executor executor, Function1<? super Context, ? extends ServiceListing> function1) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(executor, "backgroundExecutor");
         Intrinsics.checkParameterIsNotNull(function1, "serviceListingBuilder");
@@ -55,8 +50,20 @@ public final class ControlsListingControllerImpl implements ControlsListingContr
         Log.d("ControlsListingControllerImpl", "Initializing");
     }
 
+    public static final /* synthetic */ Context access$getContext$p(ControlsListingControllerImpl controlsListingControllerImpl) {
+        return controlsListingControllerImpl.context;
+    }
+
+    public static final /* synthetic */ AtomicInteger access$getUserChangeInProgress$p(ControlsListingControllerImpl controlsListingControllerImpl) {
+        return controlsListingControllerImpl.userChangeInProgress;
+    }
+
+    public static final /* synthetic */ void access$setCurrentUserId$p(ControlsListingControllerImpl controlsListingControllerImpl, int i) {
+        controlsListingControllerImpl.currentUserId = i;
+    }
+
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
-    public ControlsListingControllerImpl(@NotNull Context context2, @NotNull Executor executor) {
+    public ControlsListingControllerImpl(Context context2, Executor executor) {
         this(context2, executor, AnonymousClass1.INSTANCE);
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(executor, "executor");
@@ -68,23 +75,22 @@ public final class ControlsListingControllerImpl implements ControlsListingContr
     }
 
     @Override // com.android.systemui.util.UserAwareController
-    public void changeUser(@NotNull UserHandle userHandle) {
+    public void changeUser(UserHandle userHandle) {
         Intrinsics.checkParameterIsNotNull(userHandle, "newUser");
         this.userChangeInProgress.incrementAndGet();
         this.backgroundExecutor.execute(new ControlsListingControllerImpl$changeUser$1(this, userHandle));
     }
 
-    public void addCallback(@NotNull ControlsListingController.ControlsListingCallback controlsListingCallback) {
+    public void addCallback(ControlsListingController.ControlsListingCallback controlsListingCallback) {
         Intrinsics.checkParameterIsNotNull(controlsListingCallback, "listener");
         this.backgroundExecutor.execute(new ControlsListingControllerImpl$addCallback$1(this, controlsListingCallback));
     }
 
-    public void removeCallback(@NotNull ControlsListingController.ControlsListingCallback controlsListingCallback) {
+    public void removeCallback(ControlsListingController.ControlsListingCallback controlsListingCallback) {
         Intrinsics.checkParameterIsNotNull(controlsListingCallback, "listener");
         this.backgroundExecutor.execute(new ControlsListingControllerImpl$removeCallback$1(this, controlsListingCallback));
     }
 
-    @NotNull
     public List<ControlsServiceInfo> getCurrentServices() {
         List<? extends ServiceInfo> list = this.availableServices;
         ArrayList arrayList = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(list, 10));
@@ -96,8 +102,7 @@ public final class ControlsListingControllerImpl implements ControlsListingContr
     }
 
     @Override // com.android.systemui.controls.management.ControlsListingController
-    @Nullable
-    public CharSequence getAppLabel(@NotNull ComponentName componentName) {
+    public CharSequence getAppLabel(ComponentName componentName) {
         T t;
         Intrinsics.checkParameterIsNotNull(componentName, "name");
         Iterator<T> it = getCurrentServices().iterator();

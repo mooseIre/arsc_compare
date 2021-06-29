@@ -26,7 +26,7 @@ public final class RowAnimationUtils$startTouchAnimationIfNeed$listener$1 extend
     @Override // com.miui.systemui.animation.AutoCleanFloatTransitionListener
     public void onStart() {
         if (this.$scale != 1.0f) {
-            RowAnimationUtils.INSTANCE.setTouchAnimatingState(this.$row, true);
+            RowAnimationUtils.access$setTouchAnimatingState(RowAnimationUtils.INSTANCE, this.$row, true);
         }
     }
 

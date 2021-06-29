@@ -13,6 +13,6 @@ public final class AppMiniWindowRowTouchHelper$startResetToNotificationAnimation
     }
 
     public void onAnimationEnd(@Nullable Animator animator) {
-        this.this$0.onMiniWindowReset();
+        AppMiniWindowRowTouchHelper.access$onMiniWindowReset(this.this$0);
     }
 }

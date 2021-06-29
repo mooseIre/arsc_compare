@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import kotlin.Pair;
 import kotlin.TuplesKt;
-import kotlin.collections.CollectionsKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.collections.MapsKt__MapsKt;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -138,7 +138,7 @@ public final class MediaDataCombineLatest {
         MediaDeviceData component2 = pair.component2();
         if (!(component1 == null || component2 == null)) {
             MediaData copy$default = MediaData.copy$default(component1, 0, false, 0, null, null, null, null, null, null, null, null, null, null, component2, false, null, false, null, false, 516095, null);
-            for (MediaDataManager.Listener listener : CollectionsKt.toSet(this.listeners)) {
+            for (MediaDataManager.Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
                 listener.onMediaDataLoaded(str, str2, copy$default);
             }
         }
@@ -148,7 +148,7 @@ public final class MediaDataCombineLatest {
     /* access modifiers changed from: public */
     private final void remove(String str) {
         if (this.entries.remove(str) != null) {
-            for (MediaDataManager.Listener listener : CollectionsKt.toSet(this.listeners)) {
+            for (MediaDataManager.Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
                 listener.onMediaDataRemoved(str);
             }
         }

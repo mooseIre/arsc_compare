@@ -352,8 +352,7 @@ public class MiuiQSDetailItems extends FrameLayout {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public static abstract class ItemHolder extends RecyclerView.ViewHolder {
+    protected static abstract class ItemHolder extends RecyclerView.ViewHolder {
         public ItemHolder(View view) {
             super(view);
         }

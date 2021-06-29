@@ -4,14 +4,16 @@ import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import miuix.animation.Folme;
 import miuix.animation.base.AnimConfig;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: RowAnimationUtils.kt */
 public final class RowAnimationUtils {
     public static final RowAnimationUtils INSTANCE = new RowAnimationUtils();
 
     private RowAnimationUtils() {
     }
 
-    public static final void startTouchAnimationIfNeed(ExpandableView expandableView, float f) {
+    public static final void startTouchAnimationIfNeed(@Nullable ExpandableView expandableView, float f) {
         AnimConfig animConfig;
         if (expandableView != null) {
             boolean z = false;
@@ -42,8 +44,8 @@ public final class RowAnimationUtils {
         }
     }
 
-    /* access modifiers changed from: public */
-    private final void setTouchAnimatingState(ExpandableView expandableView, boolean z) {
+    /* access modifiers changed from: private */
+    public final void setTouchAnimatingState(ExpandableView expandableView, boolean z) {
         ExpandableViewState viewState;
         if (expandableView != null && (viewState = expandableView.getViewState()) != null) {
             viewState.setTouchAnimating(z);

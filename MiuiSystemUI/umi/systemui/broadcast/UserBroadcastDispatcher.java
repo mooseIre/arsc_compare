@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import kotlin.collections.CollectionsKt__MutableCollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt;
+import kotlin.sequences.SequencesKt__SequencesKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: UserBroadcastDispatcher.kt */
@@ -120,8 +120,8 @@ public class UserBroadcastDispatcher implements Dumpable {
         }
         Set<String> set2 = set;
         Iterator<String> actionsIterator = receiverData.getFilter().actionsIterator();
-        if (actionsIterator == null || (sequence = SequencesKt.asSequence(actionsIterator)) == null) {
-            sequence = SequencesKt.emptySequence();
+        if (actionsIterator == null || (sequence = SequencesKt__SequencesKt.asSequence(actionsIterator)) == null) {
+            sequence = SequencesKt__SequencesKt.emptySequence();
         }
         boolean unused = CollectionsKt__MutableCollectionsKt.addAll(set2, sequence);
         Iterator<String> actionsIterator2 = receiverData.getFilter().actionsIterator();

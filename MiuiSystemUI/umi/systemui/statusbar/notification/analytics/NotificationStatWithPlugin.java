@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
+/* access modifiers changed from: package-private */
 public class NotificationStatWithPlugin implements PluginListener<MiuiNotificationStatPlugin>, MiuiNotificationStatPlugin {
     protected List<MiuiNotificationStatPlugin> mPlugins = new ArrayList();
 
@@ -41,7 +42,7 @@ public class NotificationStatWithPlugin implements PluginListener<MiuiNotificati
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                NotificationStatWithPlugin.lambda$onPluginEvent$0(this.f$0, this.f$1, this.f$2, (MiuiNotificationStatPlugin) obj);
+                ((MiuiNotificationStatPlugin) obj).onPluginEvent(this.f$0, this.f$1, this.f$2);
             }
         });
     }
