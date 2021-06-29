@@ -9,7 +9,7 @@
             <include layout="@layout/heads_up_status_bar_layout" />
             <FrameLayout android:id="@id/prompt_container" android:layout_width="wrap_content" android:layout_height="fill_parent" />
             <ViewStub android:id="@id/operator_name" android:layout="@layout/operator_name" android:layout_width="wrap_content" android:layout_height="fill_parent" />
-            <com.android.systemui.statusbar.policy.MiuiClock android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:gravity="start|center" android:id="@id/clock" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" systemui:MiuiAmPmStyle="normal" systemui:MiuiClockMode="time" systemui:MiuiStatusBarClock="true" />
+            <com.android.systemui.statusbar.policy.MiuiClock android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:gravity="start|center" android:id="@id/clock" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" systemui:MiuiAmPmStyle="normal" systemui:MiuiClockMode="time" />
             <com.android.systemui.statusbar.views.NetworkSpeedSplitter android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:gravity="start|center" android:id="@id/drip_network_speed_splitter" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" />
             <com.android.systemui.statusbar.views.NetworkSpeedView android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:gravity="start|center" android:id="@id/drip_network_speed_view" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" />
             <com.android.systemui.statusbar.AlphaOptimizedFrameLayout android:id="@id/drip_left_status_icon_area" android:visibility="gone" android:clipChildren="false" android:layout_width="wrap_content" android:layout_height="fill_parent">
@@ -19,10 +19,7 @@
         </LinearLayout>
         <android.widget.Space android:gravity="center" android:id="@id/cutout_space_view" android:layout_width="0.0dip" android:layout_height="fill_parent" />
         <com.android.systemui.statusbar.AlphaOptimizedFrameLayout android:orientation="horizontal" android:id="@id/fullscreen_notification_icon_area" android:clipChildren="false" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
-        <com.android.systemui.statusbar.AlphaOptimizedFrameLayout android:gravity="center" android:orientation="horizontal" android:id="@id/centered_icon_area" android:visibility="gone" android:clipChildren="false" android:layout_width="wrap_content" android:layout_height="fill_parent" />
-        <com.android.systemui.statusbar.views.MiuiClipEdgeViewLinearLayout android:gravity="end|center" android:orientation="horizontal" android:id="@id/system_icon_area" android:layout_width="wrap_content" android:layout_height="fill_parent">
-            <include layout="@layout/miui_system_icons" />
-        </com.android.systemui.statusbar.views.MiuiClipEdgeViewLinearLayout>
+        <include android:gravity="end|center" android:orientation="horizontal" android:id="@id/system_icon_area" android:layout_width="wrap_content" android:layout_height="fill_parent" layout="@layout/miui_system_icons" />
     </LinearLayout>
     <ViewStub android:id="@id/emergency_cryptkeeper_text" android:layout="@layout/emergency_cryptkeeper_text" android:layout_width="wrap_content" android:layout_height="fill_parent" />
 </com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView>

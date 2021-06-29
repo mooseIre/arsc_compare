@@ -2,7 +2,7 @@
 <com.android.systemui.statusbar.phone.NotificationPanelView android:id="@id/notification_panel" android:background="@android:color/transparent" android:layout_width="fill_parent" android:layout_height="fill_parent"
   xmlns:android="http://schemas.android.com/apk/res/android" xmlns:systemui="http://schemas.android.com/apk/res-auto">
     <include layout="@layout/notification_panel_window_bg" />
-    <ImageView android:id="@id/left_view_bg" android:layout_width="fill_parent" android:layout_height="fill_parent" android:scaleType="centerCrop" />
+    <ImageView android:id="@id/left_view_bg" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" android:scaleType="centerCrop" />
     <com.android.keyguard.MiuiGoneFrameLayout android:id="@id/big_clock_container" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
     <include android:visibility="gone" layout="@layout/keyguard_status_view" />
     <com.android.keyguard.clock.KeyguardClockContainer android:id="@id/miui_keyguard_clock_container" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" android:importantForAccessibility="no" />

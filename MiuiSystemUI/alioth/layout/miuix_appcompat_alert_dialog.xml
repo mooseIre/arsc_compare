@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@id/dialog_root_view" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:id="@id/dialog_dim_bg" android:background="#ff000000" android:focusable="false" android:focusableInTouchMode="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:alpha="0.0" android:importantForAccessibility="no" />
+    <miuix.internal.widget.DialogParentPanel android:layout_gravity="bottom|center" android:orientation="vertical" android:id="@id/parentPanel" android:background="?android:windowBackground" android:paddingTop="@dimen/miuix_appcompat_dialog_pannel_vertical_padding_top" android:paddingBottom="@dimen/miuix_appcompat_dialog_pannel_vertical_padding_bottom" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:importantForAccessibility="no">
+        <include layout="@layout/miuix_appcompat_alert_dialog_content" />
+    </miuix.internal.widget.DialogParentPanel>
+    <View android:layout_gravity="bottom" android:id="@id/dialog_anim_holder" android:background="?dialogBgColor" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+</FrameLayout>
