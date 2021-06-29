@@ -360,7 +360,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
             }
             if (!TextUtils.equals(this.mMagazineWallpaperAuthority, str2)) {
                 this.mMagazineWallpaperAuthority = str2;
-                if (!Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isHomeDefaultWallpaper()) {
+                if (!Build.IS_INTERNATIONAL_BUILD || WallpaperAuthorityUtils.isGlobalMagazineTurnedOn()) {
                     this.mUpdateMonitorInjector.handleLockWallpaperProviderChanged();
                 } else {
                     onRemoteViewChange(null, null);

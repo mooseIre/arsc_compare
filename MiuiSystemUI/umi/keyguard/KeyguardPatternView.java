@@ -25,6 +25,7 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockPatternView;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.MiuiLockPatternView;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
@@ -354,13 +355,13 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
             return CodeInjection.MD5;
         }
         if (i == 1) {
-            return resources.getString(C0021R$string.input_password_after_boot_msg);
+            return resources.getString(C0021R$string.input_pattern_after_boot_msg);
         }
         if (i == 2) {
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
             return resources.getQuantityString(C0019R$plurals.input_pattern_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout)));
         } else if (i == 3) {
-            return resources.getString(C0021R$string.device_locked_without_biometric);
+            return MiuiFaceUnlockUtils.getDeviceLockedReason(((LinearLayout) this).mContext, resources);
         } else {
             if (i != 4) {
                 return resources.getString(C0021R$string.kg_prompt_reason_timeout_pattern);

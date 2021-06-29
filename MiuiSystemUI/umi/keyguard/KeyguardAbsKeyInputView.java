@@ -16,6 +16,7 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.EmergencyButton;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.systemui.C0019R$plurals;
 import com.android.systemui.C0021R$string;
@@ -330,19 +331,26 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             return CodeInjection.MD5;
         }
         if (i == 1) {
-            return resources.getString(C0021R$string.input_password_after_boot_msg);
+            return getRestartReasonPrompt(resources);
         }
         if (i == 2) {
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
             return resources.getQuantityString(C0019R$plurals.input_password_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout)));
         } else if (i == 3) {
-            return resources.getString(C0021R$string.device_locked_without_biometric);
+            return MiuiFaceUnlockUtils.getDeviceLockedReason(((LinearLayout) this).mContext, resources);
         } else {
             if (i != 4) {
                 return resources.getString(C0021R$string.kg_prompt_reason_timeout_password);
             }
             return resources.getString(C0021R$string.kg_prompt_reason_user_request);
         }
+    }
+
+    private String getRestartReasonPrompt(Resources resources) {
+        if (AnonymousClass4.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()] != 1) {
+            return resources.getString(C0021R$string.input_password_after_boot_msg);
+        }
+        return resources.getString(C0021R$string.input_pin_after_boot_msg);
     }
 
     @Override // com.android.keyguard.KeyguardSecurityView

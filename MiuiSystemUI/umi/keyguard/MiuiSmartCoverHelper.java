@@ -10,12 +10,14 @@ import com.android.systemui.keyguard.KeyguardViewMediator;
 public class MiuiSmartCoverHelper {
     private Context mContext;
     private boolean mHideLockForLid;
+    private boolean mLidShowing;
     private final BroadcastReceiver mSmartCoverReceiver = new BroadcastReceiver() {
         /* class com.android.keyguard.MiuiSmartCoverHelper.AnonymousClass1 */
 
         public void onReceive(Context context, Intent intent) {
             if ("miui.intent.action.SMART_COVER".equals(intent.getAction())) {
                 boolean z = !intent.getBooleanExtra("is_smart_cover_open", false);
+                MiuiSmartCoverHelper.this.mLidShowing = z;
                 if (MiuiSmartCoverHelper.this.mViewMediator.isSecure()) {
                     MiuiSmartCoverHelper.this.mHideLockForLid = false;
                 } else if (z) {
@@ -41,5 +43,9 @@ public class MiuiSmartCoverHelper {
 
     public boolean isHideLockForLid() {
         return this.mHideLockForLid;
+    }
+
+    public boolean isLidShowing() {
+        return this.mLidShowing;
     }
 }

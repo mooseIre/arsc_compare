@@ -32,28 +32,28 @@ public final class KeyguardSensorInjector$mPickupSensorListener$1 implements Sen
             if (fArr2 == null) {
                 return;
             }
-            if ((fArr2[0] == 2.0f || fArr2[0] == 0.0f) && KeyguardSensorInjector.access$getMWakeupByPickUp$p(this.this$0) && this.this$0.getMKeyguardViewMediator().isShowingAndNotOccluded()) {
+            if ((fArr2[0] == 2.0f || fArr2[0] == 0.0f) && (this.this$0.mWakeupByPickUp) && this.this$0.getMKeyguardViewMediator().isShowingAndNotOccluded() && !this.this$0.getMKeyguardViewMediator().isLidShowing()) {
                 String tag = this.this$0.getTAG();
-                Slog.i(tag, KeyguardSensorInjector.access$getSCREEN_OFF_REASON$p(this.this$0) + ":put down");
+                Slog.i(tag, this.this$0.SCREEN_OFF_REASON + ":put down");
                 this.this$0.getMPowerManager().goToSleep(SystemClock.uptimeMillis());
-                Display access$getMDisplay$p = KeyguardSensorInjector.access$getMDisplay$p(this.this$0);
-                if (access$getMDisplay$p != null) {
-                    access$getMDisplay$p.getState();
+                Display display = this.this$0.mDisplay;
+                if (display != null) {
+                    display.getState();
                 } else {
                     Intrinsics.throwNpe();
                     throw null;
                 }
             }
         } else {
-            Display access$getMDisplay$p2 = KeyguardSensorInjector.access$getMDisplay$p(this.this$0);
-            if (access$getMDisplay$p2 == null) {
+            Display display2 = this.this$0.mDisplay;
+            if (display2 == null) {
                 Intrinsics.throwNpe();
                 throw null;
-            } else if (access$getMDisplay$p2.getState() != 2 || !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
+            } else if ((display2.getState() != 2 || !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) && !this.this$0.getMKeyguardViewMediator().isLidShowing()) {
                 this.this$0.getMPowerManager().wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:PICK_UP");
-                KeyguardSensorInjector.access$setMWakeupByPickUp$p(this.this$0, true);
+                this.this$0.mWakeupByPickUp = true;
                 String tag2 = this.this$0.getTAG();
-                Slog.i(tag2, KeyguardSensorInjector.access$getSCREEN_OPEN_REASON$p(this.this$0) + ":pick up");
+                Slog.i(tag2, this.this$0.SCREEN_OPEN_REASON + ":pick up");
             }
         }
     }

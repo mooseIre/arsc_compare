@@ -28,6 +28,10 @@ public class WallpaperAuthorityUtils {
         return "com.miui.home.none_provider".equals(getWallpaperAuthority());
     }
 
+    public static boolean isGlobalMagazineTurnedOn() {
+        return "com.miui.android.fashiongallery.lockscreen_magazine_provider".equals(getWallpaperAuthority());
+    }
+
     public static boolean isLockScreenMagazineWallpaper() {
         return isLockScreenMagazineOpenedWallpaper() || isLockScreenMagazineClosedWallpaper();
     }

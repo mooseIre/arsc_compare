@@ -9,6 +9,7 @@ import android.hardware.miuiface.BaseMiuiFaceManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
@@ -350,7 +351,7 @@ public class MiuiFaceUnlockManager {
     public void deleteFeature(String str, FaceRemoveCallback faceRemoveCallback) {
         Slog.i("miui_face", "deleteFeature faceId=" + str);
         this.mFaceRemoveCallback = faceRemoveCallback;
-        this.mFaceManager.remove(new Face((CharSequence) null, Integer.parseInt(str), 0), 0, this.mRemovalCallback);
+        this.mFaceManager.remove(new Face((CharSequence) null, Integer.parseInt(str), 0), UserHandle.myUserId(), this.mRemovalCallback);
     }
 
     public boolean shouldStartFaceDetectForCamera() {

@@ -1,10 +1,12 @@
 package com.android.keyguard.faceunlock;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.hardware.miuiface.BaseMiuiFaceManager;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiDozeServiceHost;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.systemui.C0021R$string;
@@ -125,5 +127,20 @@ public class MiuiFaceUnlockUtils {
         } else {
             mHelpStringResId = C0021R$string.unlock_failed;
         }
+    }
+
+    public static String getDeviceLockedReason(Context context, Resources resources) {
+        boolean isUnlockWithFacePossible = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isUnlockWithFacePossible(KeyguardUpdateMonitor.getCurrentUser());
+        boolean z = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFingerApplyForKeyguard();
+        if (isUnlockWithFacePossible && z) {
+            return resources.getString(C0021R$string.device_locked_without_biometric);
+        }
+        if (isUnlockWithFacePossible) {
+            return resources.getString(C0021R$string.device_locked_without_biometric_face);
+        }
+        if (z) {
+            return resources.getString(C0021R$string.device_locked_without_biometric_finger);
+        }
+        return null;
     }
 }
