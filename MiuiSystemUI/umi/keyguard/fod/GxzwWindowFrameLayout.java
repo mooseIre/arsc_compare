@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+/* access modifiers changed from: package-private */
 public abstract class GxzwWindowFrameLayout extends FrameLayout {
     private boolean mAdded = false;
     public final Handler mHandler = new Handler();
@@ -31,28 +32,31 @@ public abstract class GxzwWindowFrameLayout extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mHandler.post(new Runnable() {
             /* class com.android.keyguard.fod.$$Lambda$GxzwWindowFrameLayout$zcil8p0vmCZMbI4psM5rDbfIPg */
 
             public final void run() {
-                GxzwWindowFrameLayout.m6lambda$zcil8p0vmCZMbI4psM5rDbfIPg(GxzwWindowFrameLayout.this);
+                GxzwWindowFrameLayout.this.updateViewAddState();
             }
         });
     }
 
+    /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mHandler.post(new Runnable() {
             /* class com.android.keyguard.fod.$$Lambda$GxzwWindowFrameLayout$zcil8p0vmCZMbI4psM5rDbfIPg */
 
             public final void run() {
-                GxzwWindowFrameLayout.m6lambda$zcil8p0vmCZMbI4psM5rDbfIPg(GxzwWindowFrameLayout.this);
+                GxzwWindowFrameLayout.this.updateViewAddState();
             }
         });
     }
 
+    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updateViewAddState() {
         if (this.mAdded && !isAttachedToWindow()) {
