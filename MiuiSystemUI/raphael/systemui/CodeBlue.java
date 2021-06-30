@@ -37,6 +37,14 @@ public final class CodeBlue {
             this();
         }
 
+        public static final /* synthetic */ void access$updateCrashHandler(Companion companion, Context context, Throwable th) {
+            companion.updateCrashHandler(context, th);
+        }
+
+        public static final /* synthetic */ void access$updateCrashInfo(Companion companion, Context context) {
+            companion.updateCrashInfo(context);
+        }
+
         public final boolean getTriggered() {
             return CodeBlue.triggered;
         }
@@ -77,8 +85,7 @@ public final class CodeBlue {
             }
         }
 
-        /* access modifiers changed from: private */
-        public final void updateCrashHandler(Context context, Throwable th) {
+        private final void updateCrashHandler(Context context, Throwable th) {
             ExceptionHandler exceptionHandler = getExceptionHandler(th);
             String exceptionClues = getExceptionClues(exceptionHandler);
             if (DebugConfig.DEBUG_CODE_BLUE) {
@@ -106,8 +113,7 @@ public final class CodeBlue {
             return latestNotificationPkgName;
         }
 
-        /* access modifiers changed from: private */
-        public final void updateCrashInfo(Context context) {
+        private final void updateCrashInfo(Context context) {
             if (DebugConfig.DEBUG_CODE_BLUE) {
                 Log.d("CodeBlue", "updateCrashInfo");
             }

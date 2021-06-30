@@ -18,7 +18,7 @@ final class ControlsControllerImpl$refreshStatus$1 implements Runnable {
 
     public final void run() {
         if (Favorites.INSTANCE.updateControls(this.$componentName, CollectionsKt__CollectionsJVMKt.listOf(this.$control))) {
-            ControlsControllerImpl.access$getPersistenceWrapper$p(this.this$0).storeFavorites(Favorites.INSTANCE.getAllStructures());
+            this.this$0.persistenceWrapper.storeFavorites(Favorites.INSTANCE.getAllStructures());
         }
     }
 }

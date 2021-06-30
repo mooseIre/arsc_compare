@@ -269,10 +269,6 @@ public class ScreenPinningRequest implements View.OnClickListener, NavigationMod
             addView(this.mLayout, ScreenPinningRequest.this.getRequestLayoutParams(i));
         }
 
-        static /* synthetic */ NavigationBarView lambda$inflateView$0(Lazy lazy) {
-            return ((StatusBar) lazy.get()).getNavigationBarView();
-        }
-
         private void swapChildrenIfRtlAndVertical(View view) {
             if (((FrameLayout) this).mContext.getResources().getConfiguration().getLayoutDirection() == 1) {
                 LinearLayout linearLayout = (LinearLayout) view;
