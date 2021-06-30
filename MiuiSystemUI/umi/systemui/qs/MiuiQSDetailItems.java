@@ -23,6 +23,7 @@ import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.utils.Constants;
+import java.util.Objects;
 import miui.util.Pools;
 import miuix.recyclerview.widget.RecyclerView;
 
@@ -202,8 +203,10 @@ public class MiuiQSDetailItems extends FrameLayout {
             }
             recyclerView.setVisibility(i);
         }
+        boolean compareItem = compareItem(this.mItems, itemArr);
         this.mItems = itemArr;
-        if ((this.mIsExpanding || !this.mIsDetailShowing) && this.mControlPanelController.isUseControlCenter()) {
+        Log.d("MiuiQSDetailItems", "need notify data set changed: " + compareItem);
+        if (((this.mIsExpanding || !this.mIsDetailShowing) && this.mControlPanelController.isUseControlCenter()) || !compareItem) {
             Log.d("MiuiQSDetailItems", "ignore refresh items:" + this.mIsExpanding + this.mIsDetailShowing);
             return;
         }
@@ -211,6 +214,28 @@ public class MiuiQSDetailItems extends FrameLayout {
         Adapter adapter = this.mAdapter;
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    private boolean compareItem(Item[] itemArr, Item[] itemArr2) {
+        if (itemArr == null || itemArr2 == null) {
+            return true;
+        }
+        if (itemArr.length <= 0 && itemArr2.length <= 0) {
+            Log.d("MiuiQSDetailItems", "compareItem: size all is 0");
+            return false;
+        } else if (itemArr.length != itemArr2.length) {
+            return true;
+        } else {
+            for (int i = 0; i < itemArr.length; i++) {
+                Item item = itemArr[i];
+                Item item2 = itemArr2[i];
+                if (!(item2 == null || item == null || item2.equals(item))) {
+                    return true;
+                }
+            }
+            Log.d("MiuiQSDetailItems", "compareItem: data is same!");
+            return false;
         }
     }
 
@@ -432,6 +457,21 @@ public class MiuiQSDetailItems extends FrameLayout {
             this.activated = true;
             this.type = 1;
             return this;
+        }
+
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || Item.class != obj.getClass()) {
+                return false;
+            }
+            Item item = (Item) obj;
+            return this.icon == item.icon && this.canDisconnect == item.canDisconnect && this.icon2 == item.icon2 && this.selected == item.selected && this.activated == item.activated && this.initailed == item.initailed && this.type == item.type && Objects.equals(this.drawable, item.drawable) && Objects.equals(this.overlay, item.overlay) && Objects.equals(this.line1, item.line1) && Objects.equals(this.line2, item.line2) && Objects.equals(this.unit, item.unit) && Objects.equals(this.tag, item.tag);
+        }
+
+        public int hashCode() {
+            return Objects.hash(Integer.valueOf(this.icon), this.drawable, this.overlay, this.line1, this.line2, this.unit, this.tag, Boolean.valueOf(this.canDisconnect), Integer.valueOf(this.icon2), Boolean.valueOf(this.selected), Boolean.valueOf(this.activated), Boolean.valueOf(this.initailed), Integer.valueOf(this.type));
         }
     }
 }

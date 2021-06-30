@@ -110,7 +110,9 @@ public class MiuiQSCustomizer extends LinearLayout {
                     MiuiQSCustomizer.this.setVisibility(8);
                 }
                 MiuiQSCustomizer.this.mNotifQsContainer.setCustomizerAnimating(false);
-                MiuiQSCustomizer.this.mRecyclerView.setAdapter(MiuiQSCustomizer.this.mTileAdapter);
+                if (MiuiQSCustomizer.this.mRecyclerView.getAdapter() == null) {
+                    MiuiQSCustomizer.this.mRecyclerView.setAdapter(MiuiQSCustomizer.this.mTileAdapter);
+                }
             }
 
             public void onAnimationCancel(Animator animator) {
@@ -257,7 +259,9 @@ public class MiuiQSCustomizer extends LinearLayout {
             }
         }
         this.mTileAdapter.setTileSpecs(arrayList);
-        this.mRecyclerView.setAdapter(this.mTileAdapter);
+        if (this.mRecyclerView.getAdapter() == null) {
+            this.mRecyclerView.setAdapter(this.mTileAdapter);
+        }
     }
 
     private void save() {

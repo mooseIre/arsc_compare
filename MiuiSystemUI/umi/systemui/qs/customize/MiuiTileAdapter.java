@@ -247,32 +247,58 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
     }
 
     private void recalcSpecs() {
-        if (!(this.mCurrentSpecs == null || this.mAllTiles == null)) {
+        if (this.mCurrentSpecs != null && this.mAllTiles != null) {
             this.mOtherTiles = new ArrayList(this.mAllTiles);
-            this.mTiles.clear();
-            int i = 0;
-            for (int i2 = 0; i2 < this.mCurrentSpecs.size(); i2++) {
-                TileQueryHelper.TileInfo andRemoveOther = getAndRemoveOther(this.mCurrentSpecs.get(i2));
-                if (andRemoveOther != null) {
-                    this.mTiles.add(andRemoveOther);
-                }
+            List<TileQueryHelper.TileInfo> convertData = convertData();
+            if (convertData != null && !convertData.isEmpty() && compareData(this.mTiles, convertData)) {
+                this.mTiles.clear();
+                this.mTiles.addAll(convertData);
+                updateDividerLocations();
+                notifyDataSetChanged();
             }
-            this.mTiles.add(null);
-            while (i < this.mOtherTiles.size()) {
-                TileQueryHelper.TileInfo tileInfo = this.mOtherTiles.get(i);
-                if (tileInfo.isSystem) {
-                    this.mOtherTiles.remove(i);
-                    this.mTiles.add(tileInfo);
-                    i--;
-                }
-                i++;
-            }
-            this.mTileDividerIndex = this.mTiles.size();
-            this.mTiles.add(null);
-            this.mTiles.addAll(this.mOtherTiles);
-            updateDividerLocations();
-            notifyDataSetChanged();
         }
+    }
+
+    private List<TileQueryHelper.TileInfo> convertData() {
+        if (this.mCurrentSpecs == null || this.mAllTiles == null) {
+            return null;
+        }
+        ArrayList arrayList = new ArrayList();
+        int i = 0;
+        for (int i2 = 0; i2 < this.mCurrentSpecs.size(); i2++) {
+            TileQueryHelper.TileInfo andRemoveOther = getAndRemoveOther(this.mCurrentSpecs.get(i2));
+            if (andRemoveOther != null) {
+                arrayList.add(andRemoveOther);
+            }
+        }
+        arrayList.add(null);
+        while (i < this.mOtherTiles.size()) {
+            TileQueryHelper.TileInfo tileInfo = this.mOtherTiles.get(i);
+            if (tileInfo.isSystem) {
+                this.mOtherTiles.remove(i);
+                arrayList.add(tileInfo);
+                i--;
+            }
+            i++;
+        }
+        this.mTileDividerIndex = this.mTiles.size();
+        arrayList.add(null);
+        arrayList.addAll(this.mOtherTiles);
+        return arrayList;
+    }
+
+    private boolean compareData(List<TileQueryHelper.TileInfo> list, List<TileQueryHelper.TileInfo> list2) {
+        if (list == null || list2 == null || list.isEmpty() || list2.isEmpty() || list.size() != list2.size()) {
+            return true;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            TileQueryHelper.TileInfo tileInfo = list.get(i);
+            TileQueryHelper.TileInfo tileInfo2 = list.get(i);
+            if (!(tileInfo == null && tileInfo2 == null) && (tileInfo == null || tileInfo2 == null || !TextUtils.equals(tileInfo.spec, tileInfo2.spec))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private TileQueryHelper.TileInfo getAndRemoveOther(String str) {

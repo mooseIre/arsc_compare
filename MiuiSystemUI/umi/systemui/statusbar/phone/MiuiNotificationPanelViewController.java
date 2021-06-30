@@ -52,7 +52,6 @@ import com.android.systemui.media.MediaHierarchyManager;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
-import com.android.systemui.qs.MiuiNotificationShadeHeader;
 import com.android.systemui.qs.MiuiQSFragment;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.FlingAnimationUtils;
@@ -713,16 +712,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         ControlPanelController controlPanelController2 = this.controlPanelController.get();
         Intrinsics.checkExpressionValueIsNotNull(controlPanelController2, "controlPanelController.get()");
         if (controlPanelController2.isUseControlCenter()) {
-            QS qs = this.mQs;
-            if (qs != null) {
-                View header = ((MiuiQSFragment) qs).getHeader();
-                if (header != null) {
-                    float unimportantHeight = (float) ((MiuiNotificationShadeHeader) header).getUnimportantHeight();
-                    return (!isShowingUnimportant || unimportantHeight <= 0.0f) ? calculateQsTopPadding : unimportantHeight + ((float) this.mQsNotificationTopPadding);
-                }
-                throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.qs.MiuiNotificationShadeHeader");
-            }
-            throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.qs.MiuiQSFragment");
+            float unimportantTarget = FoldManager.Companion.getUnimportantTarget();
+            return (!isShowingUnimportant || unimportantTarget <= 0.0f) ? calculateQsTopPadding : unimportantTarget + ((float) this.mQsNotificationTopPadding);
         } else if (isShowingUnimportant) {
             return this.mQsExpansionHeight;
         } else {
@@ -811,6 +802,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         return ((((f3 * coerceAtMost) / ((float) 3)) - f3) + coerceAtMost) * f2;
     }
 
+    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
     public final boolean isOnKeyguard() {
         return this.statusBarStateController.getState() == 1;
     }
