@@ -17,6 +17,7 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference1Impl;
 import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KProperty;
+import kotlin.text.StringsKt__StringsKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: FoldTool.kt */
@@ -124,6 +125,16 @@ public final class FoldTool {
         }
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
             return R$styleable.Constraint_transitionEasing;
+        }
+        if ((statusBarNotification.getNotification().flags & 1122) != 0) {
+            return R$styleable.Constraint_layout_goneMarginTop;
+        }
+        if ((statusBarNotification.getNotification().flags & 512) != 0) {
+            CharSequence resolveTitle = NotificationUtil.resolveTitle(statusBarNotification.getNotification());
+            Intrinsics.checkExpressionValueIsNotNull(resolveTitle, "resolveTitle(sbn.notification)");
+            if (StringsKt__StringsKt.contains$default(resolveTitle, "GroupSummary", false, 2, null)) {
+                return R$styleable.Constraint_motionProgress;
+            }
         }
         Boolean isFoldEntrance = NotificationUtil.isFoldEntrance(statusBarNotification);
         Intrinsics.checkExpressionValueIsNotNull(isFoldEntrance, "isFoldEntrance(sbn)");

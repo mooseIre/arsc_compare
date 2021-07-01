@@ -18,7 +18,7 @@ final class AppMiniWindowRowTouchHelper$startResetToNotificationAnimation$$inlin
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
             int intValue = ((Integer) animatedValue).intValue();
-            AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).setAlpha(((float) 1) - RangesKt___RangesKt.coerceIn(((float) ((intValue - AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).getStartHeight()) - AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).getTop())) / AppMiniWindowRowTouchHelper.access$getMMaxTriggerThreshold$p(this.this$0), 0.0f, 1.0f));
+            AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).setAlpha(((float) 1) - RangesKt___RangesKt.coerceIn(((float) ((intValue - AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).getStartHeight()) - AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).getTop())) / this.this$0.mMaxTriggerThreshold, 0.0f, 1.0f));
             AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).setBottom(intValue);
             AppMiniWindowRowTouchHelper.access$onExpandedParamsUpdated(this.this$0);
             return;

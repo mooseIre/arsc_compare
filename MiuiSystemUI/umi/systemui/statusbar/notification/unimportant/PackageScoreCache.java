@@ -59,7 +59,8 @@ public class PackageScoreCache {
     }
 
     /* access modifiers changed from: private */
-    public void updateAll() {
+    /* access modifiers changed from: public */
+    private void updateAll() {
         SQLiteDatabase openDB = openDB();
         if (openDB != null) {
             Map<String, PackageEntity> snapshot = this.mPkgEntities.snapshot();

@@ -41,26 +41,6 @@ public final class ControlsEditingActivity extends LifecycleActivity {
     private CharSequence structure;
     private TextView subtitle;
 
-    public static final /* synthetic */ void access$animateExitAndFinish(ControlsEditingActivity controlsEditingActivity) {
-        controlsEditingActivity.animateExitAndFinish();
-    }
-
-    public static final /* synthetic */ ControlsControllerImpl access$getController$p(ControlsEditingActivity controlsEditingActivity) {
-        return controlsEditingActivity.controller;
-    }
-
-    public static final /* synthetic */ int access$getEMPTY_TEXT_ID$cp() {
-        return EMPTY_TEXT_ID;
-    }
-
-    public static final /* synthetic */ GlobalActionsComponent access$getGlobalActionsComponent$p(ControlsEditingActivity controlsEditingActivity) {
-        return controlsEditingActivity.globalActionsComponent;
-    }
-
-    public static final /* synthetic */ int access$getSUBTITLE_ID$cp() {
-        return SUBTITLE_ID;
-    }
-
     public static final /* synthetic */ View access$getSaveButton$p(ControlsEditingActivity controlsEditingActivity) {
         View view = controlsEditingActivity.saveButton;
         if (view != null) {
@@ -77,10 +57,6 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         }
         Intrinsics.throwUninitializedPropertyAccessException("subtitle");
         throw null;
-    }
-
-    public static final /* synthetic */ void access$saveFavorites(ControlsEditingActivity controlsEditingActivity) {
-        controlsEditingActivity.saveFavorites();
     }
 
     public ControlsEditingActivity(@NotNull ControlsControllerImpl controlsControllerImpl, @NotNull BroadcastDispatcher broadcastDispatcher, @NotNull GlobalActionsComponent globalActionsComponent2) {
@@ -132,7 +108,8 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         animateExitAndFinish();
     }
 
-    private final void animateExitAndFinish() {
+    /* access modifiers changed from: private */
+    public final void animateExitAndFinish() {
         ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(viewGroup, "rootView");
         ControlsAnimations.exitAnimation(viewGroup, new ControlsEditingActivity$animateExitAndFinish$1(this)).start();
@@ -186,7 +163,8 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         this.saveButton = requireViewById;
     }
 
-    private final void saveFavorites() {
+    /* access modifiers changed from: private */
+    public final void saveFavorites() {
         ControlsControllerImpl controlsControllerImpl = this.controller;
         ComponentName componentName = this.component;
         if (componentName != null) {

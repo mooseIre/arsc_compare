@@ -54,11 +54,10 @@ public final class FoldCloudDataHelper {
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:62:0x015b  */
-    /* JADX WARNING: Removed duplicated region for block: B:78:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public final void updateAll(@org.jetbrains.annotations.NotNull android.content.Context r13) {
+    public final void updateAll(@org.jetbrains.annotations.NotNull android.content.Context r14) {
         /*
-        // Method dump skipped, instructions count: 391
+        // Method dump skipped, instructions count: 411
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.unimportant.FoldCloudDataHelper.updateAll(android.content.Context):void");
     }

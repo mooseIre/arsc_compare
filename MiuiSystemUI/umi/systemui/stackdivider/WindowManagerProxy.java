@@ -14,6 +14,7 @@ import android.window.TaskOrganizer;
 import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import android.window.WindowOrganizer;
+import com.android.internal.annotations.GuardedBy;
 import com.android.systemui.TransactionPool;
 import com.android.systemui.stackdivider.SyncTransactionQueue;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.function.Predicate;
 
 public class WindowManagerProxy {
     private static final int[] HOME_AND_RECENTS = {2, 3};
+    @GuardedBy({"mDockedRect"})
     private final Rect mDockedRect = new Rect();
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private final Runnable mSetTouchableRegionRunnable = new Runnable() {
@@ -42,12 +44,14 @@ public class WindowManagerProxy {
     };
     private final SyncTransactionQueue mSyncTransactionQueue;
     private final Rect mTmpRect1 = new Rect();
+    @GuardedBy({"mDockedRect"})
     private final Rect mTouchableRegion = new Rect();
 
     WindowManagerProxy(TransactionPool transactionPool, Handler handler) {
         this.mSyncTransactionQueue = new SyncTransactionQueue(transactionPool, handler);
     }
 
+    /* access modifiers changed from: package-private */
     public void dismissOrMaximizeDocked(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout, boolean z) {
         this.mExecutor.execute(new Runnable(splitScreenTaskOrganizer, splitDisplayLayout, z) {
             /* class com.android.systemui.stackdivider.$$Lambda$WindowManagerProxy$rVfdVu_tfFj6B198IbDRYIqAmkk */
@@ -152,6 +156,7 @@ public class WindowManagerProxy {
         return homeAndRecentsTasks;
     }
 
+    /* access modifiers changed from: package-private */
     public boolean applyEnterSplit(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout) {
         TaskOrganizer.setLaunchRoot(0, splitScreenTaskOrganizer.mSecondary.token);
         List rootTasks = TaskOrganizer.getRootTasks(0, (int[]) null);
@@ -192,8 +197,9 @@ public class WindowManagerProxy {
         return activityType == 2 || activityType == 3;
     }
 
+    /* access modifiers changed from: package-private */
     /* renamed from: applyDismissSplit */
-    public void lambda$dismissOrMaximizeDocked$0$WindowManagerProxy(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout, boolean z) {
+    public void lambda$dismissOrMaximizeDocked$0(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout, boolean z) {
         int i;
         int i2;
         TaskOrganizer.setLaunchRoot(0, (WindowContainerToken) null);
@@ -276,14 +282,17 @@ public class WindowManagerProxy {
         return runningTaskInfo.token.equals(splitScreenTaskOrganizer.mSecondary.token) || runningTaskInfo.token.equals(splitScreenTaskOrganizer.mPrimary.token);
     }
 
+    /* access modifiers changed from: package-private */
     public void applySyncTransaction(WindowContainerTransaction windowContainerTransaction) {
         this.mSyncTransactionQueue.queue(windowContainerTransaction);
     }
 
+    /* access modifiers changed from: package-private */
     public boolean queueSyncTransactionIfWaiting(WindowContainerTransaction windowContainerTransaction) {
         return this.mSyncTransactionQueue.queueIfWaiting(windowContainerTransaction);
     }
 
+    /* access modifiers changed from: package-private */
     public void runInSync(SyncTransactionQueue.TransactionRunnable transactionRunnable) {
         this.mSyncTransactionQueue.runInSync(transactionRunnable);
     }

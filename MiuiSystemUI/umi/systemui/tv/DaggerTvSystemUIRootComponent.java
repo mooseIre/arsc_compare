@@ -2399,7 +2399,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.miuiAlarmControllerImplProvider = DoubleCheck.provider(MiuiAlarmControllerImpl_Factory.create(this.contextProvider));
         this.systemUIStatProvider = DoubleCheck.provider(SystemUIStat_Factory.create(this.contextProvider, this.eventTrackerProvider));
         this.phoneSignalControllerImplProvider = DoubleCheck.provider(PhoneSignalControllerImpl_Factory.create(this.contextProvider));
-        this.unimportantSdkProvider = DoubleCheck.provider(UnimportantSdk_Factory.create());
+        this.unimportantSdkProvider = DoubleCheck.provider(UnimportantSdk_Factory.create(this.contextProvider));
         this.foldNotifControllerProvider = DoubleCheck.provider(FoldNotifController_Factory.create(this.contextProvider));
         this.context = builder.context;
         Provider<MediaHostStatesManager> provider3 = DoubleCheck.provider(MediaHostStatesManager_Factory.create());

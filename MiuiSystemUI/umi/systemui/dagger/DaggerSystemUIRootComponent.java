@@ -2308,7 +2308,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.miuiAlarmControllerImplProvider = DoubleCheck.provider(MiuiAlarmControllerImpl_Factory.create(this.provideContextProvider));
         this.systemUIStatProvider = DoubleCheck.provider(SystemUIStat_Factory.create(this.provideContextProvider, this.eventTrackerProvider));
         this.phoneSignalControllerImplProvider = DoubleCheck.provider(PhoneSignalControllerImpl_Factory.create(this.provideContextProvider));
-        this.unimportantSdkProvider = DoubleCheck.provider(UnimportantSdk_Factory.create());
+        this.unimportantSdkProvider = DoubleCheck.provider(UnimportantSdk_Factory.create(this.provideContextProvider));
         this.foldNotifControllerProvider = DoubleCheck.provider(FoldNotifController_Factory.create(this.provideContextProvider));
         this.contextHolder = builder.contextHolder;
         Provider<MediaHostStatesManager> provider3 = DoubleCheck.provider(MediaHostStatesManager_Factory.create());

@@ -207,7 +207,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ActivityStarterDelegate.lambda$postQSRunnableDismissingKeyguard$9(this.f$0, this.f$1, (Lazy) obj);
+                ((StatusBar) ((Lazy) obj).get()).postQSRunnableDismissingKeyguard(this.f$0, this.f$1);
             }
         });
     }

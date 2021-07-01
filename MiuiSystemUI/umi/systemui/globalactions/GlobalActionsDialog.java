@@ -261,6 +261,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         boolean onLongPress();
     }
 
+    public static /* synthetic */ void lambda$jlxsGoRx8E3djFav9gCad5fjKg0(GlobalActionsDialog globalActionsDialog) {
+        globalActionsDialog.onRotate();
+    }
+
     public enum GlobalActionsEvent implements UiEventLogger.UiEventEnum {
         GA_POWER_MENU_OPEN(337),
         GA_POWER_MENU_CLOSE(471),
@@ -615,7 +619,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: public */
     private void onRotate() {
         createActionItems();
     }
@@ -1905,6 +1908,15 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         private final IBinder mToken = new Binder();
         private final GlobalActionsPanelPlugin.PanelViewController mWalletViewController;
 
+        public static /* synthetic */ void lambda$b7BjyiDlA1YYZd2S_4WLEfoJbac(ActionsDialog actionsDialog) {
+            actionsDialog.completeDismiss();
+        }
+
+        /* renamed from: lambda$pdjB9IUZqjM8heY8C5-6yJKk6nA */
+        public static /* synthetic */ void m15lambda$pdjB9IUZqjM8heY8C56yJKk6nA(ActionsDialog actionsDialog) {
+            actionsDialog.dismissForControlsActivity();
+        }
+
         ActionsDialog(Context context, MyAdapter myAdapter, MyOverflowAdapter myOverflowAdapter, GlobalActionsPanelPlugin.PanelViewController panelViewController, NotificationShadeDepthController notificationShadeDepthController, SysuiColorExtractor sysuiColorExtractor, IStatusBarService iStatusBarService, NotificationShadeWindowController notificationShadeWindowController, boolean z, ControlsUiController controlsUiController, SysUiState sysUiState, Runnable runnable, boolean z2, MyPowerOptionsAdapter myPowerOptionsAdapter) {
             super(context, C0022R$style.Theme_SystemUI_Dialog_GlobalActions);
             this.mContext = context;
@@ -2230,6 +2242,11 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             animatorSet.start();
         }
 
+        static /* synthetic */ WindowInsets lambda$show$6(ViewGroup viewGroup, View view, WindowInsets windowInsets) {
+            viewGroup.setPadding(windowInsets.getStableInsetLeft(), windowInsets.getStableInsetTop(), windowInsets.getStableInsetRight(), windowInsets.getStableInsetBottom());
+            return WindowInsets.CONSUMED;
+        }
+
         /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$show$7 */
@@ -2295,7 +2312,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             this.mDepthController.updateGlobalDialogVisibility(animatedFraction, this.mGlobalActionsLayout);
         }
 
-        /* access modifiers changed from: public */
         private void dismissForControlsActivity() {
             dismissWithAnimation(new Runnable() {
                 /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$ActionsDialog$yh8uJQoAv1nRg6YOxU19qycI3Zo */
@@ -2326,7 +2342,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
-        /* access modifiers changed from: public */
         private void completeDismiss() {
             this.mShowing = false;
             resetOrientation();

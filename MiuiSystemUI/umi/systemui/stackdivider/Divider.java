@@ -498,7 +498,7 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
 
     /* access modifiers changed from: package-private */
     public void startDismissSplit() {
-        this.mWindowManagerProxy.lambda$dismissOrMaximizeDocked$0$WindowManagerProxy(this.mSplits, this.mSplitLayout, true);
+        this.mWindowManagerProxy.lambda$dismissOrMaximizeDocked$0(this.mSplits, this.mSplitLayout, true);
         updateVisibility(false);
         this.mMinimized = false;
         removeDivider();

@@ -11,14 +11,17 @@ import java.util.Map;
 import org.json.JSONObject;
 
 public class UnimportantSdkWithPlugin implements PluginListener<UnimportantSdkPlugin>, UnimportantSdkPlugin {
+    private Context mContext;
     protected UnimportantSdkPlugin mPlugins = null;
 
-    public UnimportantSdkWithPlugin() {
+    public UnimportantSdkWithPlugin(Context context) {
+        this.mContext = context;
         ((PluginManager) Dependency.get(PluginManager.class)).addPluginListener(UnimportantSdkPlugin.ACTION, this, UnimportantSdkPlugin.class, true);
     }
 
     public void onPluginConnected(UnimportantSdkPlugin unimportantSdkPlugin, Context context) {
         this.mPlugins = unimportantSdkPlugin;
+        FoldCloudDataHelper.INSTANCE.updateAll(this.mContext);
     }
 
     public void onPluginDisconnected(UnimportantSdkPlugin unimportantSdkPlugin) {

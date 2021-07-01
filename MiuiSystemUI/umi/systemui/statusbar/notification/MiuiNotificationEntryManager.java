@@ -89,7 +89,7 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
         if (remove != null) {
             Intrinsics.checkExpressionValueIsNotNull(remove, "activeUnimportantNotific…ons.remove(key) ?: return");
             this.groupManager.onEntryRemoved(remove);
-            checkUnimportatEntrance(remove.getSbn());
+            checkFoldEntrance(remove.getSbn());
             if (this.isShowingUnimportant && !shouldShow()) {
                 FoldManager.Companion.notifyListeners(5);
             }
@@ -103,7 +103,7 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
             if (NotificationUtil.isFold(notificationEntry.getSbn())) {
                 this.activeUnimportantNotifications.put(notificationEntry.getKey(), notificationEntry);
                 this.groupManager.onEntryAdded(notificationEntry);
-                checkUnimportatEntrance(notificationEntry.getSbn());
+                checkFoldEntrance(notificationEntry.getSbn());
             } else {
                 super.addActiveNotification(notificationEntry);
             }
@@ -119,20 +119,16 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
     public void updateNotification(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
         super.updateNotification(statusBarNotification, rankingMap);
         if (NotificationUtil.isFold(statusBarNotification)) {
-            checkUnimportatEntrance(statusBarNotification);
+            checkFoldEntrance(statusBarNotification);
         }
     }
 
-    private final void checkUnimportatEntrance(StatusBarNotification statusBarNotification) {
+    private final void checkFoldEntrance(StatusBarNotification statusBarNotification) {
         if (statusBarNotification != null && !NotificationUtil.isFoldEntrance(statusBarNotification).booleanValue()) {
             NotificationListenerService.RankingMap rankingMap = this.rankingManager.getRankingMap();
             if (rankingMap != null) {
-                updateFoldRankingAndSort(rankingMap, "checkUnimportatEntrance");
-                FoldManager.Companion companion = FoldManager.Companion;
-                boolean shouldShow = shouldShow();
-                UserHandle user = statusBarNotification.getUser();
-                Intrinsics.checkExpressionValueIsNotNull(user, "sbn.user");
-                companion.checkUnimportantNotification(shouldShow, user);
+                updateFoldRankingAndSort(rankingMap, "checkFoldEntrance");
+                FoldManager.Companion.checkUnimportantNotification(shouldShow(), getUserFromSbn(statusBarNotification));
                 return;
             }
             Intrinsics.throwNpe();
@@ -224,11 +220,11 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
     public final void changeFold2SysCommend(String str) {
         ArrayMap<String, NotificationEntry> arrayMap = this.mActiveNotifications;
         Intrinsics.checkExpressionValueIsNotNull(arrayMap, "mActiveNotifications");
-        transferNotifications(str, arrayMap, this.activeUnimportantNotifications, 0, true, false, "fold_sys_commend");
+        transferNotifications(str, arrayMap, this.activeUnimportantNotifications, 0, true, true, "fold_sys_commend");
         ArrayMap<String, NotificationEntry> arrayMap2 = this.activeUnimportantNotifications;
         ArrayMap<String, NotificationEntry> arrayMap3 = this.mActiveNotifications;
         Intrinsics.checkExpressionValueIsNotNull(arrayMap3, "mActiveNotifications");
-        transferNotifications(str, arrayMap2, arrayMap3, 0, false, false, "fold_sys_commend");
+        transferNotifications(str, arrayMap2, arrayMap3, 0, false, true, "fold_sys_commend");
     }
 
     @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
@@ -341,6 +337,23 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
         UserHandle of = UserHandle.of(((NotificationLockscreenUserManager) obj).getCurrentUserId());
         Intrinsics.checkExpressionValueIsNotNull(of, "UserHandle.of(Dependency…lass.java).currentUserId)");
         return of;
+    }
+
+    private final UserHandle getUserFromSbn(StatusBarNotification statusBarNotification) {
+        String str;
+        UserHandle userHandle;
+        if (statusBarNotification == null) {
+            return getCurrentUser();
+        }
+        if (statusBarNotification.getUserId() == 999) {
+            userHandle = UserHandle.OWNER;
+            str = "UserHandle.OWNER";
+        } else {
+            userHandle = statusBarNotification.getUser();
+            str = "sbn.user";
+        }
+        Intrinsics.checkExpressionValueIsNotNull(userHandle, str);
+        return userHandle;
     }
 
     public final boolean isSameUser(StatusBarNotification statusBarNotification) {
