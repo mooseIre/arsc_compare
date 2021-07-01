@@ -19,10 +19,6 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         this.proxyService = overviewProxyService;
     }
 
-    public static final /* synthetic */ void access$notifyGestureLineProgress(MiuiOverviewProxy miuiOverviewProxy, float f) {
-        miuiOverviewProxy.notifyGestureLineProgress(f);
-    }
-
     @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
     public void exitSplitScreen() {
         if (verifyCaller("startScreenPinning")) {

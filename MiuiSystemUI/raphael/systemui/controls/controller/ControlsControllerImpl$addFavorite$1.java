@@ -18,7 +18,7 @@ final class ControlsControllerImpl$addFavorite$1 implements Runnable {
 
     public final void run() {
         if (Favorites.INSTANCE.addFavorite(this.$componentName, this.$structureName, this.$controlInfo)) {
-            ControlsControllerImpl.access$getPersistenceWrapper$p(this.this$0).storeFavorites(Favorites.INSTANCE.getAllStructures());
+            this.this$0.persistenceWrapper.storeFavorites(Favorites.INSTANCE.getAllStructures());
         }
     }
 }

@@ -22,7 +22,7 @@ public final class DriveModeControllerImpl$observe$2 extends BroadcastReceiver {
         String action = intent.getAction();
         if (intent.getData() != null) {
             if (Intrinsics.areEqual("android.intent.action.PACKAGE_ADDED", action)) {
-                if (!(this.this$0.mIsDriveModeAvailable)) {
+                if (!this.this$0.mIsDriveModeAvailable) {
                     Uri data = intent.getData();
                     if (data == null) {
                         Intrinsics.throwNpe();
@@ -31,7 +31,7 @@ public final class DriveModeControllerImpl$observe$2 extends BroadcastReceiver {
                         this.this$0.mIsDriveModeAvailable = true;
                     }
                 }
-            } else if (Intrinsics.areEqual("android.intent.action.PACKAGE_REMOVED", action) && (this.this$0.mIsDriveModeAvailable)) {
+            } else if (Intrinsics.areEqual("android.intent.action.PACKAGE_REMOVED", action) && this.this$0.mIsDriveModeAvailable) {
                 Uri data2 = intent.getData();
                 if (data2 == null) {
                     Intrinsics.throwNpe();
