@@ -129,8 +129,7 @@ public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnima
         setAnimationListener(null);
     }
 
-    /* access modifiers changed from: private */
-    public class DecodeTask implements Runnable {
+    private class DecodeTask implements Runnable {
         private final int[] mAnimRes;
         private volatile int mCurrentPosition;
         private volatile boolean mDecoding;

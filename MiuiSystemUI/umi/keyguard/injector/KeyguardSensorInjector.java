@@ -203,8 +203,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void unregisterPickupSensor() {
+    public final void unregisterPickupSensor() {
         this.mUiOffloadThread.submit(new KeyguardSensorInjector$unregisterPickupSensor$1(this));
     }
 
@@ -241,8 +240,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final boolean shouldRegisterLargeAreaSensor() {
+    public final boolean shouldRegisterLargeAreaSensor() {
         return this.mIsDeviceSupportLargeAreaTouch && this.mSensorManager != null && this.mLargeAreaTouchSensor == null && !this.mKeyguardViewMediator.isHiding() && this.mKeyguardViewMediator.isShowing();
     }
 
