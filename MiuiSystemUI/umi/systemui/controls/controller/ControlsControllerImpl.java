@@ -138,6 +138,10 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return controlsControllerImpl.executor;
     }
 
+    public static final /* synthetic */ ControlsFavoritePersistenceWrapper access$getPersistenceWrapper$p(ControlsControllerImpl controlsControllerImpl) {
+        return controlsControllerImpl.persistenceWrapper;
+    }
+
     public static final class Companion {
         private Companion() {
         }

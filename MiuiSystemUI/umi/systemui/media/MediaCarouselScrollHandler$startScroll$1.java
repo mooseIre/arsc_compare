@@ -1,8 +1,7 @@
 package com.android.systemui.media;
 
-/* access modifiers changed from: package-private */
 /* compiled from: MediaCarouselScrollHandler.kt */
-public final class MediaCarouselScrollHandler$startScroll$1 implements Runnable {
+final class MediaCarouselScrollHandler$startScroll$1 implements Runnable {
     final /* synthetic */ int $scrollX;
     final /* synthetic */ int $scrollY;
     final /* synthetic */ MediaCarouselScrollHandler this$0;

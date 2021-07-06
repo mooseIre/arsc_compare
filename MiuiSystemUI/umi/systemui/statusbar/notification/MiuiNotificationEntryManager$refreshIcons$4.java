@@ -23,6 +23,6 @@ final class MiuiNotificationEntryManager$refreshIcons$4 extends Lambda implement
     }
 
     public final boolean invoke(Drawable drawable) {
-        return !Intrinsics.areEqual(drawable, MiuiNotificationEntryManager.access$getTRANSPARENT_DRAWABLE$p(this.this$0));
+        return !Intrinsics.areEqual(drawable, this.this$0.TRANSPARENT_DRAWABLE);
     }
 }

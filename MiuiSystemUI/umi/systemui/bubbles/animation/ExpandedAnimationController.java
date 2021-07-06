@@ -45,11 +45,13 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
     private float mStackOffsetPx;
     private float mStatusBarHeight;
 
+    /* access modifiers changed from: package-private */
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public int getNextAnimationInChain(DynamicAnimation.ViewProperty viewProperty, int i) {
         return -1;
     }
 
+    /* access modifiers changed from: package-private */
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public float getOffsetForChainedPropertyAnimation(DynamicAnimation.ViewProperty viewProperty) {
         return 0.0f;
@@ -139,7 +141,6 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         }).startAll(runnable);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$startOrUpdatePathAnimation$0 */
     public /* synthetic */ void lambda$startOrUpdatePathAnimation$0$ExpandedAnimationController() {
@@ -152,7 +153,6 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         updateBubblePositions();
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$startOrUpdatePathAnimation$1 */
     public /* synthetic */ void lambda$startOrUpdatePathAnimation$1$ExpandedAnimationController() {
@@ -164,7 +164,6 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         this.mAfterCollapse = null;
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$startOrUpdatePathAnimation$3 */
     public /* synthetic */ void lambda$startOrUpdatePathAnimation$3$ExpandedAnimationController(boolean z, int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
@@ -203,7 +202,6 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         physicsPropertyAnimator.withStiffness(1000.0f);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$startOrUpdatePathAnimation$2 */
     public /* synthetic */ void lambda$startOrUpdatePathAnimation$2$ExpandedAnimationController() {
@@ -320,6 +318,10 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         updateBubblePositions();
     }
 
+    static /* synthetic */ void lambda$snapBubbleBack$4(View view) {
+        view.setTranslationZ(0.0f);
+    }
+
     public void onGestureFinished() {
         this.mBubbleDraggedOutEnough = false;
         this.mMagnetizedBubbleDraggingOut = null;
@@ -339,7 +341,6 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         }
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$updateYPosition$5 */
     public /* synthetic */ void lambda$updateYPosition$5$ExpandedAnimationController(int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
@@ -373,6 +374,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         printWriter.println(this.mSpringingBubbleToTouch);
     }
 
+    /* access modifiers changed from: package-private */
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onActiveControllerForLayout(PhysicsAnimationLayout physicsAnimationLayout) {
         updateResources(this.mScreenOrientation, this.mDisplaySize);
@@ -386,11 +388,13 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         physicsPropertyAnimator.alpha(1.0f, new Runnable[0]);
     }
 
+    /* access modifiers changed from: package-private */
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public Set<DynamicAnimation.ViewProperty> getAnimatedProperties() {
         return Sets.newHashSet(new DynamicAnimation.ViewProperty[]{DynamicAnimation.TRANSLATION_X, DynamicAnimation.TRANSLATION_Y, DynamicAnimation.SCALE_X, DynamicAnimation.SCALE_Y, DynamicAnimation.ALPHA});
     }
 
+    /* access modifiers changed from: package-private */
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public SpringForce getSpringForce(DynamicAnimation.ViewProperty viewProperty, View view) {
         SpringForce springForce = new SpringForce();
@@ -399,6 +403,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         return springForce;
     }
 
+    /* access modifiers changed from: package-private */
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onChildAdded(View view, int i) {
         if (this.mAnimatingExpand) {
@@ -416,6 +421,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         }
     }
 
+    /* access modifiers changed from: package-private */
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onChildRemoved(View view, int i, Runnable runnable) {
         if (view.equals(getDraggedOutBubble())) {
@@ -433,6 +439,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         updateBubblePositions();
     }
 
+    /* access modifiers changed from: package-private */
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onChildReordered(View view, int i, int i2) {
         if (!this.mPreparingToCollapse) {

@@ -43,11 +43,13 @@ public class PackageScoreCache {
             /* class com.android.systemui.statusbar.notification.unimportant.$$Lambda$PackageScoreCache$H3ol39vfIqoLj8kQxiHm7tbftE4 */
 
             public final void run() {
-                PackageScoreCache.lambda$H3ol39vfIqoLj8kQxiHm7tbftE4(PackageScoreCache.this);
+                PackageScoreCache.this.updateAll();
             }
         });
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updateEntity(PackageEntity packageEntity) {
         SQLiteDatabase openDB;
         if (packageEntity.isDataChanged() && (openDB = openDB()) != null) {
@@ -56,8 +58,8 @@ public class PackageScoreCache {
         }
     }
 
-    /* access modifiers changed from: public */
-    private void updateAll() {
+    /* access modifiers changed from: private */
+    public void updateAll() {
         SQLiteDatabase openDB = openDB();
         if (openDB != null) {
             Map<String, PackageEntity> snapshot = this.mPkgEntities.snapshot();
@@ -187,6 +189,8 @@ public class PackageScoreCache {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updateEntityData(PackageEntity packageEntity) {
         SQLiteDatabase openDB = openDB();
         if (openDB != null) {
@@ -287,13 +291,13 @@ public class PackageScoreCache {
         return hashMap;
     }
 
+    /* access modifiers changed from: private */
     public class RankLruCache<K, V> extends LruCache<K, V> {
-        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public RankLruCache(int i) {
             super(i);
-            PackageScoreCache.this = r1;
         }
 
+        /* access modifiers changed from: protected */
         @Override // android.util.LruCache
         public void entryRemoved(boolean z, K k, V v, V v2) {
             if (z && (v instanceof PackageEntity)) {
@@ -312,7 +316,6 @@ public class PackageScoreCache {
             }
         }
 
-        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$entryRemoved$0 */
         public /* synthetic */ void lambda$entryRemoved$0$PackageScoreCache$RankLruCache(PackageEntity packageEntity) {

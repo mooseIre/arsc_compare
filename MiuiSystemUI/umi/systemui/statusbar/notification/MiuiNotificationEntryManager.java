@@ -48,6 +48,14 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
     private final ArrayList<NotificationEntry> sortedAndFilteredUnimportant;
     private final HashSet<String> transferSet;
 
+    public static final /* synthetic */ NotificationRankingManager access$getRankingManager$p(MiuiNotificationEntryManager miuiNotificationEntryManager) {
+        return miuiNotificationEntryManager.rankingManager;
+    }
+
+    public static final /* synthetic */ void access$updateFoldRankingAndSort(MiuiNotificationEntryManager miuiNotificationEntryManager, NotificationListenerService.RankingMap rankingMap, String str) {
+        miuiNotificationEntryManager.updateFoldRankingAndSort(rankingMap, str);
+    }
+
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiNotificationEntryManager(Context context, NotificationEntryManagerLogger notificationEntryManagerLogger, NotificationGroupManager notificationGroupManager, NotificationRankingManager notificationRankingManager, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment, FeatureFlags featureFlags, Lazy<NotificationRowBinder> lazy, Lazy<NotificationRemoteInputManager> lazy2, LeakDetector leakDetector, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController) {
         super(notificationEntryManagerLogger, notificationGroupManager, notificationRankingManager, keyguardEnvironment, featureFlags, lazy, lazy2, leakDetector, foregroundServiceDismissalFeatureController);
@@ -142,7 +150,6 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
         super.updateRankingAndSort(rankingMap, str);
     }
 
-    /* access modifiers changed from: public */
     private final void updateFoldRankingAndSort(NotificationListenerService.RankingMap rankingMap, String str) {
         if (!FoldManager.Companion.shouldSuppressFold()) {
             this.sortedAndFilteredUnimportant.clear();

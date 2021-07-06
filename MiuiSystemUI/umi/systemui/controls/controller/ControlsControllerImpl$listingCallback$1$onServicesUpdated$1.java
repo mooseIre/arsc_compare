@@ -76,7 +76,7 @@ final class ControlsControllerImpl$listingCallback$1$onServicesUpdated$1 impleme
         }
         if (z) {
             Log.d("ControlsControllerImpl", "Detected change in available services, storing updated favorites");
-            this.this$0.this$0.persistenceWrapper.storeFavorites(Favorites.INSTANCE.getAllStructures());
+            ControlsControllerImpl.access$getPersistenceWrapper$p(this.this$0.this$0).storeFavorites(Favorites.INSTANCE.getAllStructures());
         }
     }
 }
