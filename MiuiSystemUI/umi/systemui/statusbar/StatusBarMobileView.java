@@ -26,7 +26,6 @@ import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
 import com.android.systemui.statusbar.policy.DemoModeController;
-import java.util.Objects;
 import miui.os.Build;
 
 public class StatusBarMobileView extends LinearLayout implements DarkIconDispatcher.DarkReceiver, StatusIconDisplayable, DemoMode {
@@ -34,7 +33,6 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     private boolean mDrip;
     private boolean mForceUpdate;
     private boolean mInDemoMode;
-    private String mLastShowName;
     private ImageView mLeftInOut;
     private int mLeftInOutResId;
     private boolean mLight = true;
@@ -137,7 +135,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         TextView textView = this.mMobileType;
         if (textView != null) {
             textView.setTextAppearance(C0022R$style.TextAppearance_StatusBar_Signal);
-            updateMobileTypeLayout(this.mState.networkName, true);
+            updateMobileTypeLayout(this.mState.networkName);
         }
         TextView textView2 = this.mMobileTypeSingle;
         if (textView2 != null) {
@@ -147,11 +145,6 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
 
     public void onVisibilityAggregated(boolean z) {
         super.onVisibilityAggregated(z);
-        if (!z) {
-            suppressLayout(true);
-        } else {
-            suppressLayout(false);
-        }
     }
 
     private void init() {
@@ -239,7 +232,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             this.mMobileTypeSingle.setVisibility(0);
         } else {
             this.mMobileType.setText(mobileIconState.networkName);
-            updateMobileTypeLayout(mobileIconState.networkName, false);
+            updateMobileTypeLayout(mobileIconState.networkName);
             this.mMobileTypeImage.setVisibility(8);
             this.mMobileTypeSingle.setVisibility(8);
             this.mMobileType.setVisibility(0);
@@ -462,10 +455,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         } else if (i != this.mVisibleState || this.mForceUpdate) {
             this.mForceUpdate = false;
             this.mVisibleState = i;
-            if (this.mMobileContent.getVisibility() != 0) {
-                this.mMobileContent.setVisibility(0);
-                requestLayout();
-            }
+            requestLayout();
         }
     }
 
@@ -479,20 +469,17 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         return this.mState;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setDrip(boolean z) {
         this.mDrip = z;
     }
 
     public String toString() {
-        return "StatusBarMobileView(slot=" + this.mSlot + " state=" + this.mState + ") , " + super.toString();
+        return "StatusBarMobileView(slot=" + this.mSlot + " state=" + this.mState + ", measuredWidth = " + Integer.toHexString(getMeasuredHeightAndState()) + ", width = " + getWidth() + ") , " + super.toString();
     }
 
-    private void updateMobileTypeLayout(String str, boolean z) {
-        if (str == null) {
-            return;
-        }
-        if (!Objects.equals(str, this.mLastShowName) || z) {
-            this.mLastShowName = str;
+    private void updateMobileTypeLayout(String str) {
+        if (str != null) {
             TextPaint paint = this.mMobileType.getPaint();
             Paint.FontMetrics fontMetrics = paint.getFontMetrics();
             float f = fontMetrics.bottom - fontMetrics.top;

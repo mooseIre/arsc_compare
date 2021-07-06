@@ -26,9 +26,6 @@ import java.util.List;
 public interface StatusBarIconController {
     void addIconGroup(IconManager iconManager);
 
-    default void addIconGroup(IconManager iconManager, List<String> list) {
-    }
-
     void removeAllIconsForSlot(String str);
 
     void removeIconGroup(IconManager iconManager);
@@ -64,7 +61,7 @@ public interface StatusBarIconController {
     }
 
     public static class DarkIconManager extends IconManager {
-        private final DarkIconDispatcher mDarkIconDispatcher = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class));
+        protected final DarkIconDispatcher mDarkIconDispatcher = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class));
         private int mIconHPadding = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_padding);
 
         public DarkIconManager(LinearLayout linearLayout, CommandQueue commandQueue) {

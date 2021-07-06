@@ -400,29 +400,43 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         return viewArr;
     }
 
-    public void updateTransHeight(List<View> list, float f, int i, int i2) {
+    public void updateTransHeight(List<View> list, float f, final int i, final int i2) {
         if (f == 0.0f) {
             int size = this.mRecords.size() + (list == null ? 0 : list.size());
-            View[] viewArr = new View[size];
+            final View[] viewArr = new View[size];
             for (int i3 = 0; i3 < this.mRecords.size(); i3++) {
                 viewArr[i3] = this.mRecords.get(i3).tileView;
             }
             for (int size2 = this.mRecords.size(); size2 < size; size2++) {
                 viewArr[size2] = list.get(size2 - this.mRecords.size());
             }
-            for (int i4 = 0; i4 < size; i4++) {
-                Folme.useAt(viewArr[i4]).state().to(FolmeAnimState.mSpringBackAnim, FolmeAnimState.mSpringBackConfig);
-            }
+            post(new Runnable(this) {
+                /* class com.android.systemui.controlcenter.phone.QSControlCenterTileLayout.AnonymousClass1 */
+
+                public void run() {
+                    View[] viewArr = viewArr;
+                    int length = viewArr.length;
+                    for (int i = 0; i < length; i++) {
+                        Folme.useAt(viewArr[i]).state().to(FolmeAnimState.mSpringBackAnim, FolmeAnimState.mSpringBackConfig);
+                    }
+                }
+            });
             endExpanding();
             return;
         }
-        float f2 = (float) i;
-        float max = Math.max(0.0f, Math.min(f, f2));
-        Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
-        while (it.hasNext()) {
-            QSPanel.TileRecord next = it.next();
-            Folme.useAt(next.tileView).state().setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(ControlCenterUtils.getTranslationY(this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue(), i2, max, f2)));
-        }
+        final float max = Math.max(0.0f, Math.min(f, (float) i));
+        post(new Runnable() {
+            /* class com.android.systemui.controlcenter.phone.QSControlCenterTileLayout.AnonymousClass2 */
+
+            public void run() {
+                Iterator<QSPanel.TileRecord> it = QSControlCenterTileLayout.this.mRecords.iterator();
+                while (it.hasNext()) {
+                    QSPanel.TileRecord next = it.next();
+                    float translationY = ControlCenterUtils.getTranslationY(QSControlCenterTileLayout.this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue(), i2, max, (float) i);
+                    Folme.useAt(next.tileView).state().setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(translationY));
+                }
+            }
+        });
     }
 
     private void endExpanding() {
@@ -562,8 +576,8 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         final QSPanel.TileRecord tileRecord = new QSPanel.TileRecord();
         tileRecord.tile = qSTile;
         tileRecord.tileView = createTileView(qSTile, !this.mExpanded && this.mRecords.size() <= this.mMinShowRows * this.mColumns);
-        AnonymousClass1 r4 = new QSTile.Callback() {
-            /* class com.android.systemui.controlcenter.phone.QSControlCenterTileLayout.AnonymousClass1 */
+        AnonymousClass3 r4 = new QSTile.Callback() {
+            /* class com.android.systemui.controlcenter.phone.QSControlCenterTileLayout.AnonymousClass3 */
 
             @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public int getCallbackType() {

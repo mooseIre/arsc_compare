@@ -132,7 +132,7 @@ public final class FoldTool {
         if ((statusBarNotification.getNotification().flags & 512) != 0) {
             CharSequence resolveTitle = NotificationUtil.resolveTitle(statusBarNotification.getNotification());
             Intrinsics.checkExpressionValueIsNotNull(resolveTitle, "resolveTitle(sbn.notification)");
-            if (StringsKt__StringsKt.contains$default(resolveTitle, "GroupSummary", false, 2, null)) {
+            if (StringsKt__StringsKt.contains$default(resolveTitle, (CharSequence) "GroupSummary", false, 2, (Object) null)) {
                 return R$styleable.Constraint_motionProgress;
             }
         }

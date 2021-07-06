@@ -69,7 +69,7 @@ public final class KeyOrderObserver {
             String stringForUser = Settings.System.getStringForUser(contentResolver, "screen_key_order", -2);
             if (!TextUtils.isEmpty(stringForUser)) {
                 Intrinsics.checkExpressionValueIsNotNull(stringForUser, "keyList");
-                List<String> list = StringsKt__StringsKt.split$default(stringForUser, new String[]{" "}, false, 0, 6, null);
+                List<String> list = StringsKt__StringsKt.split$default((CharSequence) stringForUser, new String[]{" "}, false, 0, 6, (Object) null);
                 if (list != null) {
                     for (String str : list) {
                         if (str != null) {

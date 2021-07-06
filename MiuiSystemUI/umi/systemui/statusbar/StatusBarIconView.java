@@ -98,6 +98,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
     private Runnable mLayoutRunnable;
     private float[] mMatrix;
     private ColorMatrixColorFilter mMatrixColorFilter;
+    private boolean mMiuiBlocked;
     private boolean mNightMode;
     private ExpandedNotification mNotification;
     private Drawable mNumberBackground;
@@ -938,7 +939,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
 
     @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public boolean isIconBlocked() {
-        return this.mBlocked;
+        return this.mBlocked || this.mMiuiBlocked;
     }
 
     public void setIncreasedSize(boolean z) {
@@ -955,5 +956,13 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
 
     public boolean showsConversation() {
         return this.mShowsConversation;
+    }
+
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
+    public void setMiuiBlocked(boolean z) {
+        if (this.mMiuiBlocked != z) {
+            this.mMiuiBlocked = z;
+            requestLayout();
+        }
     }
 }

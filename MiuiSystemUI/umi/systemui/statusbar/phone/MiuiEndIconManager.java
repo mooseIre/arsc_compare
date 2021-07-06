@@ -1,13 +1,12 @@
 package com.android.systemui.statusbar.phone;
 
+import android.view.View;
 import android.widget.LinearLayout;
-import com.android.systemui.C0008R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.StatusBarMobileView;
+import com.android.systemui.statusbar.MiuiStatusBarIconViewHelper;
+import com.android.systemui.statusbar.StatusIconDisplayable;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MiuiEndIconManager extends StatusBarIconController.DarkIconManager {
     protected boolean mAttached;
@@ -21,38 +20,43 @@ public class MiuiEndIconManager extends StatusBarIconController.DarkIconManager 
     public void setDripEnd(boolean z) {
         if (this.mDripEnd != z) {
             this.mDripEnd = z;
-            updateController();
+            updateViewConfig();
         }
     }
 
     /* access modifiers changed from: protected */
-    public void updateController() {
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this);
-        if (!this.mAttached) {
-            return;
+    public void updateViewConfig() {
+        int childCount = this.mGroup.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = this.mGroup.getChildAt(i);
+            if (childAt instanceof StatusIconDisplayable) {
+                StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) childAt;
+                statusIconDisplayable.setMiuiBlocked(this.mDripEnd && MiuiStatusBarIconViewHelper.DRIP_END_BLOCKED_LIST.contains(statusIconDisplayable.getSlot()));
+                statusIconDisplayable.setDrip(this.mDripEnd);
+            }
         }
-        if (this.mDripEnd) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this, new ArrayList(Arrays.asList(this.mContext.getResources().getStringArray(C0008R$array.config_drip_right_block_statusBarIcons))));
-            return;
-        }
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this);
     }
 
     /* access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
-    public StatusBarMobileView onCreateStatusBarMobileView(String str) {
-        StatusBarMobileView onCreateStatusBarMobileView = super.onCreateStatusBarMobileView(str);
-        onCreateStatusBarMobileView.setDrip(this.mDripEnd);
-        return onCreateStatusBarMobileView;
+    @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager, com.android.systemui.statusbar.phone.StatusBarIconController.DarkIconManager
+    public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
+        StatusIconDisplayable addHolder = addHolder(i, str, z, statusBarIconHolder);
+        addHolder.setMiuiBlocked(this.mDripEnd && MiuiStatusBarIconViewHelper.DRIP_END_BLOCKED_LIST.contains(str));
+        addHolder.setDrip(this.mDripEnd);
+        this.mDarkIconDispatcher.addDarkReceiver(addHolder);
     }
 
     public void attachToWindow() {
-        this.mAttached = true;
-        updateController();
+        if (!this.mAttached) {
+            this.mAttached = true;
+            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this);
+        }
     }
 
     public void detachFromWindow() {
-        this.mAttached = false;
-        updateController();
+        if (this.mAttached) {
+            this.mAttached = false;
+            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this);
+        }
     }
 }

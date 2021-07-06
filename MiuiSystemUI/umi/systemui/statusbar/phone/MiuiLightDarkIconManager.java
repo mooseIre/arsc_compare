@@ -8,8 +8,8 @@ import com.android.systemui.statusbar.StatusIconDisplayable;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 
 public class MiuiLightDarkIconManager extends StatusBarIconController.IconManager {
-    private int mColor;
-    private boolean mLight;
+    protected int mColor;
+    protected boolean mLight;
 
     public MiuiLightDarkIconManager(ViewGroup viewGroup, CommandQueue commandQueue, boolean z, int i) {
         super(viewGroup, commandQueue);

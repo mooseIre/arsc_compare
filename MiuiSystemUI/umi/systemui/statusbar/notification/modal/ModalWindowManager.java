@@ -73,7 +73,7 @@ public class ModalWindowManager {
     private void applyBlurRatio(float f) {
         if (hasAdded()) {
             Log.d("ModalWindowManager", "setBlurRatio: " + f);
-            BlurUtil.setBlur(this.mWindowView.getViewRootImpl(), f, 0);
+            BlurUtil.setBlurWithWindowManager(this.mWindowView.getViewRootImpl(), f, 0, this.mLpChanged);
             apply();
         }
     }

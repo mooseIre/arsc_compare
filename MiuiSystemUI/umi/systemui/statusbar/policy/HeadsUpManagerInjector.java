@@ -61,7 +61,7 @@ public class HeadsUpManagerInjector {
 
     public static boolean injectSnooze(Context context, NotificationEntry notificationEntry) {
         int snoozeStrategy = getSnoozeStrategy(context);
-        if (NotificationUtil.isInCallNotification(notificationEntry.getSbn()) || NotificationUtil.isGlobalInCallNotification(context, notificationEntry.getSbn()) || NotificationUtil.containsVerifyCode(notificationEntry.getSbn())) {
+        if (NotificationUtil.isInCallNotification(notificationEntry.getSbn()) || NotificationUtil.isGlobalInCallNotification(context, notificationEntry.getSbn()) || NotificationUtil.containsVerifyCode(notificationEntry.getSbn()) || NotificationUtil.containsFullScreenIntent(notificationEntry.getSbn().getNotification())) {
             return true;
         }
         if (sSnoozeNotify) {
@@ -77,7 +77,7 @@ public class HeadsUpManagerInjector {
     }
 
     public static boolean skipSnooze(Context context, ExpandedNotification expandedNotification) {
-        if (NotificationUtil.isInCallNotification(expandedNotification) || NotificationUtil.isGlobalInCallNotification(context, expandedNotification) || NotificationUtil.containsVerifyCode(expandedNotification)) {
+        if (NotificationUtil.isInCallNotification(expandedNotification) || NotificationUtil.isGlobalInCallNotification(context, expandedNotification) || NotificationUtil.containsVerifyCode(expandedNotification) || NotificationUtil.containsFullScreenIntent(expandedNotification.getNotification())) {
             return true;
         }
         return false;

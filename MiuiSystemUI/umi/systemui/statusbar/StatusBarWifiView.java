@@ -117,11 +117,6 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
 
     public void onVisibilityAggregated(boolean z) {
         super.onVisibilityAggregated(z);
-        if (!z) {
-            suppressLayout(true);
-        } else {
-            suppressLayout(false);
-        }
     }
 
     @Override // com.android.systemui.statusbar.StatusIconDisplayable
@@ -132,10 +127,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         } else if (i != this.mVisibleState || this.mForceUpdate) {
             this.mForceUpdate = false;
             this.mVisibleState = i;
-            if (this.mWifiGroup.getVisibility() != 0) {
-                this.mWifiGroup.setVisibility(0);
-                requestLayout();
-            }
+            requestLayout();
         }
     }
 
@@ -370,7 +362,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     public String toString() {
-        return "StatusBarWifiView(slot=" + this.mSlot + " state=" + this.mState + ")";
+        return "StatusBarWifiView(slot=" + this.mSlot + " state=" + this.mState + ", measuredWidth = " + Integer.toHexString(getMeasuredHeightAndState()) + ", width = " + getWidth() + ")" + super.toString();
     }
 
     @Override // com.android.systemui.DemoMode

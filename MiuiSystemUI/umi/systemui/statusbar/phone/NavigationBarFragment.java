@@ -252,11 +252,6 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
                 NavigationBarFragment.this.orientSecondaryHomeHandle();
             }
 
-            @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
-            public void startAssistant(Bundle bundle) {
-                NavigationBarFragment.this.mAssistManager.startAssist(bundle);
-            }
-
             /* JADX WARNING: Removed duplicated region for block: B:18:? A[RETURN, SYNTHETIC] */
             /* JADX WARNING: Removed duplicated region for block: B:9:0x0035 A[ADDED_TO_REGION] */
             @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener

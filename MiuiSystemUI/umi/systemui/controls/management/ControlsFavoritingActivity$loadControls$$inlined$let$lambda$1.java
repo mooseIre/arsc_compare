@@ -86,6 +86,7 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
             }
 
             public final void run() {
+                Object obj;
                 ControlsFavoritingActivity.access$getStructurePager$p(this.this$0.this$0).setAdapter(new StructureAdapter(this.this$0.this$0.listOfStructures));
                 ControlsFavoritingActivity.access$getStructurePager$p(this.this$0.this$0).setCurrentItem(i);
                 int i = 0;
@@ -94,7 +95,7 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
                     Resources resources = this.this$0.this$0.getResources();
                     int i2 = C0021R$string.controls_favorite_load_error;
                     Object[] objArr = new Object[1];
-                    Object obj = this.this$0.this$0.appName;
+                    obj = this.this$0.this$0.appName;
                     if (obj == null) {
                         obj = CodeInjection.MD5;
                     }

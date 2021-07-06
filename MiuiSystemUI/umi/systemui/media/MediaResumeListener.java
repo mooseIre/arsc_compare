@@ -120,7 +120,7 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
         }
         if (list != null) {
             for (String str : list) {
-                List list2 = StringsKt__StringsKt.split$default(str, new String[]{"/"}, false, 0, 6, null);
+                List list2 = StringsKt__StringsKt.split$default((CharSequence) str, new String[]{"/"}, false, 0, 6, (Object) null);
                 this.resumeComponents.add(new ComponentName((String) list2.get(0), (String) list2.get(1)));
             }
         }

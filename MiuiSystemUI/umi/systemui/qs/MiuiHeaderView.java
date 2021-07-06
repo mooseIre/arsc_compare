@@ -25,6 +25,7 @@ import miuix.animation.controller.AnimState;
 import miuix.animation.property.ViewProperty;
 
 public abstract class MiuiHeaderView extends RelativeLayout implements View.OnClickListener, TunerService.Tunable, FoldListener {
+    private boolean isShortcurVisible;
     private final ActivityStarter mActStarter;
     protected MiuiClock mClock;
     private IFolme mClockStyle;
@@ -62,6 +63,7 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         super(context, attributeSet, i);
         this.mLastOrientation = 1;
         this.mShortcutDestination = 0;
+        this.isShortcurVisible = true;
         this.mActStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
     }
 
@@ -104,6 +106,11 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         // Method dump skipped, instructions count: 146
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.MiuiHeaderView.onClick(android.view.View):void");
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateShortCutVisibility(int i) {
+        this.isShortcurVisible = i == 0;
     }
 
     private void showNormalNotificationsAnim() {
@@ -200,8 +207,10 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         this.mTotalHeightStyle.to(getHeightAnimState(false), this.mHeightConfig);
         this.mSysIconAreaStyle.visible().hide(this.mItemConfig);
         this.mSysIconAreaStyle.state().to(getAnimState(1, false), this.mItemConfig);
-        this.mShortcutStyle.visible().hide(this.mItemConfig);
-        this.mShortcutStyle.state().to(getAnimState(2, false), this.mItemConfig);
+        if (this.isShortcurVisible) {
+            this.mShortcutStyle.visible().hide(this.mItemConfig);
+            this.mShortcutStyle.state().to(getAnimState(2, false), this.mItemConfig);
+        }
         this.mDateStyle.visible().hide(this.mItemConfig);
         this.mDateStyle.state().to(getAnimState(3, false), this.mItemConfig);
         this.mClockStyle.visible().hide(this.mItemConfig);
@@ -226,8 +235,10 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         this.mTotalHeightStyle.to(getHeightAnimState(true), this.mHeightConfig);
         this.mSysIconAreaStyle.visible().show(this.mItemConfig);
         this.mSysIconAreaStyle.state().to(getAnimState(1, true), this.mItemConfig);
-        this.mShortcutStyle.visible().show(this.mItemConfig);
-        this.mShortcutStyle.state().to(getAnimState(2, true), this.mItemConfig);
+        if (this.isShortcurVisible) {
+            this.mShortcutStyle.visible().show(this.mItemConfig);
+            this.mShortcutStyle.state().to(getAnimState(2, true), this.mItemConfig);
+        }
         this.mDateStyle.visible().show(this.mItemConfig);
         this.mDateStyle.state().to(getAnimState(3, true), this.mItemConfig);
         this.mClockStyle.visible().show(this.mItemConfig);
@@ -242,7 +253,9 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         resetViewVisible(this.mDateView);
         resetViewVisible(this.mClock);
         resetViewVisible(this.mSysIconArea);
-        resetViewVisible(this.mShortcut);
+        if (this.isShortcurVisible) {
+            resetViewVisible(this.mShortcut);
+        }
         resetViewGone(this.mUnimportantHeader);
         resetTranslationY();
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
@@ -257,7 +270,9 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         resetViewGone(this.mDateView);
         resetViewGone(this.mClock);
         resetViewGone(this.mSysIconArea);
-        resetViewGone(this.mShortcut);
+        if (this.isShortcurVisible) {
+            resetViewGone(this.mShortcut);
+        }
         resetViewVisible(this.mUnimportantHeader);
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         layoutParams.height = (int) getUnimportantHeight();

@@ -67,14 +67,6 @@ public final class AppMiniWindowRowTouchHelper {
         this.mHandler = new AppMiniWindowRowTouchHelper$mHandler$1(this, Looper.getMainLooper());
     }
 
-    public static final /* synthetic */ MiniWindowExpandParameters access$getMExpandedParams$p(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper) {
-        return appMiniWindowRowTouchHelper.mExpandedParams;
-    }
-
-    public static final /* synthetic */ void access$onExpandedParamsUpdated(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper) {
-        appMiniWindowRowTouchHelper.onExpandedParamsUpdated();
-    }
-
     public final boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if ((!this.mTouchingMiniWindowRow || this.mAbandonMiniWindowTracks) && motionEvent.getActionMasked() == 2) {

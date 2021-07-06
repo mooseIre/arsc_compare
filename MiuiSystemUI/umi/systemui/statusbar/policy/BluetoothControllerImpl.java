@@ -13,7 +13,6 @@ import android.os.UserManager;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.constraintlayout.widget.R$styleable;
-import codeinjection.CodeInjection;
 import com.android.settingslib.bluetooth.BluetoothCallback;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
@@ -493,20 +492,43 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         return i == 12 || i == 10 || i == 15;
     }
 
+    /* JADX WARNING: Removed duplicated region for block: B:11:0x0027  */
     @Override // com.android.systemui.statusbar.policy.BluetoothController
-    public String getLastDeviceName() {
-        if (this.mConnectedDevices.isEmpty()) {
-            return CodeInjection.MD5;
-        }
-        CachedBluetoothDevice cachedBluetoothDevice = this.mLastActiveDevice;
-        if (cachedBluetoothDevice != null) {
-            return cachedBluetoothDevice.getName();
-        }
-        CachedBluetoothDevice cachedBluetoothDevice2 = this.mConnectedDevices.get(0);
-        if (cachedBluetoothDevice2 == null) {
-            return CodeInjection.MD5;
-        }
-        return cachedBluetoothDevice2.getName();
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public java.lang.String getLastDeviceNameIgnoringBleDevice(android.content.Context r5) {
+        /*
+            r4 = this;
+            java.util.List<com.android.settingslib.bluetooth.CachedBluetoothDevice> r0 = r4.mConnectedDevices
+            boolean r0 = r0.isEmpty()
+            java.lang.String r1 = ""
+            if (r0 != 0) goto L_0x003c
+            com.android.settingslib.bluetooth.CachedBluetoothDevice r0 = r4.mLastActiveDevice
+            if (r0 == 0) goto L_0x001b
+            boolean r0 = r4.isBleAudioDevice(r5, r0)
+            if (r0 != 0) goto L_0x001b
+            com.android.settingslib.bluetooth.CachedBluetoothDevice r4 = r4.mLastActiveDevice
+            java.lang.String r4 = r4.getName()
+            return r4
+        L_0x001b:
+            java.util.List<com.android.settingslib.bluetooth.CachedBluetoothDevice> r0 = r4.mConnectedDevices
+            java.util.Iterator r0 = r0.iterator()
+        L_0x0021:
+            boolean r2 = r0.hasNext()
+            if (r2 == 0) goto L_0x003c
+            java.lang.Object r2 = r0.next()
+            com.android.settingslib.bluetooth.CachedBluetoothDevice r2 = (com.android.settingslib.bluetooth.CachedBluetoothDevice) r2
+            if (r2 == 0) goto L_0x0035
+            boolean r3 = r4.isBleAudioDevice(r5, r2)
+            if (r3 != 0) goto L_0x0021
+        L_0x0035:
+            if (r2 != 0) goto L_0x0038
+            goto L_0x003c
+        L_0x0038:
+            java.lang.String r1 = r2.getName()
+        L_0x003c:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.BluetoothControllerImpl.getLastDeviceNameIgnoringBleDevice(android.content.Context):java.lang.String");
     }
 
     @Override // com.android.systemui.statusbar.policy.BluetoothController

@@ -2505,10 +2505,12 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     static void dumpBarTransitions(PrintWriter printWriter, String str, BarTransitions barTransitions) {
-        printWriter.print("  ");
-        printWriter.print(str);
-        printWriter.print(".BarTransitions.mMode=");
-        printWriter.println(BarTransitions.modeToString(barTransitions.getMode()));
+        if (barTransitions != null) {
+            printWriter.print("  ");
+            printWriter.print(str);
+            printWriter.print(".BarTransitions.mMode=");
+            printWriter.println(BarTransitions.modeToString(barTransitions.getMode()));
+        }
     }
 
     public void createAndAddWindows(RegisterStatusBarResult registerStatusBarResult) {

@@ -114,6 +114,10 @@ public class NotificationUtil {
         return (notification.largeIcon == null && notification.getLargeIcon() == null) ? false : true;
     }
 
+    public static boolean containsFullScreenIntent(Notification notification) {
+        return notification.fullScreenIntent != null;
+    }
+
     public static Drawable getLargeIconDrawable(Context context, Notification notification) {
         if (notification.getLargeIcon() != null) {
             return notification.getLargeIcon().loadDrawable(context);

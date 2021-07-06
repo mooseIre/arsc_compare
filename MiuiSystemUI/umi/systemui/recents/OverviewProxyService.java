@@ -28,6 +28,7 @@ import com.android.internal.policy.ScreenDecorationsUtils;
 import com.android.internal.util.ScreenshotHelper;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
+import com.android.systemui.assist.AssistManager;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.model.SysUiState;
@@ -649,9 +650,6 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         default void onToggleRecentApps() {
         }
-
-        default void startAssistant(Bundle bundle) {
-        }
     }
 
     /* access modifiers changed from: private */
@@ -948,9 +946,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void notifyStartAssistant(Bundle bundle) {
-        for (int size = this.mConnectionCallbacks.size() - 1; size >= 0; size--) {
-            this.mConnectionCallbacks.get(size).startAssistant(bundle);
-        }
+        ((AssistManager) Dependency.get(AssistManager.class)).startAssist(bundle);
     }
 
     public void notifySplitScreenBoundsChanged(Rect rect, Rect rect2) {

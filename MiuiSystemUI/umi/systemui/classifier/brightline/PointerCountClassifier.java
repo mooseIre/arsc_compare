@@ -2,8 +2,7 @@ package com.android.systemui.classifier.brightline;
 
 import android.view.MotionEvent;
 
-/* access modifiers changed from: package-private */
-public class PointerCountClassifier extends FalsingClassifier {
+class PointerCountClassifier extends FalsingClassifier {
     private int mMaxPointerCount;
 
     PointerCountClassifier(FalsingDataProvider falsingDataProvider) {

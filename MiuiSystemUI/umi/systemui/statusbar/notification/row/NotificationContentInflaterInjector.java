@@ -421,13 +421,14 @@ public class NotificationContentInflaterInjector {
     }
 
     private static boolean handleMiuiAction(RemoteViews remoteViews, Notification notification) {
-        boolean isShowMiuiAction = MiuiNotificationCompat.isShowMiuiAction(notification);
-        if (isShowMiuiAction) {
-            remoteViews.setViewVisibility(C0015R$id.miui_action, 0);
-            remoteViews.setTextViewText(C0015R$id.miui_action, MiuiNotificationCompat.getMiuiActionTitle(notification));
-            remoteViews.setOnClickPendingIntent(C0015R$id.miui_action, notification.actions[0].actionIntent);
+        Notification.Action miuiAction = MiuiNotificationCompat.getMiuiAction(notification);
+        if (miuiAction == null) {
+            return false;
         }
-        return isShowMiuiAction;
+        remoteViews.setViewVisibility(C0015R$id.miui_action, 0);
+        remoteViews.setTextViewText(C0015R$id.miui_action, miuiAction.title);
+        remoteViews.setOnClickPendingIntent(C0015R$id.miui_action, miuiAction.actionIntent);
+        return true;
     }
 
     private static boolean handleChronometerAndTime(RemoteViews remoteViews, Notification notification) {

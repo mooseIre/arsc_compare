@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
+import android.util.EventLog;
 import android.util.Log;
 import android.util.Size;
 import android.view.SurfaceControl;
@@ -21,7 +22,9 @@ import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import android.window.WindowContainerTransactionCallback;
 import android.window.WindowOrganizer;
+import codeinjection.CodeInjection;
 import com.android.internal.os.SomeArgs;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.pip.PipAnimationController;
 import com.android.systemui.pip.PipSurfaceTransactionHelper;
@@ -48,6 +51,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     private SurfaceControl mLeash;
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
     private int mOneShotAnimationType = 0;
+    private int mOverridableMinSize;
     private PictureInPictureParams mPictureInPictureParams;
     private final PipAnimationController.PipAnimationCallback mPipAnimationCallback = new PipAnimationController.PipAnimationCallback() {
         /* class com.android.systemui.pip.PipTaskOrganizer.AnonymousClass1 */
@@ -146,6 +150,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     public PipTaskOrganizer(Context context, PipBoundsHandler pipBoundsHandler, PipSurfaceTransactionHelper pipSurfaceTransactionHelper, Divider divider, DisplayController displayController, PipAnimationController pipAnimationController, PipUiEventLogger pipUiEventLogger) {
         this.mPipBoundsHandler = pipBoundsHandler;
         this.mEnterExitAnimationDuration = context.getResources().getInteger(C0016R$integer.config_pipResizeAnimationDuration);
+        this.mOverridableMinSize = context.getResources().getDimensionPixelSize(C0012R$dimen.overridable_minimal_size_pip_resizable_task);
         this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
         this.mPipAnimationController = pipAnimationController;
         this.mPipUiEventLoggerLogger = pipUiEventLogger;
@@ -701,10 +706,16 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
 
     private Size getMinimalSize(ActivityInfo activityInfo) {
         ActivityInfo.WindowLayout windowLayout;
-        if (activityInfo == null || (windowLayout = activityInfo.windowLayout) == null || windowLayout.minWidth <= 0 || windowLayout.minHeight <= 0) {
+        int i;
+        int i2;
+        if (activityInfo == null || (windowLayout = activityInfo.windowLayout) == null || (i = windowLayout.minWidth) <= 0 || (i2 = windowLayout.minHeight) <= 0) {
             return null;
         }
-        return new Size(windowLayout.minWidth, windowLayout.minHeight);
+        int i3 = this.mOverridableMinSize;
+        if (i < i3 || i2 < i3) {
+            EventLog.writeEvent(1397638484, "174302616", -1, CodeInjection.MD5);
+        }
+        return new Size(Math.max(windowLayout.minWidth, this.mOverridableMinSize), Math.max(windowLayout.minHeight, this.mOverridableMinSize));
     }
 
     private float getAspectRatioOrDefault(PictureInPictureParams pictureInPictureParams) {

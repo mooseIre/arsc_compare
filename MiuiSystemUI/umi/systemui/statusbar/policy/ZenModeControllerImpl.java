@@ -433,19 +433,22 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
 
     /* access modifiers changed from: protected */
     public void fireVibrateChanged() {
-        Utils.safeForeach(this.mCallbacks, new Consumer(this.mVibrateEnable) {
-            /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$uKt_3WXZ4L13263SobuGkOac7Uw */
-            public final /* synthetic */ boolean f$0;
+        boolean z = this.mVibrateEnable;
+        synchronized (this.mCallbacksLock) {
+            Utils.safeForeach(this.mCallbacks, new Consumer(z) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$uKt_3WXZ4L13263SobuGkOac7Uw */
+                public final /* synthetic */ boolean f$0;
 
-            {
-                this.f$0 = r1;
-            }
+                {
+                    this.f$0 = r1;
+                }
 
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ((ZenModeController.Callback) obj).onVibrateChanged(this.f$0);
-            }
-        });
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    ((ZenModeController.Callback) obj).onVibrateChanged(this.f$0);
+                }
+            });
+        }
     }
 
     @Override // com.android.systemui.statusbar.policy.ZenModeController
@@ -464,21 +467,25 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     }
 
     private void fireZenOrRingerChanged() {
-        Utils.safeForeach(this.mCallbacks, new Consumer(this.mZenMode, this.mRingerMode) {
-            /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$CowTOyLJxNXw1gez1pZVPvO14fs */
-            public final /* synthetic */ boolean f$0;
-            public final /* synthetic */ boolean f$1;
+        boolean z = this.mZenMode;
+        boolean z2 = this.mRingerMode;
+        synchronized (this.mCallbacksLock) {
+            Utils.safeForeach(this.mCallbacks, new Consumer(z, z2) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$CowTOyLJxNXw1gez1pZVPvO14fs */
+                public final /* synthetic */ boolean f$0;
+                public final /* synthetic */ boolean f$1;
 
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-            }
+                {
+                    this.f$0 = r1;
+                    this.f$1 = r2;
+                }
 
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ((ZenModeController.Callback) obj).onZenOrRingerChanged(this.f$0, this.f$1);
-            }
-        });
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    ((ZenModeController.Callback) obj).onZenOrRingerChanged(this.f$0, this.f$1);
+                }
+            });
+        }
     }
 
     @Override // com.android.systemui.statusbar.policy.ZenModeController

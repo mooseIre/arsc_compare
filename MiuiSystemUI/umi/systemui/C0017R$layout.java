@@ -5676,6 +5676,7 @@ public final class R {
         public static final int one_finger_pop_limit;
         public static final int overflow_dot_radius;
         public static final int overflow_icon_dot_padding;
+        public static final int overridable_minimal_size_pip_resizable_task;
         public static final int owner_info_title_text_size;
         public static final int panel_content_corner_radius;
         public static final int panel_content_margin;
@@ -14151,6 +14152,7 @@ public final class R {
         public static final int keyguard_indication_trust_unlocked;
         public static final int keyguard_indication_trust_unlocked_plugged_in;
         public static final int keyguard_instructions_when_pattern_disabled;
+        public static final int keyguard_invalid_sim_puk_hint;
         public static final int keyguard_left_mi_wallet;
         public static final int keyguard_left_remotecentral;
         public static final int keyguard_left_smarthome;

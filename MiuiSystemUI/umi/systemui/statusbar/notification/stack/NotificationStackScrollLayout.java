@@ -49,6 +49,7 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.settingslib.Utils;
+import com.android.settingslib.utils.ThreadUtils;
 import com.android.systemui.C0009R$attr;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0011R$color;
@@ -5203,6 +5204,25 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     /* renamed from: onDismissAllAnimationsEnd */
     public void lambda$clearNotifications$9(List<ExpandableNotificationRow> list, int i) {
+        ThreadUtils.postOnMainThread(new Runnable(list, i) {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$fXc7X4D885PRioFXcAbpLn_n0FU */
+            public final /* synthetic */ List f$1;
+            public final /* synthetic */ int f$2;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void run() {
+                NotificationStackScrollLayout.this.lambda$onDismissAllAnimationsEnd$16$NotificationStackScrollLayout(this.f$1, this.f$2);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: doDismissAll */
+    public void lambda$onDismissAllAnimationsEnd$16(List<ExpandableNotificationRow> list, int i) {
         if (!this.mFeatureFlags.isNewNotifPipelineRenderingEnabled()) {
             for (ExpandableNotificationRow expandableNotificationRow : list) {
                 if (!canChildBeDismissed(expandableNotificationRow)) {

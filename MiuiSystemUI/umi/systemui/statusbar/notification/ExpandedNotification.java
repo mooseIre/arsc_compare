@@ -134,7 +134,7 @@ public class ExpandedNotification extends StatusBarNotification {
     }
 
     public boolean isShowMiuiAction() {
-        return NotificationSettingsHelper.showMiuiStyle() && MiuiNotificationCompat.isShowMiuiAction(getNotification());
+        return MiuiNotificationCompat.isShowMiuiAction(getNotification());
     }
 
     public boolean isEnableFloat() {

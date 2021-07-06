@@ -54,7 +54,6 @@ public class StatusBarIconControllerImpl extends StatusBarIconList implements Tu
         addIconGroup(iconManager, new ArrayList());
     }
 
-    @Override // com.android.systemui.statusbar.phone.StatusBarIconController
     public void addIconGroup(StatusBarIconController.IconManager iconManager, List<String> list) {
         this.mIconGroups.put(iconManager, list);
         ArrayList<StatusBarIconList.Slot> slots = getSlots();

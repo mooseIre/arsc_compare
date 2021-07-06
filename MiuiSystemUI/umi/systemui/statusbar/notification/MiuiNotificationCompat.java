@@ -4,19 +4,24 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.graphics.drawable.Icon;
 import android.os.Parcelable;
-import codeinjection.CodeInjection;
 
 public class MiuiNotificationCompat {
     public static boolean isShowMiuiAction(Notification notification) {
-        Notification.Action[] actionArr = notification.actions;
-        if (actionArr == null || actionArr.length == 0 || !notification.extras.containsKey("miui.showAction")) {
-            return false;
-        }
-        return notification.extras.getBoolean("miui.showAction", false);
+        return getMiuiAction(notification) != null;
     }
 
-    public static CharSequence getMiuiActionTitle(Notification notification) {
-        return isShowMiuiAction(notification) ? notification.actions[0].title : CodeInjection.MD5;
+    public static Notification.Action getMiuiAction(Notification notification) {
+        if (notification.extras.containsKey("miui.contractedAction")) {
+            Parcelable parcelable = notification.extras.getParcelable("miui.contractedAction");
+            if (parcelable instanceof Notification.Action) {
+                return (Notification.Action) parcelable;
+            }
+        }
+        Notification.Action[] actionArr = notification.actions;
+        if (actionArr == null || actionArr.length == 0 || !notification.extras.getBoolean("miui.showAction", false)) {
+            return null;
+        }
+        return notification.actions[0];
     }
 
     public static boolean isEnableFloat(Notification notification) {

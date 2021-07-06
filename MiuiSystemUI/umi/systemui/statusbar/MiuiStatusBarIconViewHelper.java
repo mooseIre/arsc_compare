@@ -4,8 +4,35 @@ import android.content.Context;
 import android.graphics.drawable.Icon;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
+import java.util.ArrayList;
 
 public class MiuiStatusBarIconViewHelper {
+    public static final ArrayList<String> DRIP_END_BLOCKED_LIST;
+
+    static {
+        ArrayList<String> arrayList = new ArrayList<>();
+        DRIP_END_BLOCKED_LIST = arrayList;
+        arrayList.add("micphone");
+        DRIP_END_BLOCKED_LIST.add("headset");
+        DRIP_END_BLOCKED_LIST.add("mikey");
+        DRIP_END_BLOCKED_LIST.add("call_record");
+        DRIP_END_BLOCKED_LIST.add("privacy_mode");
+        DRIP_END_BLOCKED_LIST.add("ble_unlock_mode");
+        DRIP_END_BLOCKED_LIST.add("zen");
+        DRIP_END_BLOCKED_LIST.add("gps");
+        DRIP_END_BLOCKED_LIST.add("missed_call");
+        DRIP_END_BLOCKED_LIST.add("ime");
+        DRIP_END_BLOCKED_LIST.add("sync_failing");
+        DRIP_END_BLOCKED_LIST.add("sync_active");
+        DRIP_END_BLOCKED_LIST.add("cast");
+        DRIP_END_BLOCKED_LIST.add("bluetooth_handsfree_battery");
+        DRIP_END_BLOCKED_LIST.add("nfc");
+        DRIP_END_BLOCKED_LIST.add("tty");
+        DRIP_END_BLOCKED_LIST.add("speakerphone");
+        DRIP_END_BLOCKED_LIST.add("volume");
+        DRIP_END_BLOCKED_LIST.add("alarm_clock");
+    }
+
     public static void transformIconIfNeed(Context context, StatusBarIcon statusBarIcon, ExpandedNotification expandedNotification, String str, boolean z, boolean z2) {
         if (needChangeIcon(statusBarIcon, str, expandedNotification)) {
             if (z) {

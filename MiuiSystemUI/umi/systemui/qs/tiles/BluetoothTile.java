@@ -142,7 +142,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.contentDescription = ((Object) booleanState.label) + "," + this.mContext.getString(C0021R$string.switch_bar_off);
         } else if (isBluetoothConnected) {
             booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_bluetooth_name, booleanState.label);
-            booleanState.label = this.mController.getLastDeviceName();
+            booleanState.label = this.mController.getLastDeviceNameIgnoringBleDevice(this.mContext);
         } else if (booleanState.isTransient) {
             booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_connecting);
         } else {

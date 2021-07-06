@@ -32,7 +32,7 @@ public interface BluetoothController extends CallbackController<Callback>, Dumpa
 
     Collection<CachedBluetoothDevice> getDevices();
 
-    String getLastDeviceName();
+    String getLastDeviceNameIgnoringBleDevice(Context context);
 
     int getMaxConnectionState(CachedBluetoothDevice cachedBluetoothDevice);
 

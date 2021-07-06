@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.os.SystemProperties;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import codeinjection.CodeInjection;
@@ -274,9 +273,10 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
     }
 
     private void updateShortCutVisibility() {
-        ImageView imageView = this.mShortcut;
-        if (imageView != null) {
-            imageView.setVisibility((this.mLastOrientation != 1 || this.mSuperSave) ? 8 : 0);
+        if (this.mShortcut != null) {
+            int i = (this.mLastOrientation != 1 || this.mSuperSave) ? 8 : 0;
+            this.mShortcut.setVisibility(i);
+            updateShortCutVisibility(i);
         }
     }
 }

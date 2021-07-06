@@ -681,14 +681,19 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     public void updatePanelSystemUiStateFlags() {
-        int displayId = ((FrameLayout) this).mContext.getDisplayId();
-        NotificationPanelViewController notificationPanelViewController = this.mPanelView;
-        if (notificationPanelViewController != null) {
-            SysUiState sysUiState = this.mSysUiFlagContainer;
-            sysUiState.setFlag(4, notificationPanelViewController.isFullyExpanded() && !this.mPanelView.isInSettings());
-            sysUiState.setFlag(2048, this.mPanelView.isInSettings());
-            sysUiState.commitUpdate(displayId);
-        }
+        post(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarView.AnonymousClass4 */
+
+            public void run() {
+                int displayId = ((FrameLayout) NavigationBarView.this).mContext.getDisplayId();
+                if (NavigationBarView.this.mPanelView != null) {
+                    SysUiState sysUiState = NavigationBarView.this.mSysUiFlagContainer;
+                    sysUiState.setFlag(4, NavigationBarView.this.mPanelView.isFullyExpanded() && !NavigationBarView.this.mPanelView.isInSettings());
+                    sysUiState.setFlag(2048, NavigationBarView.this.mPanelView.isInSettings());
+                    sysUiState.commitUpdate(displayId);
+                }
+            }
+        });
     }
 
     public void updateStates() {

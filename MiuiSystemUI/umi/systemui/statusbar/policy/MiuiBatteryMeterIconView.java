@@ -452,7 +452,6 @@ public class MiuiBatteryMeterIconView extends ImageView {
             super.onDraw(canvas);
             return;
         }
-        int saveLayer = canvas.saveLayer(0.0f, 0.0f, (float) canvas.getWidth(), (float) canvas.getHeight(), null, 31);
         super.onDraw(canvas);
         if (this.mMaskCharging && (path = this.mChargingMaskPath) != null && this.mCharging && !this.mIsDigit) {
             if (this.mQuickCharging) {
@@ -480,7 +479,6 @@ public class MiuiBatteryMeterIconView extends ImageView {
             canvas.drawPath(this.mProgressMaskPath, this.mClearPaint);
             canvas.restore();
         }
-        canvas.restoreToCount(saveLayer);
     }
 
     public void setUseLegacyDrawable(boolean z) {

@@ -3,12 +3,14 @@ package com.android.systemui.statusbar.notification.row;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
+import com.android.systemui.statusbar.notification.RowAnimationUtils;
 import com.miui.systemui.animation.AnimationListenerFolmeConverter;
 import kotlin.Lazy;
 import kotlin.LazyKt__LazyJVMKt;
 import kotlin.jvm.internal.PropertyReference1Impl;
 import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KProperty;
+import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.controller.AnimState;
@@ -88,6 +90,7 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
     @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void cancelAppearDrawing() {
         super.cancelAppearDrawing();
+        Folme.useValue(RowAnimationUtils.INSTANCE.getFolmeTarget(this)).cancel();
         getMFolme().cancel();
         getMFolme().setTo(STATE_VISIBLE);
         setTransitionAlpha(1.0f);
