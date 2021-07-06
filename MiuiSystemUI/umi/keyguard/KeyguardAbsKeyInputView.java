@@ -331,7 +331,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             return CodeInjection.MD5;
         }
         if (i == 1) {
-            return getRestartReasonPrompt(resources);
+            return getReasonPrompt(1);
         }
         if (i == 2) {
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
@@ -339,18 +339,27 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
         } else if (i == 3) {
             return MiuiFaceUnlockUtils.getDeviceLockedReason(((LinearLayout) this).mContext, resources);
         } else {
-            if (i != 4) {
+            if (i == 4) {
+                return resources.getString(C0021R$string.kg_prompt_reason_user_request);
+            }
+            if (i != 5) {
                 return resources.getString(C0021R$string.kg_prompt_reason_timeout_password);
             }
-            return resources.getString(C0021R$string.kg_prompt_reason_user_request);
+            return getReasonPrompt(5);
         }
     }
 
-    private String getRestartReasonPrompt(Resources resources) {
+    private String getReasonPrompt(int i) {
+        String str;
+        String str2;
         if (AnonymousClass4.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()] != 1) {
-            return resources.getString(C0021R$string.input_password_after_boot_msg);
+            str2 = ((LinearLayout) this).mContext.getResources().getString(C0021R$string.input_password_after_boot_msg);
+            str = ((LinearLayout) this).mContext.getResources().getString(C0021R$string.kg_prompt_reason_timeout_password);
+        } else {
+            str2 = ((LinearLayout) this).mContext.getResources().getString(C0021R$string.input_pin_after_boot_msg);
+            str = ((LinearLayout) this).mContext.getResources().getString(C0021R$string.kg_prompt_reason_timeout_pin);
         }
-        return resources.getString(C0021R$string.input_pin_after_boot_msg);
+        return i == 1 ? str2 : str;
     }
 
     @Override // com.android.keyguard.KeyguardSecurityView

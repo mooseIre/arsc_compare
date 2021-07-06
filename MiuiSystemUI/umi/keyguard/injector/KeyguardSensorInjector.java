@@ -212,17 +212,12 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         if (Intrinsics.areEqual("pick_up_gesture_wakeup_mode", str)) {
             this.mPickupSensorSettingsOpened = MiuiTextUtils.parseBoolean(str2);
-            boolean isFingerprintUnlock = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFingerprintUnlock();
-            boolean isHiding = this.mKeyguardViewMediator.isHiding();
-            boolean isShowing = this.mKeyguardViewMediator.isShowing();
             String str3 = this.TAG;
-            Log.d(str3, " onContentChanged mHiding:" + isHiding + "  mShowing=" + isShowing + "    unlock=" + isFingerprintUnlock + "  mPickupGestureWakeupOpened:" + this.mPickupSensorSettingsOpened + "  newValue:" + str2);
-            if (!isHiding && isShowing && !isFingerprintUnlock) {
-                if (this.mPickupSensorSettingsOpened) {
-                    registerPickupSensor();
-                } else {
-                    unregisterPickupSensor();
-                }
+            Log.d(str3, " onContentChanged mPickupGestureWakeupOpened:" + this.mPickupSensorSettingsOpened + "  newValue:" + str2);
+            if (this.mPickupSensorSettingsOpened) {
+                registerPickupSensor();
+            } else {
+                unregisterPickupSensor();
             }
         }
     }

@@ -145,7 +145,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
                     this.state = 1;
                     str = KeyguardSimPukView.this.getResources().getString(C0021R$string.kg_puk_enter_pin_hint);
                 } else {
-                    str = KeyguardSimPukView.this.getResources().getString(C0021R$string.kg_invalid_sim_puk_hint, 8);
+                    str = KeyguardSimPukView.this.getResources().getString(C0021R$string.keyguard_invalid_sim_puk_hint, 8);
                 }
             } else if (i == 1) {
                 if (KeyguardSimPukView.this.checkPin()) {
