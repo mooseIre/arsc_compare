@@ -2,8 +2,9 @@ package com.android.systemui.controls;
 
 import android.view.View;
 
+/* access modifiers changed from: package-private */
 /* compiled from: TooltipManager.kt */
-final class TooltipManager$$special$$inlined$apply$lambda$1 implements View.OnClickListener {
+public final class TooltipManager$$special$$inlined$apply$lambda$1 implements View.OnClickListener {
     final /* synthetic */ TooltipManager this$0;
 
     TooltipManager$$special$$inlined$apply$lambda$1(TooltipManager tooltipManager) {

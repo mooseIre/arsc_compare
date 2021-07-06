@@ -18,20 +18,20 @@ public final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$
     }
 
     public final void onClick(View view) {
-        if (ControlsFavoritingActivity.access$getComponent$p(this.this$0) != null) {
-            for (StructureContainer structureContainer : ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0)) {
+        if (this.this$0.component != null) {
+            for (StructureContainer structureContainer : this.this$0.listOfStructures) {
                 List<ControlInfo> favorites = structureContainer.getModel().getFavorites();
-                ControlsControllerImpl access$getController$p = ControlsFavoritingActivity.access$getController$p(this.this$0);
-                ComponentName access$getComponent$p = ControlsFavoritingActivity.access$getComponent$p(this.this$0);
-                if (access$getComponent$p != null) {
-                    access$getController$p.replaceFavoritesForStructure(new StructureInfo(access$getComponent$p, structureContainer.getStructureName(), favorites));
+                ControlsControllerImpl controlsControllerImpl = this.this$0.controller;
+                ComponentName componentName = this.this$0.component;
+                if (componentName != null) {
+                    controlsControllerImpl.replaceFavoritesForStructure(new StructureInfo(componentName, structureContainer.getStructureName(), favorites));
                 } else {
                     Intrinsics.throwNpe();
                     throw null;
                 }
             }
-            ControlsFavoritingActivity.access$animateExitAndFinish(this.this$0);
-            ControlsFavoritingActivity.access$getGlobalActionsComponent$p(this.this$0).handleShowGlobalActionsMenu();
+            this.this$0.animateExitAndFinish();
+            this.this$0.globalActionsComponent.handleShowGlobalActionsMenu();
         }
     }
 }

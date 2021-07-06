@@ -13,8 +13,8 @@ final class ControlsControllerImpl$addSeedingFavoritesCallback$1 implements Runn
     }
 
     public final void run() {
-        if (this.this$0.seedingInProgress) {
-            this.this$0.seedingCallbacks.add(this.$callback);
+        if (ControlsControllerImpl.access$getSeedingInProgress$p(this.this$0)) {
+            ControlsControllerImpl.access$getSeedingCallbacks$p(this.this$0).add(this.$callback);
         } else {
             this.$callback.accept(Boolean.FALSE);
         }

@@ -16,7 +16,6 @@ import android.provider.Settings;
 import android.service.controls.Control;
 import android.service.controls.actions.ControlAction;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.ControlStatus;
@@ -43,13 +42,10 @@ import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.collections.SetsKt___SetsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: ControlsControllerImpl.kt */
 public final class ControlsControllerImpl implements Dumpable, ControlsController {
     public static final Companion Companion = new Companion(null);
     private static final Uri URI = Settings.Secure.getUriFor("controls_enabled");
-    @NotNull
     private AuxiliaryPersistenceWrapper auxiliaryPersistenceWrapper;
     private boolean available = Companion.isAvailable(getCurrentUserId(), getContentResolver());
     private final ControlsBindingController bindingController;
@@ -60,30 +56,25 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     private final ControlsControllerImpl$listingCallback$1 listingCallback;
     private final ControlsListingController listingController;
     private final ControlsFavoritePersistenceWrapper persistenceWrapper;
-    @NotNull
     private final BroadcastReceiver restoreFinishedReceiver;
     private final List<Consumer<Boolean>> seedingCallbacks = new ArrayList();
     private boolean seedingInProgress;
-    @NotNull
     private final ContentObserver settingObserver;
     private final ControlsUiController uiController;
     private boolean userChanging = true;
     private UserStructure userStructure;
     private final ControlsControllerImpl$userSwitchReceiver$1 userSwitchReceiver;
 
-    @VisibleForTesting
     public static /* synthetic */ void auxiliaryPersistenceWrapper$annotations() {
     }
 
-    @VisibleForTesting
     public static /* synthetic */ void restoreFinishedReceiver$annotations() {
     }
 
-    @VisibleForTesting
     public static /* synthetic */ void settingObserver$annotations() {
     }
 
-    public ControlsControllerImpl(@NotNull Context context2, @NotNull DelayableExecutor delayableExecutor, @NotNull ControlsUiController controlsUiController, @NotNull ControlsBindingController controlsBindingController, @NotNull ControlsListingController controlsListingController, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull Optional<ControlsFavoritePersistenceWrapper> optional, @NotNull DumpManager dumpManager) {
+    public ControlsControllerImpl(Context context2, DelayableExecutor delayableExecutor, ControlsUiController controlsUiController, ControlsBindingController controlsBindingController, ControlsListingController controlsListingController, BroadcastDispatcher broadcastDispatcher2, Optional<ControlsFavoritePersistenceWrapper> optional, DumpManager dumpManager) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(delayableExecutor, "executor");
         Intrinsics.checkParameterIsNotNull(controlsUiController, "uiController");
@@ -111,7 +102,6 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
             }
 
             @Override // java.util.function.Supplier
-            @NotNull
             public final ControlsFavoritePersistenceWrapper get() {
                 File file = this.this$0.userStructure.getFile();
                 Intrinsics.checkExpressionValueIsNotNull(file, "userStructure.file");
@@ -144,7 +134,6 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.listingController.addCallback(this.listingCallback);
     }
 
-    /* compiled from: ControlsControllerImpl.kt */
     public static final class Companion {
         private Companion() {
         }
@@ -153,8 +142,6 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
             this();
         }
 
-        /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
         private final boolean isAvailable(int i, ContentResolver contentResolver) {
             return Settings.Secure.getIntForUser(contentResolver, "controls_enabled", 1, i) != 0;
         }
@@ -167,8 +154,8 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return userHandle.getIdentifier();
     }
 
-    /* access modifiers changed from: private */
-    public final ContentResolver getContentResolver() {
+    /* access modifiers changed from: public */
+    private final ContentResolver getContentResolver() {
         ContentResolver contentResolver = this.context.getContentResolver();
         Intrinsics.checkExpressionValueIsNotNull(contentResolver, "context.contentResolver");
         return contentResolver;
@@ -179,13 +166,12 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return this.available;
     }
 
-    @NotNull
     public final AuxiliaryPersistenceWrapper getAuxiliaryPersistenceWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() {
         return this.auxiliaryPersistenceWrapper;
     }
 
-    /* access modifiers changed from: private */
-    public final void setValuesForUser(UserHandle userHandle) {
+    /* access modifiers changed from: public */
+    private final void setValuesForUser(UserHandle userHandle) {
         Log.d("ControlsControllerImpl", "Changing to user: " + userHandle);
         this.currentUser = userHandle;
         Context context2 = this.context;
@@ -207,8 +193,8 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.userChanging = false;
     }
 
-    /* access modifiers changed from: private */
-    public final void resetFavorites(boolean z) {
+    /* access modifiers changed from: public */
+    private final void resetFavorites(boolean z) {
         Favorites.INSTANCE.clear();
         if (z) {
             Favorites.INSTANCE.load(this.persistenceWrapper.readFavorites());
@@ -227,7 +213,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         }
     }
 
-    public void loadForComponent(@NotNull ComponentName componentName, @NotNull Consumer<ControlsController.LoadData> consumer, @NotNull Consumer<Runnable> consumer2) {
+    public void loadForComponent(ComponentName componentName, Consumer<ControlsController.LoadData> consumer, Consumer<Runnable> consumer2) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(consumer, "dataCallback");
         Intrinsics.checkParameterIsNotNull(consumer2, "cancelWrapper");
@@ -241,7 +227,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    public boolean addSeedingFavoritesCallback(@NotNull Consumer<Boolean> consumer) {
+    public boolean addSeedingFavoritesCallback(Consumer<Boolean> consumer) {
         Intrinsics.checkParameterIsNotNull(consumer, "callback");
         if (!this.seedingInProgress) {
             return false;
@@ -251,7 +237,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    public void seedFavoritesForComponents(@NotNull List<ComponentName> list, @NotNull Consumer<SeedResponse> consumer) {
+    public void seedFavoritesForComponents(List<ComponentName> list, Consumer<SeedResponse> consumer) {
         Intrinsics.checkParameterIsNotNull(list, "componentNames");
         Intrinsics.checkParameterIsNotNull(consumer, "callback");
         if (!this.seedingInProgress && !list.isEmpty()) {
@@ -271,8 +257,8 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         }
     }
 
-    /* access modifiers changed from: private */
-    public final void startSeeding(List<ComponentName> list, Consumer<SeedResponse> consumer, boolean z) {
+    /* access modifiers changed from: public */
+    private final void startSeeding(List<ComponentName> list, Consumer<SeedResponse> consumer, boolean z) {
         if (list.isEmpty()) {
             endSeedingCall(!z);
             return;
@@ -298,8 +284,8 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return controlsControllerImpl.createRemovedStatus(componentName, controlInfo, charSequence, z);
     }
 
-    /* access modifiers changed from: private */
-    public final ControlStatus createRemovedStatus(ComponentName componentName, ControlInfo controlInfo, CharSequence charSequence, boolean z) {
+    /* access modifiers changed from: public */
+    private final ControlStatus createRemovedStatus(ComponentName componentName, ControlInfo controlInfo, CharSequence charSequence, boolean z) {
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.LAUNCHER");
         intent.setPackage(componentName.getPackageName());
@@ -309,7 +295,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    public void subscribeToFavorites(@NotNull StructureInfo structureInfo) {
+    public void subscribeToFavorites(StructureInfo structureInfo) {
         Intrinsics.checkParameterIsNotNull(structureInfo, "structureInfo");
         if (confirmAvailability()) {
             this.bindingController.subscribe(structureInfo);
@@ -324,7 +310,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    public void addFavorite(@NotNull ComponentName componentName, @NotNull CharSequence charSequence, @NotNull ControlInfo controlInfo) {
+    public void addFavorite(ComponentName componentName, CharSequence charSequence, ControlInfo controlInfo) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(charSequence, "structureName");
         Intrinsics.checkParameterIsNotNull(controlInfo, "controlInfo");
@@ -333,7 +319,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         }
     }
 
-    public void replaceFavoritesForStructure(@NotNull StructureInfo structureInfo) {
+    public void replaceFavoritesForStructure(StructureInfo structureInfo) {
         Intrinsics.checkParameterIsNotNull(structureInfo, "structureInfo");
         if (confirmAvailability()) {
             this.executor.execute(new ControlsControllerImpl$replaceFavoritesForStructure$1(this, structureInfo));
@@ -341,7 +327,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    public void refreshStatus(@NotNull ComponentName componentName, @NotNull Control control) {
+    public void refreshStatus(ComponentName componentName, Control control) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(control, "control");
         if (!confirmAvailability()) {
@@ -355,7 +341,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    public void onActionResponse(@NotNull ComponentName componentName, @NotNull String str, int i) {
+    public void onActionResponse(ComponentName componentName, String str, int i) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(str, "controlId");
         if (confirmAvailability()) {
@@ -364,7 +350,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    public void action(@NotNull ComponentName componentName, @NotNull ControlInfo controlInfo, @NotNull ControlAction controlAction) {
+    public void action(ComponentName componentName, ControlInfo controlInfo, ControlAction controlAction) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(controlInfo, "controlInfo");
         Intrinsics.checkParameterIsNotNull(controlAction, "action");
@@ -374,33 +360,30 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    @NotNull
     public List<StructureInfo> getFavorites() {
         return Favorites.INSTANCE.getAllStructures();
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    public int countFavoritesForComponent(@NotNull ComponentName componentName) {
+    public int countFavoritesForComponent(ComponentName componentName) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         return Favorites.INSTANCE.getControlsForComponent(componentName).size();
     }
 
     @Override // com.android.systemui.controls.controller.ControlsController
-    @NotNull
-    public List<StructureInfo> getFavoritesForComponent(@NotNull ComponentName componentName) {
+    public List<StructureInfo> getFavoritesForComponent(ComponentName componentName) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         return Favorites.INSTANCE.getStructuresForComponent(componentName);
     }
 
-    @NotNull
-    public List<ControlInfo> getFavoritesForStructure(@NotNull ComponentName componentName, @NotNull CharSequence charSequence) {
+    public List<ControlInfo> getFavoritesForStructure(ComponentName componentName, CharSequence charSequence) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(charSequence, "structureName");
         return Favorites.INSTANCE.getControlsForStructure(new StructureInfo(componentName, charSequence, CollectionsKt__CollectionsKt.emptyList()));
     }
 
     @Override // com.android.systemui.Dumpable
-    public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
         Intrinsics.checkParameterIsNotNull(strArr, "args");
@@ -424,8 +407,8 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         printWriter.println(this.bindingController.toString());
     }
 
-    /* access modifiers changed from: private */
-    public final Set<String> findRemoved(Set<String> set, List<Control> list) {
+    /* access modifiers changed from: public */
+    private final Set<String> findRemoved(Set<String> set, List<Control> list) {
         ArrayList arrayList = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(list, 10));
         Iterator<T> it = list.iterator();
         while (it.hasNext()) {
