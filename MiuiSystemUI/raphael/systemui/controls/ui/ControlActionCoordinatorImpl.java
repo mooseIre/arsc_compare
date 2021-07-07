@@ -52,10 +52,6 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         throw new TypeCastException("null cannot be cast to non-null type android.os.Vibrator");
     }
 
-    public static final /* synthetic */ void access$setPendingAction$p(ControlActionCoordinatorImpl controlActionCoordinatorImpl, Action action) {
-        controlActionCoordinatorImpl.pendingAction = action;
-    }
-
     @Override // com.android.systemui.controls.ui.ControlActionCoordinator
     public void closeDialogs() {
         Dialog dialog2 = this.dialog;

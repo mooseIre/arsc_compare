@@ -144,14 +144,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
-    public static final /* synthetic */ ContextThemeWrapper access$getPopupThemedContext$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.popupThemedContext;
-    }
-
-    public static final /* synthetic */ void access$setPopup$p(ControlsUiControllerImpl controlsUiControllerImpl, ListPopupWindow listPopupWindow) {
-        controlsUiControllerImpl.popup = listPopupWindow;
-    }
-
     @NotNull
     public final Lazy<ControlsController> getControlsController() {
         return this.controlsController;
@@ -373,8 +365,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void startProviderSelectorActivity(Context context2) {
+    public final void startProviderSelectorActivity(Context context2) {
         Intent intent = new Intent(context2, ControlsProviderSelectorActivity.class);
         intent.addFlags(335544320);
         startActivity(context2, intent);
@@ -393,8 +384,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void showControlsView(List<SelectionItem> list) {
+    public final void showControlsView(List<SelectionItem> list) {
         this.controlViewsById.clear();
         createListView();
         createDropDown(list);
