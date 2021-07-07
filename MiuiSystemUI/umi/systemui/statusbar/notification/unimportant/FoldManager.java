@@ -248,23 +248,23 @@ public final class FoldManager {
             return FoldTool.INSTANCE.canFoldByAnalyze(statusBarNotification);
         }
 
-        public final void checkUnimportantNotification(boolean z, @NotNull UserHandle userHandle) {
+        public final void checkFoldNotification(boolean z, @NotNull UserHandle userHandle) {
             Intrinsics.checkParameterIsNotNull(userHandle, "user");
             if (!shouldSuppressFold()) {
                 if (z) {
-                    onUnimportantAddOrUpdate(userHandle);
+                    onFoldAddOrUpdate(userHandle);
                 } else {
-                    onUnimportantRemoved(userHandle);
+                    onFoldRemoved(userHandle);
                 }
             }
         }
 
-        private final void onUnimportantAddOrUpdate(UserHandle userHandle) {
-            ((FoldNotifController) Dependency.get(FoldNotifController.class)).sendUnimportantNotification(userHandle);
+        private final void onFoldAddOrUpdate(UserHandle userHandle) {
+            ((FoldNotifController) Dependency.get(FoldNotifController.class)).sendFoldNotification(userHandle);
         }
 
-        private final void onUnimportantRemoved(UserHandle userHandle) {
-            ((FoldNotifController) Dependency.get(FoldNotifController.class)).cancelUnimportantNotification(userHandle);
+        private final void onFoldRemoved(UserHandle userHandle) {
+            ((FoldNotifController) Dependency.get(FoldNotifController.class)).cancelFoldNotification(userHandle);
         }
     }
 

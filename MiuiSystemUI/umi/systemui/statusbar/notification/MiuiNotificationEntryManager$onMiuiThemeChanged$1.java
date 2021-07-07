@@ -16,8 +16,8 @@ final class MiuiNotificationEntryManager$onMiuiThemeChanged$1 implements Runnabl
         MiuiNotificationEntryManager miuiNotificationEntryManager = this.this$0;
         NotificationListenerService.RankingMap rankingMap = MiuiNotificationEntryManager.access$getRankingManager$p(miuiNotificationEntryManager).getRankingMap();
         if (rankingMap != null) {
-            MiuiNotificationEntryManager.access$updateFoldRankingAndSort(miuiNotificationEntryManager, rankingMap, "onMiuiThemeChanged");
-            FoldManager.Companion.checkUnimportantNotification(this.this$0.shouldShow(), this.this$0.getCurrentUser());
+            MiuiNotificationEntryManager.updateFoldRankingAndSort$default(miuiNotificationEntryManager, rankingMap, "onMiuiThemeChanged", false, 4, null);
+            FoldManager.Companion.checkFoldNotification(MiuiNotificationEntryManager.shouldShow$default(this.this$0, 0, 1, null), this.this$0.getCurrentUser());
             return;
         }
         Intrinsics.throwNpe();

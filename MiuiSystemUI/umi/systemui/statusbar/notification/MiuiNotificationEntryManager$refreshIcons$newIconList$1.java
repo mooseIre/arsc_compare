@@ -1,19 +1,18 @@
 package com.android.systemui.statusbar.notification;
 
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.unimportant.FoldTool;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: MiuiNotificationEntryManager.kt */
-final class MiuiNotificationEntryManager$refreshIcons$1 extends Lambda implements Function1<NotificationEntry, Boolean> {
-    final /* synthetic */ MiuiNotificationEntryManager this$0;
+final class MiuiNotificationEntryManager$refreshIcons$newIconList$1 extends Lambda implements Function1<NotificationEntry, Boolean> {
+    public static final MiuiNotificationEntryManager$refreshIcons$newIconList$1 INSTANCE = new MiuiNotificationEntryManager$refreshIcons$newIconList$1();
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    MiuiNotificationEntryManager$refreshIcons$1(MiuiNotificationEntryManager miuiNotificationEntryManager) {
+    MiuiNotificationEntryManager$refreshIcons$newIconList$1() {
         super(1);
-        this.this$0 = miuiNotificationEntryManager;
     }
 
     /* Return type fixed from 'java.lang.Object' to match base method */
@@ -25,6 +24,6 @@ final class MiuiNotificationEntryManager$refreshIcons$1 extends Lambda implement
 
     public final boolean invoke(@NotNull NotificationEntry notificationEntry) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "it");
-        return this.this$0.isSameUser(notificationEntry.getSbn());
+        return FoldTool.isSameUser$default(FoldTool.INSTANCE, notificationEntry.getSbn(), 0, 2, null);
     }
 }

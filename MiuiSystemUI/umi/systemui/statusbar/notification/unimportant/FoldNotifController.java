@@ -12,13 +12,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
-import android.util.Log;
 import android.widget.RemoteViews;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.MiuiNotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationProvider;
@@ -114,8 +114,22 @@ public final class FoldNotifController {
                 this.this$0.getEntryManager().changeFoldEnabled(z);
             }
         });
-        this.context.getContentResolver().registerContentObserver(NotificationProvider.URI_FOLD_IMPORTANCE, false, new ContentObserver(this, (Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
+        ((NotificationLockscreenUserManager) Dependency.get(NotificationLockscreenUserManager.class)).addUserChangedListener(new NotificationLockscreenUserManager.UserChangedListener(this) {
             /* class com.android.systemui.statusbar.notification.unimportant.FoldNotifController.AnonymousClass2 */
+            final /* synthetic */ FoldNotifController this$0;
+
+            /* JADX WARN: Incorrect args count in method signature: ()V */
+            {
+                this.this$0 = r1;
+            }
+
+            @Override // com.android.systemui.statusbar.NotificationLockscreenUserManager.UserChangedListener
+            public void onUserChanged(int i) {
+                this.this$0.getEntryManager().onUserChanged(i);
+            }
+        });
+        this.context.getContentResolver().registerContentObserver(NotificationProvider.URI_FOLD_IMPORTANCE, false, new ContentObserver(this, (Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
+            /* class com.android.systemui.statusbar.notification.unimportant.FoldNotifController.AnonymousClass3 */
             final /* synthetic */ FoldNotifController this$0;
 
             {
@@ -147,7 +161,7 @@ public final class FoldNotifController {
 
     public final void setShowNotifFoldFooterIcon(boolean z) {
         this.showNotifFoldFooterIcon = z;
-        FoldManager.Companion.checkUnimportantNotification(getEntryManager().shouldShow(), getEntryManager().getCurrentUser());
+        FoldManager.Companion.checkFoldNotification(MiuiNotificationEntryManager.shouldShow$default(getEntryManager(), 0, 1, null), getEntryManager().getCurrentUser());
     }
 
     /* access modifiers changed from: private */
@@ -196,15 +210,14 @@ public final class FoldNotifController {
         }
     }
 
-    public final void sendUnimportantNotification(@NotNull UserHandle userHandle) {
+    public final void sendFoldNotification(@NotNull UserHandle userHandle) {
         Intrinsics.checkParameterIsNotNull(userHandle, "user");
         PendingIntent broadcast = PendingIntent.getBroadcast(this.context, 0, new Intent(), 134217728);
         PendingIntent activity = PendingIntent.getActivity(this.context, 1001, new Intent(), 134217728);
         RemoteViews remoteViews = new RemoteViews(this.context.getPackageName(), C0017R$layout.unimportant_notification);
         remoteViews.setTextViewText(C0015R$id.aggregate_title, this.context.getResources().getString(C0021R$string.miui_unimportant_notifications));
-        Log.i("UnimportantNotificationFoldTool", "sendUnimportantNotification: notifFoldFooterIcon=" + this.showNotifFoldFooterIcon);
         if (this.showNotifFoldFooterIcon) {
-            remoteViews.setImageViewBitmap(C0015R$id.aggregate_title_icons, BitmapUtils.drawables2Bitmap(getEntryManager().getIcons(), getIconSize(), getIconMargin()));
+            remoteViews.setImageViewBitmap(C0015R$id.aggregate_title_icons, BitmapUtils.drawables2Bitmap(getEntryManager().getIconList(), getIconSize(), getIconMargin()));
             remoteViews.setViewVisibility(C0015R$id.aggregate_title_icons, 0);
             remoteViews.setViewVisibility(C0015R$id.aggregate_title_icon_more, 0);
         } else {
@@ -227,7 +240,7 @@ public final class FoldNotifController {
         getMNm().notifyAsUser("UNIMPORTANT", 2012875145, new Notification.Builder(this.context, "id_aggregate").setSmallIcon(C0013R$drawable.icon).addExtras(bundle).setCustomContentView(remoteViews).setContentIntent(broadcast).build(), userHandle);
     }
 
-    public final void cancelUnimportantNotification(@NotNull UserHandle userHandle) {
+    public final void cancelFoldNotification(@NotNull UserHandle userHandle) {
         Intrinsics.checkParameterIsNotNull(userHandle, "user");
         getMNm().cancelAsUser("UNIMPORTANT", 2012875145, userHandle);
     }

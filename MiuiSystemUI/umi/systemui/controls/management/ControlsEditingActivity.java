@@ -109,8 +109,7 @@ public final class ControlsEditingActivity extends LifecycleActivity {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void animateExitAndFinish() {
+    public final void animateExitAndFinish() {
         ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(viewGroup, "rootView");
         ControlsAnimations.exitAnimation(viewGroup, new ControlsEditingActivity$animateExitAndFinish$1(this)).start();
@@ -165,8 +164,7 @@ public final class ControlsEditingActivity extends LifecycleActivity {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void saveFavorites() {
+    public final void saveFavorites() {
         ControlsControllerImpl controlsControllerImpl = this.controller;
         ComponentName componentName = this.component;
         if (componentName != null) {

@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -250,11 +251,15 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         if (this.mCurrentSpecs != null && this.mAllTiles != null) {
             this.mOtherTiles = new ArrayList(this.mAllTiles);
             List<TileQueryHelper.TileInfo> convertData = convertData();
-            if (convertData != null && !convertData.isEmpty() && compareData(this.mTiles, convertData)) {
-                this.mTiles.clear();
-                this.mTiles.addAll(convertData);
-                updateDividerLocations();
-                notifyDataSetChanged();
+            if (convertData != null && !convertData.isEmpty()) {
+                boolean compareData = compareData(this.mTiles, convertData);
+                Log.d("MiuiTileAdapter", "need refresh: " + compareData);
+                if (compareData) {
+                    this.mTiles.clear();
+                    this.mTiles.addAll(convertData);
+                    updateDividerLocations();
+                    notifyDataSetChanged();
+                }
             }
         }
     }
@@ -293,8 +298,18 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         }
         for (int i = 0; i < list.size(); i++) {
             TileQueryHelper.TileInfo tileInfo = list.get(i);
-            TileQueryHelper.TileInfo tileInfo2 = list.get(i);
-            if (!(tileInfo == null && tileInfo2 == null) && (tileInfo == null || tileInfo2 == null || !TextUtils.equals(tileInfo.spec, tileInfo2.spec))) {
+            TileQueryHelper.TileInfo tileInfo2 = list2.get(i);
+            if (!(tileInfo == null && tileInfo2 == null)) {
+                if (!(tileInfo == null || tileInfo2 == null || !TextUtils.equals(tileInfo.spec, tileInfo2.spec))) {
+                    QSTile.State state = tileInfo.state;
+                    if (state instanceof QSTile.BooleanState) {
+                        QSTile.State state2 = tileInfo2.state;
+                        if ((state2 instanceof QSTile.BooleanState) && ((QSTile.BooleanState) state).value != ((QSTile.BooleanState) state2).value) {
+                        }
+                    } else {
+                        continue;
+                    }
+                }
                 return true;
             }
         }
