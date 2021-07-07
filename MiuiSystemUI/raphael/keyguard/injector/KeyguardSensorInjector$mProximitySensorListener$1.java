@@ -5,9 +5,8 @@ import com.android.keyguard.injector.KeyguardSensorInjector;
 import kotlin.jvm.internal.Intrinsics;
 import miui.util.ProximitySensorWrapper;
 
-/* access modifiers changed from: package-private */
 /* compiled from: KeyguardSensorInjector.kt */
-public final class KeyguardSensorInjector$mProximitySensorListener$1 implements ProximitySensorWrapper.ProximitySensorChangeListener {
+final class KeyguardSensorInjector$mProximitySensorListener$1 implements ProximitySensorWrapper.ProximitySensorChangeListener {
     final /* synthetic */ KeyguardSensorInjector this$0;
 
     KeyguardSensorInjector$mProximitySensorListener$1(KeyguardSensorInjector keyguardSensorInjector) {
@@ -15,11 +14,11 @@ public final class KeyguardSensorInjector$mProximitySensorListener$1 implements 
     }
 
     public final void onSensorChanged(boolean z) {
-        if (this.this$0.mProximitySensorChangeCallback != null) {
+        if (KeyguardSensorInjector.access$getMProximitySensorChangeCallback$p(this.this$0) != null) {
             AnalyticsHelper.getInstance(this.this$0.getMContext()).recordKeyguardProximitySensor(z);
-            KeyguardSensorInjector.ProximitySensorChangeCallback proximitySensorChangeCallback = this.this$0.mProximitySensorChangeCallback;
-            if (proximitySensorChangeCallback != null) {
-                proximitySensorChangeCallback.onChange(z);
+            KeyguardSensorInjector.ProximitySensorChangeCallback access$getMProximitySensorChangeCallback$p = KeyguardSensorInjector.access$getMProximitySensorChangeCallback$p(this.this$0);
+            if (access$getMProximitySensorChangeCallback$p != null) {
+                access$getMProximitySensorChangeCallback$p.onChange(z);
             } else {
                 Intrinsics.throwNpe();
                 throw null;
