@@ -29,7 +29,7 @@ public final class KeyguardSensorInjector$mLargeAreaTouchSensorListener$1 implem
         if (fArr != null && fArr[0] == 1.0f && !this.this$0.getMKeyguardViewMediator().isHiding() && this.this$0.getMKeyguardViewMediator().isShowing() && !((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFingerprintUnlock()) {
             if (!this.this$0.getMKeyguardViewMediator().isOccluded() || !MiuiKeyguardUtils.keepScreenOnWhenLargeAreaTouch(this.this$0.getMContext())) {
                 String tag = this.this$0.getTAG();
-                Slog.i(tag, KeyguardSensorInjector.access$getSCREEN_OFF_REASON$p(this.this$0) + ":large area touch");
+                Slog.i(tag, this.this$0.SCREEN_OFF_REASON + ":large area touch");
                 this.this$0.getMPowerManager().goToSleep(SystemClock.uptimeMillis());
             }
         }
