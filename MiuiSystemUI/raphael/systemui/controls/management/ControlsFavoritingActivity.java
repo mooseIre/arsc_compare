@@ -56,6 +56,10 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
     private TextView subtitleView;
     private TextView titleView;
 
+    public static final /* synthetic */ void access$animateExitAndFinish(ControlsFavoritingActivity controlsFavoritingActivity) {
+        controlsFavoritingActivity.animateExitAndFinish();
+    }
+
     public static final /* synthetic */ Comparator access$getComparator$p(ControlsFavoritingActivity controlsFavoritingActivity) {
         Comparator<StructureContainer> comparator2 = controlsFavoritingActivity.comparator;
         if (comparator2 != null) {
@@ -63,6 +67,10 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
         Intrinsics.throwUninitializedPropertyAccessException("comparator");
         throw null;
+    }
+
+    public static final /* synthetic */ ComponentName access$getComponent$p(ControlsFavoritingActivity controlsFavoritingActivity) {
+        return controlsFavoritingActivity.component;
     }
 
     public static final /* synthetic */ ControlsControllerImpl access$getController$p(ControlsFavoritingActivity controlsFavoritingActivity) {
@@ -76,6 +84,14 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
         Intrinsics.throwUninitializedPropertyAccessException("doneButton");
         throw null;
+    }
+
+    public static final /* synthetic */ GlobalActionsComponent access$getGlobalActionsComponent$p(ControlsFavoritingActivity controlsFavoritingActivity) {
+        return controlsFavoritingActivity.globalActionsComponent;
+    }
+
+    public static final /* synthetic */ List access$getListOfStructures$p(ControlsFavoritingActivity controlsFavoritingActivity) {
+        return controlsFavoritingActivity.listOfStructures;
     }
 
     public static final /* synthetic */ View access$getOtherAppsButton$p(ControlsFavoritingActivity controlsFavoritingActivity) {
@@ -270,7 +286,6 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
-    /* access modifiers changed from: public */
     private final void animateExitAndFinish() {
         ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(viewGroup, "rootView");

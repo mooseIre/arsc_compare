@@ -120,6 +120,26 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         this.paddingHorizontal = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
     }
 
+    public static final /* synthetic */ void access$calculateTransitionValues(ControlCenterPanelViewController controlCenterPanelViewController) {
+        controlCenterPanelViewController.calculateTransitionValues();
+    }
+
+    public static final /* synthetic */ int access$getExpandThreshold$p(ControlCenterPanelViewController controlCenterPanelViewController) {
+        return controlCenterPanelViewController.expandThreshold;
+    }
+
+    public static final /* synthetic */ int access$getTileLayoutMinHeight$p(ControlCenterPanelViewController controlCenterPanelViewController) {
+        return controlCenterPanelViewController.tileLayoutMinHeight;
+    }
+
+    public static final /* synthetic */ void access$setAnimatingToCollapse$p(ControlCenterPanelViewController controlCenterPanelViewController, boolean z) {
+        controlCenterPanelViewController.animatingToCollapse = z;
+    }
+
+    public static final /* synthetic */ void access$setTransRatio$p(ControlCenterPanelViewController controlCenterPanelViewController, float f) {
+        controlCenterPanelViewController.setTransRatio(f);
+    }
+
     public final boolean isPortrait() {
         return this.orientation == 1;
     }
@@ -187,8 +207,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return this.transRatio;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void setTransRatio(float f) {
         if (this.transRatio != f && isExpandable()) {
             this.transRatio = f;
@@ -514,15 +532,15 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
             if (!ControlCenterPanelViewController.this.isExpandable() || ControlCenterPanelViewController.this.getTransRatio() == 0.0f || ControlCenterPanelViewController.this.getTransRatio() == 1.0f) {
                 return false;
             }
-            float f = (ControlCenterPanelViewController.this.tileLayoutLastHeight + this.transY) - ((float) ControlCenterPanelViewController.this.tileLayoutMinHeight);
+            float access$getTileLayoutMinHeight$p = (ControlCenterPanelViewController.this.tileLayoutLastHeight + this.transY) - ((float) ControlCenterPanelViewController.access$getTileLayoutMinHeight$p(ControlCenterPanelViewController.this));
             ControlCenterPanelViewController.this.velocityTracker.computeCurrentVelocity(1000, (float) ControlCenterPanelViewController.this.maxVelocity);
             float yVelocity = ControlCenterPanelViewController.this.velocityTracker.getYVelocity();
-            float f2 = (float) 0;
-            if (yVelocity > f2 && Math.abs(yVelocity) > ((float) ControlCenterPanelViewController.this.minVelocity)) {
+            float f = (float) 0;
+            if (yVelocity > f && Math.abs(yVelocity) > ((float) ControlCenterPanelViewController.this.minVelocity)) {
                 ControlCenterPanelViewController.this.toExpandAnimation();
                 return true;
-            } else if (yVelocity >= f2 || Math.abs(yVelocity) <= ((float) ControlCenterPanelViewController.this.minVelocity)) {
-                if (f > ((float) (ControlCenterPanelViewController.this.expandThreshold / 2))) {
+            } else if (yVelocity >= f || Math.abs(yVelocity) <= ((float) ControlCenterPanelViewController.this.minVelocity)) {
+                if (access$getTileLayoutMinHeight$p > ((float) (ControlCenterPanelViewController.access$getExpandThreshold$p(ControlCenterPanelViewController.this) / 2))) {
                     ControlCenterPanelViewController.this.toExpandAnimation();
                 } else {
                     ControlCenterPanelViewController.this.toCollapseAnimation();
@@ -597,8 +615,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void calculateTransitionValues() {
         int height = this.panelView.getBigTileLayout().getHeight();
         ViewGroup.LayoutParams layoutParams = this.panelView.getBigTileLayout().getLayoutParams();

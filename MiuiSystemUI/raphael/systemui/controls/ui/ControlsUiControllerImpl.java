@@ -384,7 +384,8 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     /* access modifiers changed from: private */
-    public final void showControlsView(List<SelectionItem> list) {
+    /* access modifiers changed from: public */
+    private final void showControlsView(List<SelectionItem> list) {
         this.controlViewsById.clear();
         createListView();
         createDropDown(list);

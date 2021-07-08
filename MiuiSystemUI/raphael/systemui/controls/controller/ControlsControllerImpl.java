@@ -173,6 +173,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return this.auxiliaryPersistenceWrapper;
     }
 
+    /* access modifiers changed from: public */
     private final void setValuesForUser(UserHandle userHandle) {
         Log.d("ControlsControllerImpl", "Changing to user: " + userHandle);
         this.currentUser = userHandle;

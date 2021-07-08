@@ -19,6 +19,14 @@ public final class ControlsAnimations {
     private ControlsAnimations() {
     }
 
+    public static final /* synthetic */ float access$getTranslationY$p(ControlsAnimations controlsAnimations) {
+        return translationY;
+    }
+
+    public static final /* synthetic */ void access$setTranslationY$p(ControlsAnimations controlsAnimations, float f) {
+        translationY = f;
+    }
+
     public final LifecycleObserver observerForAnimations(ViewGroup viewGroup, Window window, Intent intent) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "view");
         Intrinsics.checkParameterIsNotNull(window, "window");
