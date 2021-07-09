@@ -5,8 +5,9 @@ import com.android.systemui.controls.ui.ControlActionCoordinatorImpl;
 import com.android.systemui.plugins.ActivityStarter;
 import kotlin.jvm.internal.Ref$BooleanRef;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlActionCoordinatorImpl.kt */
-final class ControlActionCoordinatorImpl$bouncerOrRun$1 implements ActivityStarter.OnDismissAction {
+public final class ControlActionCoordinatorImpl$bouncerOrRun$1 implements ActivityStarter.OnDismissAction {
     final /* synthetic */ ControlActionCoordinatorImpl.Action $action;
     final /* synthetic */ Ref$BooleanRef $closeGlobalActions;
     final /* synthetic */ ControlActionCoordinatorImpl this$0;
@@ -21,7 +22,7 @@ final class ControlActionCoordinatorImpl$bouncerOrRun$1 implements ActivityStart
     public final boolean onDismiss() {
         Log.d("ControlsUiController", "Device unlocked, invoking controls action");
         if (this.$closeGlobalActions.element) {
-            ControlActionCoordinatorImpl.access$getGlobalActionsComponent$p(this.this$0).handleShowGlobalActionsMenu();
+            this.this$0.globalActionsComponent.handleShowGlobalActionsMenu();
             return true;
         }
         this.$action.invoke();

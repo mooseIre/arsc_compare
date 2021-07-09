@@ -115,6 +115,10 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         this.paddingHorizontal = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
     }
 
+    public static final /* synthetic */ void access$setAnimatingToCollapse$p(ControlCenterPanelViewController controlCenterPanelViewController, boolean z) {
+        controlCenterPanelViewController.animatingToCollapse = z;
+    }
+
     public final boolean isPortrait() {
         return this.orientation == 1;
     }
@@ -181,7 +185,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return this.transRatio;
     }
 
-    /* access modifiers changed from: public */
     private final void setTransRatio(float f) {
         if (this.transRatio != f && isExpandable()) {
             this.transRatio = f;

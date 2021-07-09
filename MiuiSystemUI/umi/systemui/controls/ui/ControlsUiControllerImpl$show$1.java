@@ -41,6 +41,6 @@ public final /* synthetic */ class ControlsUiControllerImpl$show$1 extends Funct
 
     public final void invoke(@NotNull List<SelectionItem> list) {
         Intrinsics.checkParameterIsNotNull(list, "p1");
-        ((ControlsUiControllerImpl) this.receiver).showSeedingView(list);
+        ControlsUiControllerImpl.access$showSeedingView((ControlsUiControllerImpl) this.receiver, list);
     }
 }

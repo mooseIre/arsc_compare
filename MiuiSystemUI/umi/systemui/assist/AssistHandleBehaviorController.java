@@ -8,6 +8,7 @@ import android.provider.DeviceConfig;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.accessibility.AccessibilityManager;
+import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.app.AssistUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dumpable;
@@ -53,6 +54,7 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
     };
     private long mShowAndGoEndsAt;
 
+    /* access modifiers changed from: package-private */
     public interface BehaviorController {
         default void dump(PrintWriter printWriter, String str) {
         }
@@ -110,7 +112,6 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         dumpManager.registerDumpable("AssistHandleBehavior", this);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$AssistHandleBehaviorController(DeviceConfig.Properties properties) {
@@ -131,8 +132,8 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         this.mHandler.post(this.mShowAndGo);
     }
 
-    /* access modifiers changed from: public */
-    private void showAndGoInternal() {
+    /* access modifiers changed from: private */
+    public void showAndGoInternal() {
         maybeShowHandles(false);
         long showAndGoDuration = getShowAndGoDuration();
         this.mShowAndGoEndsAt = SystemClock.elapsedRealtime() + showAndGoDuration;
@@ -160,7 +161,6 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         });
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$showAndStay$1 */
     public /* synthetic */ void lambda$showAndStay$1$AssistHandleBehaviorController() {
@@ -175,16 +175,19 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         return this.mHandlesShowing;
     }
 
+    /* access modifiers changed from: package-private */
     public void onAssistantGesturePerformed() {
         this.mBehaviorMap.get(this.mCurrentBehavior).onAssistantGesturePerformed();
     }
 
+    /* access modifiers changed from: package-private */
     public void onAssistHandlesRequested() {
         if (this.mInGesturalMode) {
             this.mBehaviorMap.get(this.mCurrentBehavior).onAssistHandlesRequested();
         }
     }
 
+    /* access modifiers changed from: package-private */
     public void setBehavior(AssistHandleBehavior assistHandleBehavior) {
         if (this.mCurrentBehavior != assistHandleBehavior) {
             if (!this.mBehaviorMap.containsKey(assistHandleBehavior)) {
@@ -243,8 +246,8 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         }
     }
 
-    /* access modifiers changed from: public */
-    private void hideHandles() {
+    /* access modifiers changed from: private */
+    public void hideHandles() {
         if (this.mHandlesShowing) {
             this.mHandlesShowing = false;
             this.mHandlesLastHiddenAt = SystemClock.elapsedRealtime();
@@ -257,8 +260,8 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         }
     }
 
-    /* access modifiers changed from: public */
-    private void handleNavigationModeChange(int i) {
+    /* access modifiers changed from: private */
+    public void handleNavigationModeChange(int i) {
         boolean isGesturalMode = QuickStepContract.isGesturalMode(i);
         if (this.mInGesturalMode != isGesturalMode) {
             this.mInGesturalMode = isGesturalMode;
@@ -284,6 +287,8 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         return false;
     }
 
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
     public void setInGesturalModeForTest(boolean z) {
         this.mInGesturalMode = z;
     }

@@ -21,7 +21,10 @@ import java.util.Iterator;
 import java.util.concurrent.Executor;
 import kotlin.Unit;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: DriveModeControllerImpl.kt */
 public final class DriveModeControllerImpl implements DriveModeController {
     private final Handler mBgHandler;
     private final Context mContext;
@@ -33,7 +36,7 @@ public final class DriveModeControllerImpl implements DriveModeController {
     private final ContentResolver mResolver;
     private final Executor mUIExecutor;
 
-    public DriveModeControllerImpl(Context context, Looper looper, Executor executor, Executor executor2) {
+    public DriveModeControllerImpl(@NotNull Context context, @Nullable Looper looper, @NotNull Executor executor, @NotNull Executor executor2) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");
         Intrinsics.checkParameterIsNotNull(executor, "bgExecutor");
         Intrinsics.checkParameterIsNotNull(executor2, "uiExecutor");
@@ -62,7 +65,7 @@ public final class DriveModeControllerImpl implements DriveModeController {
                     } catch (PackageManager.NameNotFoundException unused) {
                         Log.d("DriveModeController", "Drive app not exist.");
                     }
-                    DriveModeControllerImpl.access$setMIsDriveModeAvailable$p(driveModeControllerImpl, z);
+                    driveModeControllerImpl.mIsDriveModeAvailable = z;
                 }
             });
             observe();
@@ -72,24 +75,12 @@ public final class DriveModeControllerImpl implements DriveModeController {
         throw null;
     }
 
-    public static final /* synthetic */ boolean access$getMIsDriveModeAvailable$p(DriveModeControllerImpl driveModeControllerImpl) {
-        return driveModeControllerImpl.mIsDriveModeAvailable;
-    }
-
-    public static final /* synthetic */ void access$leaveDriveMode(DriveModeControllerImpl driveModeControllerImpl) {
-        driveModeControllerImpl.leaveDriveMode();
-    }
-
-    public static final /* synthetic */ void access$setMIsDriveModeAvailable$p(DriveModeControllerImpl driveModeControllerImpl, boolean z) {
-        driveModeControllerImpl.mIsDriveModeAvailable = z;
-    }
-
     static {
         Log.isLoggable("DriveModeController", 3);
     }
 
-    /* access modifiers changed from: public */
-    private final void updateDriveModeValue() {
+    /* access modifiers changed from: private */
+    public final void updateDriveModeValue() {
         this.mDriveModeValue = Settings.System.getIntForUser(this.mResolver, "drive_mode_drive_mode", -1, -2);
     }
 
@@ -119,8 +110,8 @@ public final class DriveModeControllerImpl implements DriveModeController {
         }
     }
 
-    /* access modifiers changed from: public */
-    private final void dispatchOnDriveModeChanged() {
+    /* access modifiers changed from: private */
+    public final void dispatchOnDriveModeChanged() {
         synchronized (this.mListeners) {
             Iterator<DriveModeController.DriveModeListener> it = this.mListeners.iterator();
             while (it.hasNext()) {
@@ -151,7 +142,7 @@ public final class DriveModeControllerImpl implements DriveModeController {
     }
 
     @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
         Intrinsics.checkParameterIsNotNull(strArr, "args");
@@ -162,7 +153,7 @@ public final class DriveModeControllerImpl implements DriveModeController {
         printWriter.println(this.mIsDriveModeAvailable);
     }
 
-    public void addCallback(DriveModeController.DriveModeListener driveModeListener) {
+    public void addCallback(@Nullable DriveModeController.DriveModeListener driveModeListener) {
         if (driveModeListener != null && !this.mListeners.contains(driveModeListener)) {
             synchronized (this.mListeners) {
                 this.mListeners.add(driveModeListener);
@@ -171,7 +162,7 @@ public final class DriveModeControllerImpl implements DriveModeController {
         }
     }
 
-    public void removeCallback(DriveModeController.DriveModeListener driveModeListener) {
+    public void removeCallback(@Nullable DriveModeController.DriveModeListener driveModeListener) {
         if (driveModeListener != null) {
             synchronized (this.mListeners) {
                 this.mListeners.remove(driveModeListener);
@@ -179,7 +170,8 @@ public final class DriveModeControllerImpl implements DriveModeController {
         }
     }
 
-    private final void leaveDriveMode() {
+    /* access modifiers changed from: private */
+    public final void leaveDriveMode() {
         this.mDriveModeValue = -1;
         Settings.System.putIntForUser(this.mResolver, "drive_mode_drive_mode", -1, -2);
         Intent intent = new Intent();

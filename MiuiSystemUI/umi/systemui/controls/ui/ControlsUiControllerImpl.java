@@ -117,14 +117,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         this.onSeedingComplete = new ControlsUiControllerImpl$onSeedingComplete$1(this);
     }
 
-    public static final /* synthetic */ Map access$getControlViewsById$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.controlViewsById;
-    }
-
-    public static final /* synthetic */ Map access$getControlsById$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.controlsById;
-    }
-
     public static final /* synthetic */ Runnable access$getDismissGlobalActions$p(ControlsUiControllerImpl controlsUiControllerImpl) {
         Runnable runnable = controlsUiControllerImpl.dismissGlobalActions;
         if (runnable != null) {
@@ -239,6 +231,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
+    /* access modifiers changed from: public */
     private final void showSeedingView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
         int i = C0017R$layout.controls_no_favorites;
@@ -258,6 +251,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
+    /* access modifiers changed from: public */
     private final void showInitialSetupView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
         int i = C0017R$layout.controls_no_favorites;
@@ -356,6 +350,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         intent.putExtra("android.intent.extra.COMPONENT_NAME", structureInfo.getComponentName());
     }
 
+    /* access modifiers changed from: public */
     private final void startProviderSelectorActivity(Context context2) {
         Intent intent = new Intent(context2, ControlsProviderSelectorActivity.class);
         intent.addFlags(335544320);
@@ -374,6 +369,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
+    /* access modifiers changed from: public */
     private final void showControlsView(List<SelectionItem> list) {
         this.controlViewsById.clear();
         createListView();

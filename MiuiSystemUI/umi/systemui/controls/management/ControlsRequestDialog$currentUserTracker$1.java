@@ -12,7 +12,7 @@ public final class ControlsRequestDialog$currentUserTracker$1 extends CurrentUse
     ControlsRequestDialog$currentUserTracker$1(ControlsRequestDialog controlsRequestDialog, BroadcastDispatcher broadcastDispatcher) {
         super(broadcastDispatcher);
         this.this$0 = controlsRequestDialog;
-        this.startingUser = ControlsRequestDialog.access$getController$p(controlsRequestDialog).getCurrentUserId();
+        this.startingUser = controlsRequestDialog.controller.getCurrentUserId();
     }
 
     @Override // com.android.systemui.settings.CurrentUserTracker
