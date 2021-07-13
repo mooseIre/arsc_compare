@@ -10,4 +10,10 @@ public class MiuiLogModule {
         logBuffer.attach(dumpManager);
         return logBuffer;
     }
+
+    public static LogBuffer provideMediaControlLogBuffer(LogcatEchoTracker logcatEchoTracker, DumpManager dumpManager) {
+        LogBuffer logBuffer = new LogBuffer("MediaControlLog", 1000, 10, logcatEchoTracker);
+        logBuffer.attach(dumpManager);
+        return logBuffer;
+    }
 }

@@ -173,23 +173,19 @@ public class NotificationShadeWindowViewController {
                         float rawX = motionEvent.getRawX();
                         float rawY = motionEvent.getRawY();
                         NotificationShadeWindowViewController notificationShadeWindowViewController = NotificationShadeWindowViewController.this;
-                        if (!notificationShadeWindowViewController.isIntersecting(notificationShadeWindowViewController.mStatusBarView, rawX, rawY)) {
+                        if (!notificationShadeWindowViewController.isIntersecting(notificationShadeWindowViewController.mStatusBarView, rawX, rawY) || !NotificationShadeWindowViewController.this.mService.isSameStatusBarState(0)) {
                             return null;
-                        }
-                        if (!NotificationShadeWindowViewController.this.mService.isSameStatusBarState(0)) {
-                            return Boolean.TRUE;
                         }
                         NotificationShadeWindowViewController.this.mIsTrackingBarGesture = true;
                         return Boolean.valueOf(NotificationShadeWindowViewController.this.mStatusBarView.dispatchTouchEvent(motionEvent));
-                    } else if (!NotificationShadeWindowViewController.this.mIsTrackingBarGesture) {
-                        return null;
-                    } else {
+                    } else if (NotificationShadeWindowViewController.this.mIsTrackingBarGesture) {
                         boolean dispatchTouchEvent = NotificationShadeWindowViewController.this.mStatusBarView.dispatchTouchEvent(motionEvent);
                         if (z2 || z3) {
                             NotificationShadeWindowViewController.this.mIsTrackingBarGesture = false;
                         }
                         return Boolean.valueOf(dispatchTouchEvent);
                     }
+                    return null;
                 }
             }
 

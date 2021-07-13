@@ -319,6 +319,7 @@ public class QSBigTileView extends QSTileView {
         boolean z;
         setClickable(state.state != 0);
         this.mExpandIndicator.setVisibility((this.mPanelController.isSuperPowerMode() || !state.dualTarget) ? 8 : 0);
+        this.mExpandIndicator.setClickable(!this.mPanelController.isSuperPowerMode());
         this.mStatusIconView.setIcon(state, false);
         this.mStatusIconView.setContentDescription(state.contentDescription);
         String str = state.expandedAccessibilityClassName;
@@ -428,6 +429,9 @@ public class QSBigTileView extends QSTileView {
 
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int actionMasked = motionEvent.getActionMasked();
+                if (QSBigTileView.this.mPanelController.isSuperPowerMode()) {
+                    return false;
+                }
                 if (actionMasked == 0) {
                     QSBigTileView.this.mClicked = true;
                 }

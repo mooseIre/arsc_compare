@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import com.android.systemui.statusbar.phone.PanelViewController;
 
 public abstract class PanelView extends FrameLayout {
+    public static final boolean DEBUG = PanelBar.DEBUG;
     public static final String TAG = PanelView.class.getSimpleName();
     private OnConfigurationChangedListener mOnConfigurationChangedListener;
     protected StatusBar mStatusBar;
@@ -16,10 +17,6 @@ public abstract class PanelView extends FrameLayout {
 
     interface OnConfigurationChangedListener {
         void onConfigurationChanged(Configuration configuration);
-    }
-
-    static {
-        boolean z = PanelBar.DEBUG;
     }
 
     public PanelView(Context context) {

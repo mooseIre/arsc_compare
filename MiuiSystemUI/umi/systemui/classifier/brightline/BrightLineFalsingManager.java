@@ -289,8 +289,7 @@ public class BrightLineFalsingManager implements FalsingManager {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onProximityEvent(ProximitySensor.ProximityEvent proximityEvent) {
+    public void onProximityEvent(ProximitySensor.ProximityEvent proximityEvent) {
         this.mClassifiers.forEach(new Consumer() {
             /* class com.android.systemui.classifier.brightline.$$Lambda$BrightLineFalsingManager$_d89p1tVOz6Jf4LOgqm74DRgw1s */
 

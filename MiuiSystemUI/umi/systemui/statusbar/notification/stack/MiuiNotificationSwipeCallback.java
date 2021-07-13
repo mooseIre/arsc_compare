@@ -12,19 +12,19 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiNotificationSwipeCallback.kt */
 public final class MiuiNotificationSwipeCallback extends NotificationCallbackWrapper {
-    private final MediaDataFilter mediaManager;
+    private final MediaDataFilter mediaDataFilter;
     private final MediaTimeoutListener mediaTimeoutListener;
     private final ZenModeViewController zenModeViewController;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public MiuiNotificationSwipeCallback(@NotNull NotificationSwipeHelper.NotificationCallback notificationCallback, @NotNull MediaTimeoutListener mediaTimeoutListener2, @NotNull MediaDataFilter mediaDataFilter, @NotNull ZenModeViewController zenModeViewController2) {
+    public MiuiNotificationSwipeCallback(@NotNull NotificationSwipeHelper.NotificationCallback notificationCallback, @NotNull MediaTimeoutListener mediaTimeoutListener2, @NotNull MediaDataFilter mediaDataFilter2, @NotNull ZenModeViewController zenModeViewController2) {
         super(notificationCallback);
         Intrinsics.checkParameterIsNotNull(notificationCallback, "base");
         Intrinsics.checkParameterIsNotNull(mediaTimeoutListener2, "mediaTimeoutListener");
-        Intrinsics.checkParameterIsNotNull(mediaDataFilter, "mediaManager");
+        Intrinsics.checkParameterIsNotNull(mediaDataFilter2, "mediaDataFilter");
         Intrinsics.checkParameterIsNotNull(zenModeViewController2, "zenModeViewController");
         this.mediaTimeoutListener = mediaTimeoutListener2;
-        this.mediaManager = mediaDataFilter;
+        this.mediaDataFilter = mediaDataFilter2;
         this.zenModeViewController = zenModeViewController2;
     }
 
@@ -51,7 +51,7 @@ public final class MiuiNotificationSwipeCallback extends NotificationCallbackWra
     @Override // com.android.systemui.SwipeHelper.Callback, com.android.systemui.statusbar.notification.stack.NotificationCallbackWrapper
     public boolean canChildBeDismissed(@Nullable View view) {
         if (view instanceof MiuiMediaHeaderView) {
-            return !this.mediaTimeoutListener.hasPlayingMedia();
+            return !this.mediaTimeoutListener.hasPlayingMedia() && this.mediaDataFilter.isMediaDataClearable();
         }
         if (view instanceof ZenModeView) {
             return ((ZenModeView) view).getCanSwipe();
@@ -67,7 +67,7 @@ public final class MiuiNotificationSwipeCallback extends NotificationCallbackWra
         }
         super.onChildDismissed(view);
         if (view instanceof MiuiMediaHeaderView) {
-            this.mediaManager.onSwipeToDismiss();
+            this.mediaDataFilter.onSwipeToDismiss();
         }
     }
 }

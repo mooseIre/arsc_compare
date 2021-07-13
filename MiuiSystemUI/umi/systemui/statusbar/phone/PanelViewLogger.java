@@ -24,6 +24,18 @@ public final class PanelViewLogger {
         }
     }
 
+    public final void logBlurAnimUpdate(float f, float f2) {
+        LogBuffer logBuffer = this.buffer;
+        LogLevel logLevel = LogLevel.DEBUG;
+        PanelViewLogger$logBlurAnimUpdate$2 panelViewLogger$logBlurAnimUpdate$2 = PanelViewLogger$logBlurAnimUpdate$2.INSTANCE;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("PanelView", logLevel, panelViewLogger$logBlurAnimUpdate$2);
+            obtain.setStr1(String.valueOf(f));
+            obtain.setDouble1((double) f2);
+            logBuffer.push(obtain);
+        }
+    }
+
     public final void logBlurAnimEnd(boolean z, float f) {
         LogBuffer logBuffer = this.buffer;
         LogLevel logLevel = LogLevel.DEBUG;
@@ -80,6 +92,29 @@ public final class PanelViewLogger {
             obtain.setBool4(z10);
             obtain.setInt1((int) f2);
             obtain.setInt2((int) f3);
+            logBuffer.push(obtain);
+        }
+    }
+
+    public final void logNcSwitch(boolean z) {
+        LogBuffer logBuffer = this.buffer;
+        LogLevel logLevel = LogLevel.DEBUG;
+        PanelViewLogger$logNcSwitch$2 panelViewLogger$logNcSwitch$2 = PanelViewLogger$logNcSwitch$2.INSTANCE;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("PanelView", logLevel, panelViewLogger$logNcSwitch$2);
+            obtain.setBool1(z);
+            logBuffer.push(obtain);
+        }
+    }
+
+    public final void logNcSwitchError(boolean z, boolean z2) {
+        LogBuffer logBuffer = this.buffer;
+        LogLevel logLevel = LogLevel.DEBUG;
+        PanelViewLogger$logNcSwitchError$2 panelViewLogger$logNcSwitchError$2 = PanelViewLogger$logNcSwitchError$2.INSTANCE;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("PanelView", logLevel, panelViewLogger$logNcSwitchError$2);
+            obtain.setBool1(z);
+            obtain.setBool2(z2);
             logBuffer.push(obtain);
         }
     }

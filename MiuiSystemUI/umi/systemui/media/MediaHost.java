@@ -2,6 +2,8 @@ package com.android.systemui.media;
 
 import android.graphics.Rect;
 import android.util.ArraySet;
+import com.android.systemui.statusbar.notification.mediacontrol.MediaControlLogger;
+import com.android.systemui.statusbar.notification.mediacontrol.MediaControlLoggerKt;
 import com.android.systemui.statusbar.notification.unimportant.FoldListener;
 import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.util.animation.DisappearParameters;
@@ -24,6 +26,7 @@ public final class MediaHost implements MediaHostState, FoldListener {
     public UniqueObjectHostView hostView;
     private final MediaHost$listener$1 listener = new MediaHost$listener$1(this);
     private int location = -1;
+    private final MediaControlLogger mediaControlLogger;
     private final MediaDataFilter mediaDataFilter;
     private final MediaHierarchyManager mediaHierarchyManager;
     private final MediaHostStatesManager mediaHostStatesManager;
@@ -91,15 +94,17 @@ public final class MediaHost implements MediaHostState, FoldListener {
         this.state.setVisible(z);
     }
 
-    public MediaHost(@NotNull MediaHostStateHolder mediaHostStateHolder, @NotNull MediaHierarchyManager mediaHierarchyManager2, @NotNull MediaDataFilter mediaDataFilter2, @NotNull MediaHostStatesManager mediaHostStatesManager2) {
+    public MediaHost(@NotNull MediaHostStateHolder mediaHostStateHolder, @NotNull MediaHierarchyManager mediaHierarchyManager2, @NotNull MediaDataFilter mediaDataFilter2, @NotNull MediaHostStatesManager mediaHostStatesManager2, @NotNull MediaControlLogger mediaControlLogger2) {
         Intrinsics.checkParameterIsNotNull(mediaHostStateHolder, "state");
         Intrinsics.checkParameterIsNotNull(mediaHierarchyManager2, "mediaHierarchyManager");
         Intrinsics.checkParameterIsNotNull(mediaDataFilter2, "mediaDataFilter");
         Intrinsics.checkParameterIsNotNull(mediaHostStatesManager2, "mediaHostStatesManager");
+        Intrinsics.checkParameterIsNotNull(mediaControlLogger2, "mediaControlLogger");
         this.state = mediaHostStateHolder;
         this.mediaHierarchyManager = mediaHierarchyManager2;
         this.mediaDataFilter = mediaDataFilter2;
         this.mediaHostStatesManager = mediaHostStatesManager2;
+        this.mediaControlLogger = mediaControlLogger2;
     }
 
     @NotNull
@@ -230,6 +235,10 @@ public final class MediaHost implements MediaHostState, FoldListener {
                 Iterator<T> it = this.visibleChangedListeners.iterator();
                 while (it.hasNext()) {
                     it.next().invoke(Boolean.valueOf(getVisible()));
+                }
+                if (MediaControlLoggerKt.getMEDIA_DEBUG()) {
+                    this.mediaControlLogger.logMediaHostVisibilityChanged(getVisible(), i);
+                    return;
                 }
                 return;
             }

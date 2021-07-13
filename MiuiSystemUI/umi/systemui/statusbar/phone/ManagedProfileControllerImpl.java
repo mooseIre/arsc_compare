@@ -91,14 +91,18 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
 
     @Override // com.android.systemui.statusbar.phone.ManagedProfileController
     public boolean hasActiveProfile() {
-        boolean z;
         if (!this.mListening) {
             reloadManagedProfiles();
         }
         synchronized (this.mProfiles) {
-            z = this.mProfiles.size() > 0;
+            Iterator<UserInfo> it = this.mProfiles.iterator();
+            while (it.hasNext()) {
+                if (it.next().id != 999) {
+                    return true;
+                }
+            }
+            return false;
         }
-        return z;
     }
 
     @Override // com.android.systemui.statusbar.phone.ManagedProfileController

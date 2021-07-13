@@ -16,7 +16,7 @@ final class ControlsUiControllerImpl$onRefreshState$$inlined$forEach$lambda$1 im
     }
 
     public final void run() {
-        ControlViewHolder controlViewHolder = (ControlViewHolder) ControlsUiControllerImpl.access$getControlViewsById$p(this.this$0).get(this.$key);
+        ControlViewHolder controlViewHolder = (ControlViewHolder) this.this$0.controlViewsById.get(this.$key);
         if (controlViewHolder != null) {
             controlViewHolder.bindData(this.$cws);
         }

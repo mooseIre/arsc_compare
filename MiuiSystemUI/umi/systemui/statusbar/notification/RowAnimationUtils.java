@@ -15,6 +15,10 @@ public final class RowAnimationUtils {
     private RowAnimationUtils() {
     }
 
+    public static final /* synthetic */ void access$setTouchAnimatingState(RowAnimationUtils rowAnimationUtils, ExpandableView expandableView, boolean z) {
+        rowAnimationUtils.setTouchAnimatingState(expandableView, z);
+    }
+
     @NotNull
     public final String getFolmeTarget(@NotNull ExpandableView expandableView) {
         Intrinsics.checkParameterIsNotNull(expandableView, "row");
@@ -53,8 +57,7 @@ public final class RowAnimationUtils {
         }
     }
 
-    /* access modifiers changed from: private */
-    public final void setTouchAnimatingState(ExpandableView expandableView, boolean z) {
+    private final void setTouchAnimatingState(ExpandableView expandableView, boolean z) {
         ExpandableViewState viewState;
         if (expandableView != null && (viewState = expandableView.getViewState()) != null) {
             viewState.setTouchAnimating(z);

@@ -92,7 +92,7 @@ public class NotificationAlertController {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void buzzBeepBlink(NotificationEntry notificationEntry) {
-        if (!this.mSettingsManager.getMiuiMirrorDndModeEnabled()) {
+        if (!this.mSettingsManager.getMiuiMirrorDndModeEnabled() && !NotificationUtil.isFold(notificationEntry.getSbn())) {
             this.mBgHandler.post(new Runnable(notificationEntry) {
                 /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationAlertController$eZsKb5VsMRsWmtBG8H0C88n8bs */
                 public final /* synthetic */ NotificationEntry f$1;
@@ -159,7 +159,7 @@ public class NotificationAlertController {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void wakeUpIfNeeded(NotificationEntry notificationEntry) {
-        if (this.mSettingsManager.getWakeupForNotification() && this.mNotificationLockscreenUserManager.shouldShowLockscreenNotifications() && this.mNotificationLockscreenUserManager.shouldShowOnKeyguard(notificationEntry) && !this.mZenModeController.isZenModeOn() && !NotificationUtil.isMediaNotification(notificationEntry.getSbn()) && !notificationEntry.getSbn().getNotification().hasMediaSession() && notificationEntry.getSbn().isClearable() && !NotificationUtil.hasProgressbar(notificationEntry.getSbn()) && !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive()) {
+        if (this.mSettingsManager.getWakeupForNotification() && this.mNotificationLockscreenUserManager.shouldShowLockscreenNotifications() && this.mNotificationLockscreenUserManager.shouldShowOnKeyguard(notificationEntry) && !this.mZenModeController.isZenModeOn() && !NotificationUtil.isFold(notificationEntry.getSbn()) && !NotificationUtil.isMediaNotification(notificationEntry.getSbn()) && !notificationEntry.getSbn().getNotification().hasMediaSession() && notificationEntry.getSbn().isClearable() && !NotificationUtil.hasProgressbar(notificationEntry.getSbn()) && !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive()) {
             Log.d("NotificationAlertController", "wakeUpForNotification " + notificationEntry.getKey());
             wakeUpForNotification(notificationEntry);
         }

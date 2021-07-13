@@ -3506,6 +3506,7 @@ public final class R {
         public static final int qs_big_tile_expand_indicator_color;
         public static final int qs_big_tile_expand_indicator_dark_color;
         public static final int qs_brightness_background_color;
+        public static final int qs_brightness_mirror_background_color;
         public static final int qs_brightness_progress_color;
         public static final int qs_cellular_detail_item_disable_icon_color;
         public static final int qs_control_big_tile_0_bg;
@@ -8513,12 +8514,8 @@ public final class R {
         public static final int ic_stop_bubble;
         public static final int ic_swap_vert;
         public static final int ic_sysbar_accessibility_button;
-        public static final int ic_sysbar_accessibility_button_dark;
         public static final int ic_sysbar_aspect;
         public static final int ic_sysbar_back;
-        public static final int ic_sysbar_back_darkmode;
-        public static final int ic_sysbar_back_ime;
-        public static final int ic_sysbar_back_ime_darkmode;
         public static final int ic_sysbar_back_quick_step;
         public static final int ic_sysbar_bg;
         public static final int ic_sysbar_bg_darkmode;
@@ -8532,7 +8529,6 @@ public final class R {
         public static final int ic_sysbar_highlight;
         public static final int ic_sysbar_highlight_land;
         public static final int ic_sysbar_home;
-        public static final int ic_sysbar_home_darkmode;
         public static final int ic_sysbar_home_quick_step;
         public static final int ic_sysbar_lights_out_dot_large;
         public static final int ic_sysbar_lights_out_dot_small;
@@ -8540,7 +8536,6 @@ public final class R {
         public static final int ic_sysbar_menu_dark;
         public static final int ic_sysbar_menu_land;
         public static final int ic_sysbar_recent;
-        public static final int ic_sysbar_recent_darkmode;
         public static final int ic_sysbar_rotate_button;
         public static final int ic_system_update;
         public static final int ic_touch;
@@ -9654,6 +9649,7 @@ public final class R {
         public static final int qs_big_tile_expand_indicator_dark;
         public static final int qs_btn_borderless_rect;
         public static final int qs_control_bg;
+        public static final int qs_control_brightness_mirror_toggle_bg;
         public static final int qs_control_brightness_toggle_bg;
         public static final int qs_control_brightness_toggle_progress;
         public static final int qs_control_brightness_toggle_progress_bg;

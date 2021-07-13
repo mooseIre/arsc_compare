@@ -5,8 +5,9 @@ import android.view.View;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-final class ControlsUiControllerImpl$showInitialSetupView$1 implements View.OnClickListener {
+public final class ControlsUiControllerImpl$showInitialSetupView$1 implements View.OnClickListener {
     final /* synthetic */ ControlsUiControllerImpl this$0;
 
     ControlsUiControllerImpl$showInitialSetupView$1(ControlsUiControllerImpl controlsUiControllerImpl) {
@@ -18,6 +19,6 @@ final class ControlsUiControllerImpl$showInitialSetupView$1 implements View.OnCl
         ControlsUiControllerImpl controlsUiControllerImpl = this.this$0;
         Context context = view.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "v.context");
-        ControlsUiControllerImpl.access$startProviderSelectorActivity(controlsUiControllerImpl, context);
+        controlsUiControllerImpl.startProviderSelectorActivity(context);
     }
 }

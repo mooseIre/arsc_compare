@@ -191,7 +191,7 @@ public class MiuiFiveGServiceClient {
     private boolean mIsCustForJpKd;
     private boolean mIsCustForKrOps;
     private boolean[] mIsDelayUpdate5GIcon = null;
-    private boolean mIsDualNrEnabled = false;
+    private boolean mIsDualNrEnabled = true;
     private boolean mIsUserFiveGEnabled = true;
     private int[] mLastBearerAllocationStatus = null;
     private final SparseArray<FiveGServiceState> mLastServiceStates = new SparseArray<>();
@@ -231,7 +231,7 @@ public class MiuiFiveGServiceClient {
         public void onBindingDied(ComponentName componentName) {
             MiuiFiveGServiceClient.localLog("onBindingDied", "onBindingDied name=" + componentName + ", bindRetryTimes=" + MiuiFiveGServiceClient.this.mBindRetryTimes);
             cleanup();
-            if (MiuiFiveGServiceClient.this.mBindRetryTimes < 4) {
+            if (MiuiFiveGServiceClient.this.mBindRetryTimes < 10) {
                 Log.d("FiveGServiceClient", "try to re-bind");
                 MiuiFiveGServiceClient.this.mHandler.sendEmptyMessageDelayed(1024, (long) ((MiuiFiveGServiceClient.this.mBindRetryTimes * 2000) + 3000));
             }
@@ -418,8 +418,8 @@ public class MiuiFiveGServiceClient {
     /* access modifiers changed from: public */
     private void binderService() {
         boolean bindService = ServiceUtil.bindService(this.mContext, this.mServiceConnection);
-        localLog("binderService", "binderService success=" + bindService + " bindRetryTimes=" + this.mBindRetryTimes + " maxRetryTimes=" + 4);
-        if (!bindService && this.mBindRetryTimes < 4 && !this.mHandler.hasMessages(1024)) {
+        localLog("binderService", "binderService success=" + bindService + " bindRetryTimes=" + this.mBindRetryTimes + " maxRetryTimes=" + 10);
+        if (!bindService && this.mBindRetryTimes < 10 && !this.mHandler.hasMessages(1024)) {
             this.mHandler.sendEmptyMessageDelayed(1024, (long) ((this.mBindRetryTimes * 2000) + 3000));
             this.mBindRetryTimes++;
         }
@@ -499,7 +499,7 @@ public class MiuiFiveGServiceClient {
     }
 
     private void initFiveGServiceState(int i) {
-        localLog("initFiveGServiceState", "initFiveGServiceState initRetryTimes=" + this.mInitRetryTimes + " maxRetryTimes=" + 4 + " mNetworkService=" + this.mNetworkService + " mClient=" + this.mClient);
+        localLog("initFiveGServiceState", "initFiveGServiceState initRetryTimes=" + this.mInitRetryTimes + " maxRetryTimes=" + 10 + " mNetworkService=" + this.mNetworkService + " mClient=" + this.mClient);
         if (this.mNetworkService != null && this.mClient != null) {
             Log.d("FiveGServiceClient", "query 5G service state for phoneId " + i);
             try {
@@ -511,7 +511,7 @@ public class MiuiFiveGServiceClient {
                 Log.d("FiveGServiceClient", "queryNrIconType result:" + this.mNetworkService.queryNrIconType(i, this.mClient));
             } catch (Exception e) {
                 Log.d("FiveGServiceClient", "initFiveGServiceState: Exception = " + e);
-                if (this.mInitRetryTimes < 4 && !this.mHandler.hasMessages(1025)) {
+                if (this.mInitRetryTimes < 10 && !this.mHandler.hasMessages(1025)) {
                     this.mHandler.sendEmptyMessageDelayed(1025, (long) ((this.mInitRetryTimes * 2000) + 3000));
                     this.mInitRetryTimes++;
                 }
@@ -522,7 +522,7 @@ public class MiuiFiveGServiceClient {
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public void update5GIcon(FiveGServiceState fiveGServiceState, int i) {
-        if (!this.mIsUserFiveGEnabled || (i != this.mDefaultDataSlotId && !this.mIsDualNrEnabled)) {
+        if ((i == this.mDefaultDataSlotId && !this.mIsUserFiveGEnabled) || (i != this.mDefaultDataSlotId && !this.mIsDualNrEnabled)) {
             fiveGServiceState.mIconGroup = TelephonyIcons.UNKNOWN;
         } else if (fiveGServiceState.mNrConfigType == 1) {
             fiveGServiceState.mIconGroup = getSaIcon(fiveGServiceState);
@@ -575,7 +575,7 @@ public class MiuiFiveGServiceClient {
         int otherSlotId = getOtherSlotId(this.mDefaultDataSlotId);
         FiveGServiceState currentServiceState = getCurrentServiceState(this.mDefaultDataSlotId);
         FiveGServiceState currentServiceState2 = getCurrentServiceState(otherSlotId);
-        if (this.mIsDualNrEnabled && currentServiceState.mIconGroup == TelephonyIcons.FIVE_G_BASIC && currentServiceState2.mIconGroup != TelephonyIcons.FIVE_G_BASIC) {
+        if (this.mIsUserFiveGEnabled && this.mIsDualNrEnabled && currentServiceState.mIconGroup == TelephonyIcons.FIVE_G_BASIC && currentServiceState2.mIconGroup != TelephonyIcons.FIVE_G_BASIC) {
             if (currentServiceState2.mUpperLayerInd != 1 || currentServiceState2.mPlmn != 1) {
                 boolean isSameOperatorCard = isSameOperatorCard(this.mDefaultDataSlotId, otherSlotId);
                 boolean isSameCell = isSameCell(this.mDefaultDataSlotId, otherSlotId);

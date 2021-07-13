@@ -162,7 +162,8 @@ public class ControlPanelWindowView extends FrameLayout {
         Folme.getValueTarget("ControlPanelViewBlur").setMinVisibleChange(0.01f, "blurRatio");
         IStateStyle useValue = Folme.useValue("ControlPanelViewBlur");
         this.mBlurAmin = useValue;
-        useValue.setup("blurRatioSetup").setTo("blurRatio", Float.valueOf(this.mBlurRatio));
+        useValue.clean();
+        this.mBlurAmin.setup("blurRatioSetup").setTo("blurRatio", Float.valueOf(this.mBlurRatio));
         AnimConfig animConfig = new AnimConfig();
         animConfig.addListeners(this.mBlurRatioListener);
         this.mBlurAnimConfig = animConfig;
@@ -173,7 +174,12 @@ public class ControlPanelWindowView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        this.mBlurAnimConfig.removeListeners(this.mBlurRatioListener);
+        this.mBlurAnimConfig.clear();
+        ValueAnimator valueAnimator = this.mHeightChangeAnimator;
+        if (valueAnimator != null) {
+            valueAnimator.removeAllUpdateListeners();
+            this.mHeightChangeAnimator.removeAllListeners();
+        }
         this.mAttached = false;
     }
 

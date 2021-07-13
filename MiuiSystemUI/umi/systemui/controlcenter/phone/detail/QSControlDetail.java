@@ -35,6 +35,7 @@ import com.android.systemui.controlcenter.phone.detail.QSControlDetail;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.qs.tileview.QSBigTileView;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
+import com.android.systemui.controlcenter.utils.CpuBoostUtil;
 import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.plugins.miui.controls.MiPlayPlugin;
 import com.android.systemui.plugins.qs.DetailAdapter;
@@ -114,6 +115,9 @@ public class QSControlDetail extends FrameLayout {
 
         @Override // com.android.systemui.controlcenter.phone.detail.QSControlDetail.QSPanelCallback
         public void onShowingDetail(DetailAdapter detailAdapter, View view, View view2) {
+            if (DeviceConfig.isMiddleGpuDevice()) {
+                CpuBoostUtil.getInstance().boostCpuToMax(2000);
+            }
             if (detailAdapter != null) {
                 QSControlDetail.this.mShowingMiPlayDetail = detailAdapter instanceof MiPlayDetailAdapter;
             }
@@ -869,6 +873,9 @@ public class QSControlDetail extends FrameLayout {
                 View view4 = QSControlDetail.this.mFromView;
                 if (view4 instanceof QSBigTileView) {
                     ((QSBigTileView) view4).updateIndicatorTouch();
+                }
+                if (DeviceConfig.isMiddleGpuDevice()) {
+                    CpuBoostUtil.getInstance().cancelBoostCpu();
                 }
             }
         });

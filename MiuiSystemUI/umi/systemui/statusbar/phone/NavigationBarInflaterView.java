@@ -215,7 +215,6 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
         if (createView == null) {
             return null;
         }
-        NavigationModeControllerExt.INSTANCE.updateElderMode(createView);
         View applySize = applySize(createView, str, z, z2);
         viewGroup.addView(applySize);
         addToDispatchers(applySize);

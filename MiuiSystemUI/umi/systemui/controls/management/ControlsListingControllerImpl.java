@@ -55,6 +55,14 @@ public final class ControlsListingControllerImpl implements ControlsListingContr
         Log.d("ControlsListingControllerImpl", "Initializing");
     }
 
+    public static final /* synthetic */ Set access$getCallbacks$p(ControlsListingControllerImpl controlsListingControllerImpl) {
+        return controlsListingControllerImpl.callbacks;
+    }
+
+    public static final /* synthetic */ AtomicInteger access$getUserChangeInProgress$p(ControlsListingControllerImpl controlsListingControllerImpl) {
+        return controlsListingControllerImpl.userChangeInProgress;
+    }
+
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public ControlsListingControllerImpl(@NotNull Context context2, @NotNull Executor executor) {
         this(context2, executor, AnonymousClass1.INSTANCE);

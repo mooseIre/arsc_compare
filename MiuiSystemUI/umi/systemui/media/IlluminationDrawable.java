@@ -26,13 +26,20 @@ public final class IlluminationDrawable extends Drawable {
     private float cornerRadius;
     private float highlight;
     private int highlightColor;
-    private final ArrayList<LightSourceDrawable> lightSources = new ArrayList<>();
-    private Paint paint = new Paint();
+    private final ArrayList<LightSourceDrawable> lightSources;
+    private Paint paint;
     private int[] themeAttrs;
     private float[] tmpHsl = {0.0f, 0.0f, 0.0f};
 
     public int getOpacity() {
         return -2;
+    }
+
+    public IlluminationDrawable() {
+        Paint paint2 = new Paint();
+        paint2.setAntiAlias(true);
+        this.paint = paint2;
+        this.lightSources = new ArrayList<>();
     }
 
     /* access modifiers changed from: public */

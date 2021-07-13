@@ -43,13 +43,13 @@ final class ControlsUiControllerImpl$onSeedingComplete$1<T> implements Consumer<
             }
             T t2 = t;
             if (t2 == null) {
-                t2 = ControlsUiControllerImpl.access$getEMPTY_STRUCTURE$cp();
+                t2 = ControlsUiControllerImpl.EMPTY_STRUCTURE;
             }
-            ControlsUiControllerImpl.access$setSelectedStructure$p(controlsUiControllerImpl, t2);
+            controlsUiControllerImpl.selectedStructure = t2;
             ControlsUiControllerImpl controlsUiControllerImpl2 = this.this$0;
-            ControlsUiControllerImpl.access$updatePreferences(controlsUiControllerImpl2, ControlsUiControllerImpl.access$getSelectedStructure$p(controlsUiControllerImpl2));
+            controlsUiControllerImpl2.updatePreferences(controlsUiControllerImpl2.selectedStructure);
         }
         ControlsUiControllerImpl controlsUiControllerImpl3 = this.this$0;
-        ControlsUiControllerImpl.access$reload(controlsUiControllerImpl3, ControlsUiControllerImpl.access$getParent$p(controlsUiControllerImpl3));
+        controlsUiControllerImpl3.reload(ControlsUiControllerImpl.access$getParent$p(controlsUiControllerImpl3));
     }
 }

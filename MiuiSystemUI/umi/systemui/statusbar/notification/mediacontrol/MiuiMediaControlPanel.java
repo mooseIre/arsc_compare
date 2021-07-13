@@ -8,7 +8,6 @@ import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.os.AsyncTask;
 import android.util.ArraySet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
@@ -25,6 +24,7 @@ import com.android.systemui.media.SeekBarViewModel;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.NotificationRemoteInputManager;
 import com.android.systemui.statusbar.notification.mediacontrol.ProcessArtworkTask;
+import com.android.systemui.statusbar.phone.PanelView;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -32,15 +32,18 @@ import miuix.animation.Folme;
 import miuix.animation.base.AnimConfig;
 
 public class MiuiMediaControlPanel extends MediaControlPanel {
+    private static final boolean DEBUG = PanelView.DEBUG;
     private final int ACTION_GAP;
     private int actionCount = 0;
     private final int direction;
+    private final MediaControlLogger mMediaControlLogger;
     private final MiuiMediaTransferManager mMediaTransferManager;
     private final Set<AsyncTask<?, ?, ?>> mProcessArtworkTasks = new ArraySet();
 
-    public MiuiMediaControlPanel(Context context, Executor executor, ActivityStarter activityStarter, MediaViewController mediaViewController, SeekBarViewModel seekBarViewModel, MiuiMediaTransferManager miuiMediaTransferManager) {
+    public MiuiMediaControlPanel(Context context, Executor executor, ActivityStarter activityStarter, MediaViewController mediaViewController, SeekBarViewModel seekBarViewModel, MiuiMediaTransferManager miuiMediaTransferManager, MediaControlLogger mediaControlLogger) {
         super(context, executor, activityStarter, mediaViewController, seekBarViewModel);
         this.mMediaTransferManager = miuiMediaTransferManager;
+        this.mMediaControlLogger = mediaControlLogger;
         this.direction = this.mContext.getResources().getConfiguration().getLayoutDirection();
         this.ACTION_GAP = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.media_control_action_gap);
     }
@@ -140,6 +143,14 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         boolean z;
         int[] iArr = MediaControlPanel.ACTION_IDS;
         List<MediaAction> actions = mediaData.getActions();
+        if (DEBUG) {
+            StringBuilder sb = new StringBuilder();
+            for (MediaAction mediaAction : actions) {
+                sb.append(mediaAction.getContentDescription());
+                sb.append(" ");
+            }
+            this.mMediaControlLogger.logMediaAction(sb.toString());
+        }
         int i = 0;
         while (true) {
             z = true;
@@ -149,37 +160,37 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
             } else {
                 int i2 = iArr[i];
                 ImageButton action = playerViewHolder.getAction(i2);
-                MediaAction mediaAction = actions.get(i);
-                action.setImageDrawable(mediaAction.getDrawable());
-                action.setContentDescription(mediaAction.getContentDescription());
-                Notification.Action notificationAction = mediaAction.getNotificationAction();
-                Runnable action2 = mediaAction.getAction();
+                MediaAction mediaAction2 = actions.get(i);
+                action.setImageDrawable(mediaAction2.getDrawable());
+                action.setContentDescription(mediaAction2.getContentDescription());
+                Notification.Action notificationAction = mediaAction2.getNotificationAction();
+                Runnable action2 = mediaAction2.getAction();
                 if (notificationAction != null && notificationAction.actionIntent != null) {
                     enableActionButton(action, new View.OnClickListener(notificationAction, action) {
-                        /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$37drBkuRL76GGV6bNhqhR5LC18 */
-                        public final /* synthetic */ Notification.Action f$0;
-                        public final /* synthetic */ ImageButton f$1;
+                        /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$YJWdyuvk0gMqWV2mntOcrQIys */
+                        public final /* synthetic */ Notification.Action f$1;
+                        public final /* synthetic */ ImageButton f$2;
 
                         {
-                            this.f$0 = r1;
                             this.f$1 = r2;
+                            this.f$2 = r3;
                         }
 
                         public final void onClick(View view) {
-                            MiuiMediaControlPanel.lambda$setMediaActions$1(this.f$0, this.f$1, view);
+                            MiuiMediaControlPanel.this.lambda$setMediaActions$1$MiuiMediaControlPanel(this.f$1, this.f$2, view);
                         }
                     });
                 } else if (action2 != null) {
                     enableActionButton(action, new View.OnClickListener(action2) {
-                        /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$SmuBjPadan0Q8RJ_PKy9AlL7YwQ */
-                        public final /* synthetic */ Runnable f$0;
+                        /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$6EXQINmiGCpjhCagL35o9R7lU */
+                        public final /* synthetic */ Runnable f$1;
 
                         {
-                            this.f$0 = r1;
+                            this.f$1 = r2;
                         }
 
                         public final void onClick(View view) {
-                            MiuiMediaControlPanel.lambda$setMediaActions$2(this.f$0, view);
+                            MiuiMediaControlPanel.this.lambda$setMediaActions$2$MiuiMediaControlPanel(this.f$1, view);
                         }
                     });
                 } else {
@@ -207,13 +218,17 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         }
     }
 
-    static /* synthetic */ void lambda$setMediaActions$1(Notification.Action action, ImageButton imageButton, View view) {
-        Log.d("MiuiMediaControlPanel", "media_btn_click: pendingIntent=" + action.actionIntent);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setMediaActions$1 */
+    public /* synthetic */ void lambda$setMediaActions$1$MiuiMediaControlPanel(Notification.Action action, ImageButton imageButton, View view) {
+        this.mMediaControlLogger.logMediaActionClicked(action.actionIntent);
         ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class)).getRemoteViewsOnClickHandler().onClickHandler(imageButton, action.actionIntent, RemoteViews.RemoteResponse.fromPendingIntent(action.actionIntent));
     }
 
-    static /* synthetic */ void lambda$setMediaActions$2(Runnable runnable, View view) {
-        Log.d("MiuiMediaControlPanel", "media_btn_click: runnable");
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setMediaActions$2 */
+    public /* synthetic */ void lambda$setMediaActions$2$MiuiMediaControlPanel(Runnable runnable, View view) {
+        this.mMediaControlLogger.logMediaActionClicked("media_btn_click: runnable");
         runnable.run();
     }
 

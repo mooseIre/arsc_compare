@@ -106,7 +106,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
-        if (this.mDataController.isMobileDataSupported()) {
+        if ((this.mSignalCallback.mInfo == null || !this.mSignalCallback.mInfo.airplaneModeEnabled) && this.mDataController.isMobileDataSupported()) {
             String str = this.TAG;
             StringBuilder sb = new StringBuilder();
             sb.append("handleClick: from: ");

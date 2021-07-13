@@ -20,7 +20,7 @@ public final class AppMiniWindowRowTouchHelper$mHandler$1 extends Handler {
         Intrinsics.checkParameterIsNotNull(message, "msg");
         super.handleMessage(message);
         if (message.what == 1) {
-            this.this$0.handleHideNotificationPanel();
+            AppMiniWindowRowTouchHelper.access$handleHideNotificationPanel(this.this$0);
         }
     }
 }

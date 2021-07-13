@@ -8,7 +8,6 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.phone.ManagedProfileController;
-import miuix.os.Build;
 
 public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements ManagedProfileController.Callback {
     private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C0013R$drawable.stat_sys_managed_profile_status);
@@ -42,7 +41,7 @@ public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements Man
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
-        return Build.IS_INTERNATIONAL_BUILD && this.mProfileController.hasActiveProfile();
+        return this.mProfileController.hasActiveProfile();
     }
 
     @Override // com.android.systemui.statusbar.phone.ManagedProfileController.Callback

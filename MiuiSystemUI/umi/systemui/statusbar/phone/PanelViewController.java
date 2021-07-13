@@ -614,6 +614,12 @@ public abstract class PanelViewController {
                 PanelViewController.this.setAnimator(null);
                 if (!this.mCancelled) {
                     PanelViewController.this.notifyExpandingFinished();
+                } else {
+                    PanelViewController panelViewController2 = PanelViewController.this;
+                    if ((panelViewController2 instanceof MiuiNotificationPanelViewController) && ((MiuiNotificationPanelViewController) panelViewController2).isNCSwitching()) {
+                        PanelViewController.this.notifyExpandingFinished();
+                        Log.e(PanelViewController.TAG, "catch: heightAnimator cancel");
+                    }
                 }
                 ((KeyguardPanelViewInjector) Dependency.get(KeyguardPanelViewInjector.class)).resetVerticalTouchEvent();
                 PanelViewController.this.notifyBarPanelExpansionChanged();

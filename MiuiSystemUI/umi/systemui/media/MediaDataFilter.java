@@ -8,6 +8,8 @@ import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.mediacontrol.MediaControlLogger;
+import com.android.systemui.statusbar.notification.mediacontrol.MediaControlLoggerKt;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -17,6 +19,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,12 +31,13 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
     private final Executor executor;
     private final Set<MediaDataManager.Listener> listeners = new LinkedHashSet();
     private final NotificationLockscreenUserManager lockscreenUserManager;
+    private final MediaControlLogger mediaControlLogger;
     private final MediaDataManager mediaDataManager;
     private final LinkedHashMap<String, MediaData> mediaEntries = new LinkedHashMap<>();
     private final MediaResumeListener mediaResumeListener;
     private final CurrentUserTracker userTracker;
 
-    public MediaDataFilter(@NotNull MediaDataCombineLatest mediaDataCombineLatest, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull MediaResumeListener mediaResumeListener2, @NotNull MediaDataManager mediaDataManager2, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull Executor executor2, @NotNull NotificationEntryManager notificationEntryManager) {
+    public MediaDataFilter(@NotNull MediaDataCombineLatest mediaDataCombineLatest, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull MediaResumeListener mediaResumeListener2, @NotNull MediaDataManager mediaDataManager2, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull Executor executor2, @NotNull NotificationEntryManager notificationEntryManager, @NotNull MediaControlLogger mediaControlLogger2) {
         Intrinsics.checkParameterIsNotNull(mediaDataCombineLatest, "dataSource");
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
         Intrinsics.checkParameterIsNotNull(mediaResumeListener2, "mediaResumeListener");
@@ -41,6 +45,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
         Intrinsics.checkParameterIsNotNull(notificationLockscreenUserManager, "lockscreenUserManager");
         Intrinsics.checkParameterIsNotNull(executor2, "executor");
         Intrinsics.checkParameterIsNotNull(notificationEntryManager, "entryManager");
+        Intrinsics.checkParameterIsNotNull(mediaControlLogger2, "mediaControlLogger");
         this.dataSource = mediaDataCombineLatest;
         this.broadcastDispatcher = broadcastDispatcher2;
         this.mediaResumeListener = mediaResumeListener2;
@@ -48,6 +53,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
         this.lockscreenUserManager = notificationLockscreenUserManager;
         this.executor = executor2;
         this.entryManager = notificationEntryManager;
+        this.mediaControlLogger = mediaControlLogger2;
         AnonymousClass1 r2 = new CurrentUserTracker(this, this.broadcastDispatcher) {
             /* class com.android.systemui.media.MediaDataFilter.AnonymousClass1 */
             final /* synthetic */ MediaDataFilter this$0;
@@ -78,6 +84,8 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
             for (MediaDataManager.Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
                 listener.onMediaDataLoaded(str, str2, mediaData);
             }
+        } else if (MediaControlLoggerKt.getMEDIA_DEBUG()) {
+            this.mediaControlLogger.logDataNotCurrentUser(mediaData);
         }
     }
 
@@ -116,6 +124,12 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
                 }
             }
         }
+    }
+
+    public final boolean isMediaDataClearable() {
+        Set<String> keySet = this.mediaEntries.keySet();
+        Intrinsics.checkExpressionValueIsNotNull(keySet, "mediaEntries.keys");
+        return SequencesKt___SequencesKt.count(SequencesKt___SequencesKt.filter(SequencesKt___SequencesKt.filterNotNull(SequencesKt___SequencesKt.map(CollectionsKt___CollectionsKt.asSequence(keySet), new MediaDataFilter$isMediaDataClearable$1(this))), MediaDataFilter$isMediaDataClearable$2.INSTANCE)) == 0;
     }
 
     public final void onSwipeToDismiss() {

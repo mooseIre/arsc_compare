@@ -216,6 +216,10 @@ public final class MediaData {
         return this.resumption;
     }
 
+    public final String getNotificationKey() {
+        return this.notificationKey;
+    }
+
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public /* synthetic */ MediaData(int i, boolean z, int i2, String str, Drawable drawable, CharSequence charSequence, CharSequence charSequence2, Icon icon, List list, List list2, String str2, MediaSession.Token token2, PendingIntent pendingIntent, MediaDeviceData mediaDeviceData, boolean z2, Runnable runnable, boolean z3, String str3, boolean z4, int i3, DefaultConstructorMarker defaultConstructorMarker) {
         this(i, (i3 & 2) != 0 ? false : z, i2, str, drawable, charSequence, charSequence2, icon, list, list2, str2, token2, pendingIntent, mediaDeviceData, z2, runnable, (i3 & 65536) != 0 ? false : z3, (i3 & 131072) != 0 ? null : str3, (i3 & 262144) != 0 ? false : z4);

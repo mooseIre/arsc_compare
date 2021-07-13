@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.util.LatencyTracker;
 import com.android.keyguard.AwesomeLockScreen;
+import com.android.keyguard.KeyguardMoveHelper;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiFastUnlockController;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
@@ -33,10 +34,13 @@ import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.clock.KeyguardClockContainer;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.injector.KeyguardClockInjector;
+import com.android.keyguard.injector.KeyguardNegative1PageInjector;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.magazine.LockScreenMagazinePreView;
+import com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView;
+import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
@@ -457,6 +461,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 f = RangesKt.coerceIn(floatValue, 0.0f, 1.0f);
             }
             miuiNotificationPanelViewController.setMBlurRatio(f);
+            if (PanelViewController.DEBUG) {
+                MiuiNotificationPanelViewController.this.panelBlurLogger.logBlurAnimUpdate(MiuiNotificationPanelViewController.this.getMBlurRatio(), floatValue);
+            }
         }
 
         @Override // miuix.animation.listener.TransitionListener
@@ -504,17 +511,18 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             }
             super.setExpandedHeightInternal(f);
         } else {
-            boolean z = false;
-            int i = (f > ((float) 0) ? 1 : (f == ((float) 0) ? 0 : -1));
-            float f2 = 0.0f;
-            if (i > 0 && this.mExpandedHeight == 0.0f) {
-                z = true;
-            }
+            float f2 = (float) 0;
+            int i = (f > f2 ? 1 : (f == f2 ? 0 : -1));
+            float f3 = 0.0f;
+            boolean z = i > 0 && this.mExpandedHeight == 0.0f;
             if (i > 0) {
-                f2 = (float) getMaxPanelHeight();
+                f3 = (float) getMaxPanelHeight();
             }
             if (!isOnKeyguard()) {
-                f = f2;
+                f = f3;
+            }
+            if (f <= f2) {
+                setMPanelAppeared(false);
             }
             super.setExpandedHeightInternal(f);
             if (z) {
@@ -1352,7 +1360,14 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.PanelViewController
     public boolean isStatusBarExpandable() {
-        return !isOnKeyguard() || MiuiKeyguardUtils.supportExpandableStatusbarUnderKeyguard();
+        KeyguardMoveHelper keyguardMoveHelper;
+        if ((!isOnKeyguard() || MiuiKeyguardUtils.supportExpandableStatusbarUnderKeyguard()) && (keyguardMoveHelper = this.mKeyguardPanelViewInjector.getKeyguardMoveHelper()) != null && !keyguardMoveHelper.isInLeftView()) {
+            MiuiKeyguardMoveLeftViewContainer leftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
+            if ((leftView != null ? leftView.getContentView() : null) instanceof MiuiKeyguardMoveLeftControlCenterView) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override // com.android.systemui.statusbar.phone.PanelViewController

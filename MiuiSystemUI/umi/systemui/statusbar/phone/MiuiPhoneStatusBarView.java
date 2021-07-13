@@ -205,10 +205,14 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
             this.mDown = MotionEvent.obtain(motionEvent);
             this.mIsGiveAllEvent = false;
             this.mFirstMove = true;
-        } else if (z2 && Math.abs(motionEvent.getRawY() - this.mDownY) > 5.0f && this.mFirstMove) {
-            this.mControlPanelWindowManager.dispatchToControlPanel(this.mDown, (float) getWidth());
-            this.mFirstMove = false;
-            this.mIsGiveAllEvent = true;
+        } else if (z2) {
+            if (Math.abs(motionEvent.getRawY() - this.mDownY) > 5.0f && this.mFirstMove) {
+                this.mFirstMove = false;
+                this.mIsGiveAllEvent = true;
+                return this.mControlPanelWindowManager.dispatchToControlPanel(this.mDown, (float) getWidth());
+            } else if (!this.mFirstMove && this.mIsGiveAllEvent && this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) {
+                return true;
+            }
         } else if (z3 || z4) {
             this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth());
             this.mFirstMove = false;
@@ -219,7 +223,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
                 this.mDown = null;
             }
         }
-        return (this.mIsGiveAllEvent && this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) || this.mGestureDetector.onTouchEvent(motionEvent) || !panelEnabled();
+        return this.mGestureDetector.onTouchEvent(motionEvent) || !panelEnabled();
     }
 
     static class MyGestureListener extends GestureDetector.SimpleOnGestureListener {

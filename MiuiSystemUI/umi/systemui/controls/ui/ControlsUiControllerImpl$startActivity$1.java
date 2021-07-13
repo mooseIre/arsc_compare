@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import com.android.systemui.plugins.ActivityStarter;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-final class ControlsUiControllerImpl$startActivity$1 implements ActivityStarter.OnDismissAction {
+public final class ControlsUiControllerImpl$startActivity$1 implements ActivityStarter.OnDismissAction {
     final /* synthetic */ Context $context;
     final /* synthetic */ Intent $intent;
     final /* synthetic */ ControlsUiControllerImpl this$0;
@@ -18,7 +19,7 @@ final class ControlsUiControllerImpl$startActivity$1 implements ActivityStarter.
 
     @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
     public final boolean onDismiss() {
-        ControlsUiControllerImpl.access$getShadeController$p(this.this$0).collapsePanel(false);
+        this.this$0.shadeController.collapsePanel(false);
         this.$context.startActivity(this.$intent);
         return true;
     }

@@ -266,6 +266,7 @@ import com.android.systemui.dagger.DependencyProvider_ProviderLayoutInflaterFact
 import com.android.systemui.dagger.DependencyProvider_ProvidesBroadcastDispatcherFactory;
 import com.android.systemui.dagger.DependencyProvider_ProvidesChoreographerFactory;
 import com.android.systemui.dagger.DependencyProvider_ProvidesViewMediatorCallbackFactory;
+import com.android.systemui.dagger.MiuiLogModule_ProvideMediaControlLogBufferFactory;
 import com.android.systemui.dagger.MiuiLogModule_ProvidePanelViewLogBufferFactory;
 import com.android.systemui.dagger.SystemServicesModule_ProvideAccessibilityManagerFactory;
 import com.android.systemui.dagger.SystemServicesModule_ProvideActivityManagerFactory;
@@ -660,6 +661,8 @@ import com.android.systemui.statusbar.notification.interruption.MiuiNotification
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger_ExpansionStateLogger_Factory;
 import com.android.systemui.statusbar.notification.logging.NotificationPanelLogger;
+import com.android.systemui.statusbar.notification.mediacontrol.MediaControlLogger;
+import com.android.systemui.statusbar.notification.mediacontrol.MediaControlLogger_Factory;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiKeyguardMediaController;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiKeyguardMediaController_Factory;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaControlPanel_Factory;
@@ -1201,6 +1204,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<Map<Class<?>, Provider<SystemUI>>> mapOfClassOfAndProviderOfSystemUIProvider;
     private Provider<MediaArtworkProcessor> mediaArtworkProcessorProvider;
     private Provider<MediaCarouselController> mediaCarouselControllerProvider;
+    private MediaControlLogger_Factory mediaControlLoggerProvider;
     private MediaControllerFactory_Factory mediaControllerFactoryProvider;
     private MediaCoordinator_Factory mediaCoordinatorProvider;
     private Provider<MediaDataCombineLatest> mediaDataCombineLatestProvider;
@@ -1252,6 +1256,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<ModalController> modalControllerProvider;
     private Provider<ModalRowInflater> modalRowInflaterProvider;
     private MuteTile_Factory muteTileProvider;
+    private Provider<NCSwitchController> nCSwitchControllerProvider;
     private Provider<NavigationModeController> navigationModeControllerProvider;
     private Provider<NetworkControllerImpl> networkControllerImplProvider;
     private Provider<NetworkSpeedController> networkSpeedControllerProvider;
@@ -1316,6 +1321,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<OverviewProxyService> overviewProxyServiceProvider;
     private Provider<PackageEventController> packageEventControllerProvider;
     private Provider<PanelExpansionObserver> panelExpansionObserverProvider;
+    private PanelViewLogger_Factory panelViewLoggerProvider;
     private PaperModeControllerImpl_Factory paperModeControllerImplProvider;
     private PaperModeTile_Factory paperModeTileProvider;
     private Provider<PeopleHubDataSourceImpl> peopleHubDataSourceImplProvider;
@@ -1404,6 +1410,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<DelayableExecutor> provideMainDelayableExecutorProvider;
     private ConcurrencyModule_ProvideMainExecutorFactory provideMainExecutorProvider;
     private ConcurrencyModule_ProvideMainHandlerFactory provideMainHandlerProvider;
+    private Provider<LogBuffer> provideMediaControlLogBufferProvider;
     private SystemServicesModule_ProvideMediaRouter2ManagerFactory provideMediaRouter2ManagerProvider;
     private Provider<MetricsLogger> provideMetricsLoggerProvider;
     private Provider<NavigationBarController> provideNavigationBarControllerProvider;
@@ -1608,10 +1615,14 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         return new QSLogger(this.provideQuickSettingsLogBufferProvider.get());
     }
 
+    private MediaControlLogger getMediaControlLogger() {
+        return new MediaControlLogger(this.provideMediaControlLogBufferProvider.get());
+    }
+
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private MediaHost getMediaHost() {
-        return new MediaHost(new MediaHost.MediaHostStateHolder(), this.mediaHierarchyManagerProvider.get(), this.mediaDataFilterProvider.get(), this.mediaHostStatesManagerProvider.get());
+        return new MediaHost(new MediaHost.MediaHostStateHolder(), this.mediaHierarchyManagerProvider.get(), this.mediaDataFilterProvider.get(), this.mediaHostStatesManagerProvider.get(), getMediaControlLogger());
     }
 
     private void initialize(Builder builder) {
@@ -2397,47 +2408,54 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.demoModeControllerProvider = DoubleCheck.provider(DemoModeController_Factory.create(this.providesBroadcastDispatcherProvider));
         this.slaveWifiSignalControllerProvider = DoubleCheck.provider(SlaveWifiSignalController_Factory.create(this.contextProvider, this.provideBgHandlerProvider, this.statusBarIconControllerImplProvider, this.provideMainHandlerProvider, this.providesBroadcastDispatcherProvider));
         this.miuiAlarmControllerImplProvider = DoubleCheck.provider(MiuiAlarmControllerImpl_Factory.create(this.contextProvider));
-        this.systemUIStatProvider = DoubleCheck.provider(SystemUIStat_Factory.create(this.contextProvider, this.eventTrackerProvider));
+        Provider<LogBuffer> provider3 = DoubleCheck.provider(MiuiLogModule_ProvidePanelViewLogBufferFactory.create(this.provideLogcatEchoTrackerProvider, this.dumpManagerProvider));
+        this.providePanelViewLogBufferProvider = provider3;
+        this.panelViewLoggerProvider = PanelViewLogger_Factory.create(provider3);
+        Provider<SystemUIStat> provider4 = DoubleCheck.provider(SystemUIStat_Factory.create(this.contextProvider, this.eventTrackerProvider));
+        this.systemUIStatProvider = provider4;
+        this.nCSwitchControllerProvider = DoubleCheck.provider(NCSwitchController_Factory.create(this.contextProvider, this.statusBarStateControllerImplProvider, this.controlPanelControllerProvider, this.shadeControllerImplProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, this.panelViewLoggerProvider, provider4));
         this.phoneSignalControllerImplProvider = DoubleCheck.provider(PhoneSignalControllerImpl_Factory.create(this.contextProvider));
         this.unimportantSdkProvider = DoubleCheck.provider(UnimportantSdk_Factory.create(this.contextProvider));
         this.foldNotifControllerProvider = DoubleCheck.provider(FoldNotifController_Factory.create(this.contextProvider));
         this.context = builder.context;
-        Provider<MediaHostStatesManager> provider3 = DoubleCheck.provider(MediaHostStatesManager_Factory.create());
-        this.mediaHostStatesManagerProvider = provider3;
-        this.mediaViewControllerProvider = MediaViewController_Factory.create(this.contextProvider, this.provideConfigurationControllerProvider, provider3);
-        Provider<RepeatableExecutor> provider4 = DoubleCheck.provider(ConcurrencyModule_ProvideBackgroundRepeatableExecutorFactory.create(this.provideBackgroundDelayableExecutorProvider));
-        this.provideBackgroundRepeatableExecutorProvider = provider4;
-        this.seekBarViewModelProvider = SeekBarViewModel_Factory.create(provider4);
-        Provider<MiuiMediaTransferManager> provider5 = DoubleCheck.provider(MiuiMediaTransferManager_Factory.create(this.contextProvider, this.controlPanelControllerProvider));
-        this.miuiMediaTransferManagerProvider = provider5;
-        this.miuiMediaControlPanelProvider = MiuiMediaControlPanel_Factory.create(this.contextProvider, this.provideBackgroundExecutorProvider, this.activityStarterDelegateProvider, this.mediaViewControllerProvider, this.seekBarViewModelProvider, provider5);
+        Provider<MediaHostStatesManager> provider5 = DoubleCheck.provider(MediaHostStatesManager_Factory.create());
+        this.mediaHostStatesManagerProvider = provider5;
+        this.mediaViewControllerProvider = MediaViewController_Factory.create(this.contextProvider, this.provideConfigurationControllerProvider, provider5);
+        Provider<RepeatableExecutor> provider6 = DoubleCheck.provider(ConcurrencyModule_ProvideBackgroundRepeatableExecutorFactory.create(this.provideBackgroundDelayableExecutorProvider));
+        this.provideBackgroundRepeatableExecutorProvider = provider6;
+        this.seekBarViewModelProvider = SeekBarViewModel_Factory.create(provider6);
+        this.miuiMediaTransferManagerProvider = DoubleCheck.provider(MiuiMediaTransferManager_Factory.create(this.contextProvider, this.controlPanelControllerProvider));
+        Provider<LogBuffer> provider7 = DoubleCheck.provider(MiuiLogModule_ProvideMediaControlLogBufferFactory.create(this.provideLogcatEchoTrackerProvider, this.dumpManagerProvider));
+        this.provideMediaControlLogBufferProvider = provider7;
+        MediaControlLogger_Factory create = MediaControlLogger_Factory.create(provider7);
+        this.mediaControlLoggerProvider = create;
+        this.miuiMediaControlPanelProvider = MiuiMediaControlPanel_Factory.create(this.contextProvider, this.provideBackgroundExecutorProvider, this.activityStarterDelegateProvider, this.mediaViewControllerProvider, this.seekBarViewModelProvider, this.miuiMediaTransferManagerProvider, create);
         this.localMediaManagerFactoryProvider = LocalMediaManagerFactory_Factory.create(this.contextProvider, this.provideLocalBluetoothControllerProvider);
-        SystemServicesModule_ProvideMediaRouter2ManagerFactory create = SystemServicesModule_ProvideMediaRouter2ManagerFactory.create(this.contextProvider);
-        this.provideMediaRouter2ManagerProvider = create;
-        Provider<MediaDeviceManager> provider6 = DoubleCheck.provider(MediaDeviceManager_Factory.create(this.contextProvider, this.localMediaManagerFactoryProvider, create, this.provideMainExecutorProvider, this.mediaDataManagerProvider, this.dumpManagerProvider));
-        this.mediaDeviceManagerProvider = provider6;
-        Provider<MediaDataCombineLatest> provider7 = DoubleCheck.provider(MediaDataCombineLatest_Factory.create(this.mediaDataManagerProvider, provider6));
-        this.mediaDataCombineLatestProvider = provider7;
-        Provider<MediaDataFilter> provider8 = DoubleCheck.provider(MediaDataFilter_Factory.create(provider7, this.providesBroadcastDispatcherProvider, this.mediaResumeListenerProvider, this.mediaDataManagerProvider, this.notificationLockscreenUserManagerImplProvider, this.provideMainExecutorProvider, this.provideNotificationEntryManagerProvider));
-        this.mediaDataFilterProvider = provider8;
-        Provider<MediaCarouselController> provider9 = DoubleCheck.provider(MediaCarouselController_Factory.create(this.contextProvider, this.miuiMediaControlPanelProvider, this.provideVisualStabilityManagerProvider, this.mediaHostStatesManagerProvider, this.activityStarterDelegateProvider, this.provideMainDelayableExecutorProvider, provider8, this.provideConfigurationControllerProvider, this.falsingManagerProxyProvider));
-        this.mediaCarouselControllerProvider = provider9;
-        this.mediaHierarchyManagerProvider = DoubleCheck.provider(MediaHierarchyManager_Factory.create(this.contextProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.keyguardBypassControllerProvider, provider9, this.notificationLockscreenUserManagerImplProvider, this.wakefulnessLifecycleProvider));
-        MediaHost_Factory create2 = MediaHost_Factory.create(MediaHost_MediaHostStateHolder_Factory.create(), this.mediaHierarchyManagerProvider, this.mediaDataFilterProvider, this.mediaHostStatesManagerProvider);
-        this.mediaHostProvider = create2;
-        this.miuiKeyguardMediaControllerProvider = DoubleCheck.provider(MiuiKeyguardMediaController_Factory.create(create2, this.keyguardBypassControllerProvider, this.statusBarStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
+        SystemServicesModule_ProvideMediaRouter2ManagerFactory create2 = SystemServicesModule_ProvideMediaRouter2ManagerFactory.create(this.contextProvider);
+        this.provideMediaRouter2ManagerProvider = create2;
+        Provider<MediaDeviceManager> provider8 = DoubleCheck.provider(MediaDeviceManager_Factory.create(this.contextProvider, this.localMediaManagerFactoryProvider, create2, this.provideMainExecutorProvider, this.mediaDataManagerProvider, this.dumpManagerProvider));
+        this.mediaDeviceManagerProvider = provider8;
+        Provider<MediaDataCombineLatest> provider9 = DoubleCheck.provider(MediaDataCombineLatest_Factory.create(this.mediaDataManagerProvider, provider8));
+        this.mediaDataCombineLatestProvider = provider9;
+        Provider<MediaDataFilter> provider10 = DoubleCheck.provider(MediaDataFilter_Factory.create(provider9, this.providesBroadcastDispatcherProvider, this.mediaResumeListenerProvider, this.mediaDataManagerProvider, this.notificationLockscreenUserManagerImplProvider, this.provideMainExecutorProvider, this.provideNotificationEntryManagerProvider, this.mediaControlLoggerProvider));
+        this.mediaDataFilterProvider = provider10;
+        Provider<MediaCarouselController> provider11 = DoubleCheck.provider(MediaCarouselController_Factory.create(this.contextProvider, this.miuiMediaControlPanelProvider, this.provideVisualStabilityManagerProvider, this.mediaHostStatesManagerProvider, this.activityStarterDelegateProvider, this.provideMainDelayableExecutorProvider, provider10, this.provideConfigurationControllerProvider, this.falsingManagerProxyProvider));
+        this.mediaCarouselControllerProvider = provider11;
+        this.mediaHierarchyManagerProvider = DoubleCheck.provider(MediaHierarchyManager_Factory.create(this.contextProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.keyguardBypassControllerProvider, provider11, this.notificationLockscreenUserManagerImplProvider, this.wakefulnessLifecycleProvider));
+        MediaHost_Factory create3 = MediaHost_Factory.create(MediaHost_MediaHostStateHolder_Factory.create(), this.mediaHierarchyManagerProvider, this.mediaDataFilterProvider, this.mediaHostStatesManagerProvider, this.mediaControlLoggerProvider);
+        this.mediaHostProvider = create3;
+        this.miuiKeyguardMediaControllerProvider = DoubleCheck.provider(MiuiKeyguardMediaController_Factory.create(create3, this.keyguardBypassControllerProvider, this.statusBarStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
         this.zenModeViewControllerProvider = DoubleCheck.provider(ZenModeViewController_Factory.create(this.zenModeControllerImplProvider, this.keyguardBypassControllerProvider, this.statusBarStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider, this.notificationRowComponentBuilderProvider));
-        Provider<PeopleHubDataSourceImpl> provider10 = DoubleCheck.provider(PeopleHubDataSourceImpl_Factory.create(this.provideNotificationEntryManagerProvider, this.notificationPersonExtractorPluginBoundaryProvider, this.provideUserManagerProvider, this.provideLauncherAppsProvider, this.providePackageManagerProvider, this.contextProvider, this.provideNotificationListenerProvider, this.provideBackgroundExecutorProvider, this.provideMainExecutorProvider, this.notificationLockscreenUserManagerImplProvider, this.peopleNotificationIdentifierImplProvider));
-        this.peopleHubDataSourceImplProvider = provider10;
-        Provider<PeopleHubViewModelFactoryDataSourceImpl> provider11 = DoubleCheck.provider(PeopleHubViewModelFactoryDataSourceImpl_Factory.create(this.activityStarterDelegateProvider, provider10));
-        this.peopleHubViewModelFactoryDataSourceImplProvider = provider11;
-        this.peopleHubViewAdapterImplProvider = DoubleCheck.provider(PeopleHubViewAdapterImpl_Factory.create(provider11));
-        Provider<LogBuffer> provider12 = DoubleCheck.provider(LogModule_ProvideNotificationSectionLogBufferFactory.create(this.provideLogcatEchoTrackerProvider, this.dumpManagerProvider));
-        this.provideNotificationSectionLogBufferProvider = provider12;
-        this.notificationSectionsLoggerProvider = DoubleCheck.provider(NotificationSectionsLogger_Factory.create(provider12));
+        Provider<PeopleHubDataSourceImpl> provider12 = DoubleCheck.provider(PeopleHubDataSourceImpl_Factory.create(this.provideNotificationEntryManagerProvider, this.notificationPersonExtractorPluginBoundaryProvider, this.provideUserManagerProvider, this.provideLauncherAppsProvider, this.providePackageManagerProvider, this.contextProvider, this.provideNotificationListenerProvider, this.provideBackgroundExecutorProvider, this.provideMainExecutorProvider, this.notificationLockscreenUserManagerImplProvider, this.peopleNotificationIdentifierImplProvider));
+        this.peopleHubDataSourceImplProvider = provider12;
+        Provider<PeopleHubViewModelFactoryDataSourceImpl> provider13 = DoubleCheck.provider(PeopleHubViewModelFactoryDataSourceImpl_Factory.create(this.activityStarterDelegateProvider, provider12));
+        this.peopleHubViewModelFactoryDataSourceImplProvider = provider13;
+        this.peopleHubViewAdapterImplProvider = DoubleCheck.provider(PeopleHubViewAdapterImpl_Factory.create(provider13));
+        Provider<LogBuffer> provider14 = DoubleCheck.provider(LogModule_ProvideNotificationSectionLogBufferFactory.create(this.provideLogcatEchoTrackerProvider, this.dumpManagerProvider));
+        this.provideNotificationSectionLogBufferProvider = provider14;
+        this.notificationSectionsLoggerProvider = DoubleCheck.provider(NotificationSectionsLogger_Factory.create(provider14));
         this.provideLatencyTrackerProvider = DoubleCheck.provider(SystemServicesModule_ProvideLatencyTrackerFactory.create(this.contextProvider));
         this.provideActivityManagerProvider = DoubleCheck.provider(SystemServicesModule_ProvideActivityManagerFactory.create(this.contextProvider));
-        this.providePanelViewLogBufferProvider = DoubleCheck.provider(MiuiLogModule_ProvidePanelViewLogBufferFactory.create(this.provideLogcatEchoTrackerProvider, this.dumpManagerProvider));
         this.providerLayoutInflaterProvider = DoubleCheck.provider(DependencyProvider_ProviderLayoutInflaterFactory.create(builder.dependencyProvider, this.contextProvider));
     }
 
@@ -2587,7 +2605,6 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         private CarrierObserver_Factory carrierObserverProvider;
         private GestureObserver_Factory gestureObserverProvider;
         private MiuiCarrierTextController_Factory miuiCarrierTextControllerProvider;
-        private NCSwitchController_Factory nCSwitchControllerProvider;
         private NotificationIconObserver_Factory notificationIconObserverProvider;
 
         private DependencyInjectorImpl() {
@@ -2598,7 +2615,6 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.carrierObserverProvider = CarrierObserver_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider, DaggerTvSystemUIRootComponent.this.provideBgHandlerProvider);
             this.miuiCarrierTextControllerProvider = MiuiCarrierTextController_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider, DaggerTvSystemUIRootComponent.this.provideBgHandlerProvider);
             this.notificationIconObserverProvider = NotificationIconObserver_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider);
-            this.nCSwitchControllerProvider = NCSwitchController_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider, DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider, DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider, DaggerTvSystemUIRootComponent.this.systemUIStatProvider);
             this.gestureObserverProvider = GestureObserver_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider, DaggerTvSystemUIRootComponent.this.provideBgHandlerProvider);
         }
 
@@ -2782,7 +2798,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             Dependency_MembersInjector.injectMSlaveWifiSignalController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.slaveWifiSignalControllerProvider));
             Dependency_MembersInjector.injectMMiuiAlarmControllerImpl(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.miuiAlarmControllerImplProvider));
             Dependency_MembersInjector.injectMNotificationNavigationCoordinator(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.notificationPanelNavigationBarCoordinatorProvider));
-            Dependency_MembersInjector.injectMNCSwitchController(dependency, DoubleCheck.lazy(this.nCSwitchControllerProvider));
+            Dependency_MembersInjector.injectMNCSwitchController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.nCSwitchControllerProvider));
             Dependency_MembersInjector.injectMSystemUIStat(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.systemUIStatProvider));
             Dependency_MembersInjector.injectMPhoneSignalController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.phoneSignalControllerImplProvider));
             Dependency_MembersInjector.injectMGestureObserver(dependency, DoubleCheck.lazy(this.gestureObserverProvider));
@@ -2835,10 +2851,6 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
 
             private CCTileQueryHelper getCCTileQueryHelper() {
                 return new CCTileQueryHelper(DaggerTvSystemUIRootComponent.this.context, DaggerTvSystemUIRootComponent.this.getMainExecutor(), (Executor) DaggerTvSystemUIRootComponent.this.provideCCBackgroundExecutorProvider.get());
-            }
-
-            private NCSwitchController getNCSwitchController() {
-                return new NCSwitchController(DaggerTvSystemUIRootComponent.this.context, (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (HeadsUpManagerPhone) DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider.get(), (SystemUIStat) DaggerTvSystemUIRootComponent.this.systemUIStatProvider.get());
             }
 
             private void initialize(InjectionInflationController.ViewAttributeProvider viewAttributeProvider2) {
@@ -2913,7 +2925,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
 
             @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public ControlCenterPanelView createControlCenterPanelView() {
-                return new ControlCenterPanelView(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper(), (ConfigurationController) DaggerTvSystemUIRootComponent.this.provideConfigurationControllerProvider.get(), (ControlsPluginManager) DaggerTvSystemUIRootComponent.this.controlsPluginManagerProvider.get(), (MiPlayPluginManager) DaggerTvSystemUIRootComponent.this.miPlayPluginManagerProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), getNCSwitchController(), (StatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get());
+                return new ControlCenterPanelView(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper(), (ConfigurationController) DaggerTvSystemUIRootComponent.this.provideConfigurationControllerProvider.get(), (ControlsPluginManager) DaggerTvSystemUIRootComponent.this.controlsPluginManagerProvider.get(), (MiPlayPluginManager) DaggerTvSystemUIRootComponent.this.miPlayPluginManagerProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), (NCSwitchController) DaggerTvSystemUIRootComponent.this.nCSwitchControllerProvider.get(), (StatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get());
             }
 
             @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
@@ -3057,16 +3069,11 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         private FlingAnimationUtils_Builder_Factory builderProvider;
         private Provider<NotificationPanelView> getNotificationPanelViewProvider;
         private Provider<MiuiNotificationPanelViewController> miuiNotificationPanelViewControllerProvider;
-        private PanelViewLogger_Factory panelViewLoggerProvider;
         private NotificationShadeWindowView statusBarWindowView;
         private Provider<NotificationShadeWindowView> statusBarWindowViewProvider;
 
         private StatusBarComponentImpl(StatusBarComponentBuilder statusBarComponentBuilder) {
             initialize(statusBarComponentBuilder);
-        }
-
-        private NCSwitchController getNCSwitchController() {
-            return new NCSwitchController(DaggerTvSystemUIRootComponent.this.context, (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (HeadsUpManagerPhone) DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider.get(), (SystemUIStat) DaggerTvSystemUIRootComponent.this.systemUIStatProvider.get());
         }
 
         private void initialize(StatusBarComponentBuilder statusBarComponentBuilder) {
@@ -3075,13 +3082,12 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.statusBarWindowViewProvider = create;
             this.getNotificationPanelViewProvider = DoubleCheck.provider(StatusBarViewModule_GetNotificationPanelViewFactory.create(create));
             this.builderProvider = FlingAnimationUtils_Builder_Factory.create(DaggerTvSystemUIRootComponent.this.provideDisplayMetricsProvider);
-            this.panelViewLoggerProvider = PanelViewLogger_Factory.create(DaggerTvSystemUIRootComponent.this.providePanelViewLogBufferProvider);
-            this.miuiNotificationPanelViewControllerProvider = DoubleCheck.provider(MiuiNotificationPanelViewController_Factory.create(this.getNotificationPanelViewProvider, DaggerTvSystemUIRootComponent.this.injectionInflationControllerProvider, DaggerTvSystemUIRootComponent.this.notificationWakeUpCoordinatorProvider, DaggerTvSystemUIRootComponent.this.pulseExpansionHandlerProvider, DaggerTvSystemUIRootComponent.this.dynamicPrivacyControllerProvider, DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider, DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider, DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider, DaggerTvSystemUIRootComponent.this.notificationLockscreenUserManagerImplProvider, DaggerTvSystemUIRootComponent.this.provideNotificationEntryManagerProvider, DaggerTvSystemUIRootComponent.this.keyguardStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.dozeLogProvider, DaggerTvSystemUIRootComponent.this.dozeParametersProvider, DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider, DaggerTvSystemUIRootComponent.this.vibratorHelperProvider, DaggerTvSystemUIRootComponent.this.provideLatencyTrackerProvider, DaggerTvSystemUIRootComponent.this.providePowerManagerProvider, DaggerTvSystemUIRootComponent.this.provideAccessibilityManagerProvider, DaggerTvSystemUIRootComponent.this.provideDisplayIdProvider, DaggerTvSystemUIRootComponent.this.keyguardUpdateMonitorProvider, DaggerTvSystemUIRootComponent.this.provideMetricsLoggerProvider, DaggerTvSystemUIRootComponent.this.provideActivityManagerProvider, DaggerTvSystemUIRootComponent.this.zenModeControllerImplProvider, DaggerTvSystemUIRootComponent.this.provideConfigurationControllerProvider, this.builderProvider, DaggerTvSystemUIRootComponent.this.statusBarTouchableRegionManagerProvider, DaggerTvSystemUIRootComponent.this.conversationNotificationManagerProvider, DaggerTvSystemUIRootComponent.this.mediaHierarchyManagerProvider, DaggerTvSystemUIRootComponent.this.biometricUnlockControllerProvider, DaggerTvSystemUIRootComponent.this.statusBarKeyguardViewManagerProvider, DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider, DaggerTvSystemUIRootComponent.this.eventTrackerProvider, DaggerTvSystemUIRootComponent.this.wakefulnessLifecycleProvider, DaggerTvSystemUIRootComponent.this.notificationShadeWindowControllerProvider, this.panelViewLoggerProvider));
+            this.miuiNotificationPanelViewControllerProvider = DoubleCheck.provider(MiuiNotificationPanelViewController_Factory.create(this.getNotificationPanelViewProvider, DaggerTvSystemUIRootComponent.this.injectionInflationControllerProvider, DaggerTvSystemUIRootComponent.this.notificationWakeUpCoordinatorProvider, DaggerTvSystemUIRootComponent.this.pulseExpansionHandlerProvider, DaggerTvSystemUIRootComponent.this.dynamicPrivacyControllerProvider, DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider, DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider, DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider, DaggerTvSystemUIRootComponent.this.notificationLockscreenUserManagerImplProvider, DaggerTvSystemUIRootComponent.this.provideNotificationEntryManagerProvider, DaggerTvSystemUIRootComponent.this.keyguardStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.dozeLogProvider, DaggerTvSystemUIRootComponent.this.dozeParametersProvider, DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider, DaggerTvSystemUIRootComponent.this.vibratorHelperProvider, DaggerTvSystemUIRootComponent.this.provideLatencyTrackerProvider, DaggerTvSystemUIRootComponent.this.providePowerManagerProvider, DaggerTvSystemUIRootComponent.this.provideAccessibilityManagerProvider, DaggerTvSystemUIRootComponent.this.provideDisplayIdProvider, DaggerTvSystemUIRootComponent.this.keyguardUpdateMonitorProvider, DaggerTvSystemUIRootComponent.this.provideMetricsLoggerProvider, DaggerTvSystemUIRootComponent.this.provideActivityManagerProvider, DaggerTvSystemUIRootComponent.this.zenModeControllerImplProvider, DaggerTvSystemUIRootComponent.this.provideConfigurationControllerProvider, this.builderProvider, DaggerTvSystemUIRootComponent.this.statusBarTouchableRegionManagerProvider, DaggerTvSystemUIRootComponent.this.conversationNotificationManagerProvider, DaggerTvSystemUIRootComponent.this.mediaHierarchyManagerProvider, DaggerTvSystemUIRootComponent.this.biometricUnlockControllerProvider, DaggerTvSystemUIRootComponent.this.statusBarKeyguardViewManagerProvider, DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider, DaggerTvSystemUIRootComponent.this.eventTrackerProvider, DaggerTvSystemUIRootComponent.this.wakefulnessLifecycleProvider, DaggerTvSystemUIRootComponent.this.notificationShadeWindowControllerProvider, DaggerTvSystemUIRootComponent.this.panelViewLoggerProvider));
         }
 
         @Override // com.android.systemui.statusbar.phone.dagger.StatusBarComponent
         public NotificationShadeWindowViewController getNotificationShadeWindowViewController() {
-            return new NotificationShadeWindowViewController((InjectionInflationController) DaggerTvSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (NotificationWakeUpCoordinator) DaggerTvSystemUIRootComponent.this.notificationWakeUpCoordinatorProvider.get(), (PulseExpansionHandler) DaggerTvSystemUIRootComponent.this.pulseExpansionHandlerProvider.get(), (DynamicPrivacyController) DaggerTvSystemUIRootComponent.this.dynamicPrivacyControllerProvider.get(), (KeyguardBypassController) DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider.get(), (FalsingManager) DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider.get(), (PluginManager) DaggerTvSystemUIRootComponent.this.providePluginManagerProvider.get(), (TunerService) DaggerTvSystemUIRootComponent.this.tunerServiceImplProvider.get(), (NotificationLockscreenUserManager) DaggerTvSystemUIRootComponent.this.notificationLockscreenUserManagerImplProvider.get(), (NotificationEntryManager) DaggerTvSystemUIRootComponent.this.provideNotificationEntryManagerProvider.get(), (KeyguardStateController) DaggerTvSystemUIRootComponent.this.keyguardStateControllerImplProvider.get(), (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (DozeLog) DaggerTvSystemUIRootComponent.this.dozeLogProvider.get(), (DozeParameters) DaggerTvSystemUIRootComponent.this.dozeParametersProvider.get(), (CommandQueue) DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (DockManager) DaggerTvSystemUIRootComponent.this.dockManagerImplProvider.get(), (NotificationShadeDepthController) DaggerTvSystemUIRootComponent.this.notificationShadeDepthControllerProvider.get(), this.statusBarWindowView, this.miuiNotificationPanelViewControllerProvider.get(), (SuperStatusBarViewFactory) DaggerTvSystemUIRootComponent.this.superStatusBarViewFactoryProvider.get(), (ControlPanelWindowManager) DaggerTvSystemUIRootComponent.this.controlPanelWindowManagerProvider.get(), getNCSwitchController(), (MiuiKeyguardMediaController) DaggerTvSystemUIRootComponent.this.miuiKeyguardMediaControllerProvider.get());
+            return new NotificationShadeWindowViewController((InjectionInflationController) DaggerTvSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (NotificationWakeUpCoordinator) DaggerTvSystemUIRootComponent.this.notificationWakeUpCoordinatorProvider.get(), (PulseExpansionHandler) DaggerTvSystemUIRootComponent.this.pulseExpansionHandlerProvider.get(), (DynamicPrivacyController) DaggerTvSystemUIRootComponent.this.dynamicPrivacyControllerProvider.get(), (KeyguardBypassController) DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider.get(), (FalsingManager) DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider.get(), (PluginManager) DaggerTvSystemUIRootComponent.this.providePluginManagerProvider.get(), (TunerService) DaggerTvSystemUIRootComponent.this.tunerServiceImplProvider.get(), (NotificationLockscreenUserManager) DaggerTvSystemUIRootComponent.this.notificationLockscreenUserManagerImplProvider.get(), (NotificationEntryManager) DaggerTvSystemUIRootComponent.this.provideNotificationEntryManagerProvider.get(), (KeyguardStateController) DaggerTvSystemUIRootComponent.this.keyguardStateControllerImplProvider.get(), (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (DozeLog) DaggerTvSystemUIRootComponent.this.dozeLogProvider.get(), (DozeParameters) DaggerTvSystemUIRootComponent.this.dozeParametersProvider.get(), (CommandQueue) DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (DockManager) DaggerTvSystemUIRootComponent.this.dockManagerImplProvider.get(), (NotificationShadeDepthController) DaggerTvSystemUIRootComponent.this.notificationShadeDepthControllerProvider.get(), this.statusBarWindowView, this.miuiNotificationPanelViewControllerProvider.get(), (SuperStatusBarViewFactory) DaggerTvSystemUIRootComponent.this.superStatusBarViewFactoryProvider.get(), (ControlPanelWindowManager) DaggerTvSystemUIRootComponent.this.controlPanelWindowManagerProvider.get(), (NCSwitchController) DaggerTvSystemUIRootComponent.this.nCSwitchControllerProvider.get(), (MiuiKeyguardMediaController) DaggerTvSystemUIRootComponent.this.miuiKeyguardMediaControllerProvider.get());
         }
 
         @Override // com.android.systemui.statusbar.phone.dagger.StatusBarComponent

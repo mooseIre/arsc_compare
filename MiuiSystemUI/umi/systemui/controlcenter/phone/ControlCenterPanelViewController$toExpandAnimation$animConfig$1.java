@@ -17,18 +17,18 @@ public final class ControlCenterPanelViewController$toExpandAnimation$animConfig
     public void onUpdate(@Nullable Object obj, @Nullable FloatProperty<?> floatProperty, float f, float f2, boolean z) {
         ControlCenterPanelViewController.access$setAnimatingToCollapse$p(this.this$0, false);
         ControlCenterPanelViewController controlCenterPanelViewController = this.this$0;
-        controlCenterPanelViewController.setTransRatio((f - ((float) controlCenterPanelViewController.tileLayoutMinHeight)) / ((float) this.this$0.expandThreshold));
+        ControlCenterPanelViewController.access$setTransRatio$p(controlCenterPanelViewController, (f - ((float) ControlCenterPanelViewController.access$getTileLayoutMinHeight$p(controlCenterPanelViewController))) / ((float) ControlCenterPanelViewController.access$getExpandThreshold$p(this.this$0)));
     }
 
     @Override // miuix.animation.listener.TransitionListener
     public void onComplete(@Nullable Object obj) {
         ControlCenterPanelViewController.access$setAnimatingToCollapse$p(this.this$0, false);
-        this.this$0.panelView.getTileLayout().setExpanded(true);
+        ControlCenterPanelViewController.access$getPanelView$p(this.this$0).getTileLayout().setExpanded(true);
     }
 
     @Override // miuix.animation.listener.TransitionListener
     public void onCancel(@Nullable Object obj) {
         ControlCenterPanelViewController.access$setAnimatingToCollapse$p(this.this$0, false);
-        this.this$0.calculateTransitionValues();
+        ControlCenterPanelViewController.access$calculateTransitionValues(this.this$0);
     }
 }

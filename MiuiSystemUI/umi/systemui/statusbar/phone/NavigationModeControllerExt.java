@@ -9,8 +9,6 @@ import android.os.Looper;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
 import com.android.systemui.statusbar.NavigationBarController;
 import kotlin.Lazy;
 import kotlin.LazyKt__LazyJVMKt;
@@ -160,18 +158,6 @@ public final class NavigationModeControllerExt {
         }
         Intrinsics.throwUninitializedPropertyAccessException("mContext");
         throw null;
-    }
-
-    public final void updateElderMode(@NotNull View view) {
-        Intrinsics.checkParameterIsNotNull(view, "view");
-        if (!(view instanceof ImageView)) {
-            return;
-        }
-        if (isElderMode()) {
-            ((ImageView) view).setScaleType(ImageView.ScaleType.FIT_CENTER);
-        } else {
-            ((ImageView) view).setScaleType(ImageView.ScaleType.CENTER);
-        }
     }
 
     /* access modifiers changed from: private */
