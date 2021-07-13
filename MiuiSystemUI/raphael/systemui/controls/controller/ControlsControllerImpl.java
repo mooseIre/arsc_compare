@@ -105,7 +105,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
             public final ControlsFavoritePersistenceWrapper get() {
                 File file = this.this$0.userStructure.getFile();
                 Intrinsics.checkExpressionValueIsNotNull(file, "userStructure.file");
-                return new ControlsFavoritePersistenceWrapper(file, ControlsControllerImpl.access$getExecutor$p(this.this$0), new BackupManager(this.this$0.userStructure.getUserContext()));
+                return new ControlsFavoritePersistenceWrapper(file, this.this$0.executor, new BackupManager(this.this$0.userStructure.getUserContext()));
             }
         });
         Intrinsics.checkExpressionValueIsNotNull(orElseGet, "optionalWrapper.orElseGe…)\n            )\n        }");
@@ -134,10 +134,6 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.listingController.addCallback(this.listingCallback);
     }
 
-    public static final /* synthetic */ DelayableExecutor access$getExecutor$p(ControlsControllerImpl controlsControllerImpl) {
-        return controlsControllerImpl.executor;
-    }
-
     public static final class Companion {
         private Companion() {
         }
@@ -158,6 +154,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return userHandle.getIdentifier();
     }
 
+    /* access modifiers changed from: public */
     private final ContentResolver getContentResolver() {
         ContentResolver contentResolver = this.context.getContentResolver();
         Intrinsics.checkExpressionValueIsNotNull(contentResolver, "context.contentResolver");
@@ -196,6 +193,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.userChanging = false;
     }
 
+    /* access modifiers changed from: public */
     private final void resetFavorites(boolean z) {
         Favorites.INSTANCE.clear();
         if (z) {
