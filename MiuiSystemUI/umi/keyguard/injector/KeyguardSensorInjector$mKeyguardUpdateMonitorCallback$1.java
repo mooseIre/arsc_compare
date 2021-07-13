@@ -16,17 +16,11 @@ public final class KeyguardSensorInjector$mKeyguardUpdateMonitorCallback$1 exten
         this.this$0.disableFullScreenGesture();
     }
 
-    @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
-    public void onKeyguardVisibilityChanged(boolean z) {
-        if (!z) {
-            this.this$0.unregisterPickupSensor();
-            this.this$0.unregisterProximitySensor();
-        }
-    }
-
     @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
     public void onKeyguardShowingChanged(boolean z) {
         if (!z) {
+            this.this$0.unregisterPickupSensor();
+            this.this$0.unregisterProximitySensor();
             this.this$0.unregisterLargeAreaTouchSensor();
         }
     }

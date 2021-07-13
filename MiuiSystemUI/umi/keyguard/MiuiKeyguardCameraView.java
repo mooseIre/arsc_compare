@@ -14,7 +14,6 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
-import android.os.Handler;
 import android.os.UserHandle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -27,14 +26,12 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.DeviceConfig;
@@ -54,7 +51,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private Configuration mConfiguration = new Configuration();
     private Context mContext = getContext();
     private boolean mDarkStyle;
-    private Handler mHandler;
     private float mIconActiveCenterX;
     private float mIconActiveCenterY;
     private float mIconActiveWidth;
@@ -82,7 +78,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private boolean mIsPendingStartCamera;
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
-        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass2 */
+        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass1 */
 
         @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
@@ -95,9 +91,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
                         MiuiKeyguardCameraView.this.applyBlurRatio(0.0f);
                         MiuiKeyguardCameraView.this.updateKeepScreenOnFlag(false);
                         MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
-                    }
-                    if (MiuiKeyguardCameraView.this.mHandler != null) {
-                        MiuiKeyguardCameraView.this.mHandler.removeCallbacks(MiuiKeyguardCameraView.this.mTimeOutSaver);
                         return;
                     }
                     return;
@@ -126,7 +119,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private float mPreViewHeightWidthRatio;
     private float mPreViewInitRadius = 60.0f;
     private ViewOutlineProvider mPreViewOutlineProvider = new ViewOutlineProvider() {
-        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass3 */
+        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass2 */
 
         public void getOutline(View view, Outline outline) {
             outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), MiuiKeyguardCameraView.this.mPreViewRadius);
@@ -138,17 +131,8 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private Point mScreenSizePoint;
     private int mScreenWidth;
     private boolean mShowing = false;
-    private Runnable mTimeOutSaver = new Runnable() {
-        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass1 */
-
-        public void run() {
-            MiuiKeyguardCameraView.this.reset();
-            Toast.makeText(MiuiKeyguardCameraView.this.mContext, C0021R$string.start_camera_error_try_again, 0).show();
-            Log.e("KeyguardCameraView", "启动相机5s没有成功,请查看log确认 Camera进程是否crash");
-        }
-    };
     private final MiuiActivityUtil.TopActivityMayChangeListener mTopActivityMayChangeListener = new MiuiActivityUtil.TopActivityMayChangeListener() {
-        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass4 */
+        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass3 */
 
         @Override // com.miui.systemui.util.MiuiActivityUtil.TopActivityMayChangeListener
         public void onTopActivityMayChanged(ComponentName componentName) {
@@ -224,9 +208,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).registerWallpaperChangeCallback(this);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
-        if (this.mHandler == null) {
-            this.mHandler = getHandler();
-        }
     }
 
     /* access modifiers changed from: protected */
@@ -235,7 +216,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
         this.mKeyguardUpdateMonitor.removeCallback(this.mKeyguardUpdateMonitorCallback);
-        this.mHandler = null;
     }
 
     @Override // com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController.IWallpaperChangeCallback
@@ -652,7 +632,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         fullScreenAnim.setInterpolator(new PhysicBasedInterpolator(this, 0.9f, 0.85f));
         this.mAnimatorSet.setDuration(350L);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
-            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass5 */
+            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass4 */
 
             public void onAnimationCancel(Animator animator) {
             }
@@ -701,11 +681,8 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         ((MiuiActivityUtil) Dependency.get(MiuiActivityUtil.class)).addTopActivityMayChangeListener(this.mTopActivityMayChangeListener);
         AnalyticsHelper.getInstance(this.mContext).recordKeyguardAction("action_enter_camera_view");
         AnalyticsHelper.getInstance(this.mContext).trackPageStart("action_enter_camera_view");
+        Log.d("KeyguardCameraView", "start camera activity");
         this.mContext.startActivityAsUser(PackageUtils.getCameraIntent(), UserHandle.CURRENT);
-        Handler handler = this.mHandler;
-        if (handler != null) {
-            handler.postDelayed(this.mTimeOutSaver, 5000);
-        }
     }
 
     private AnimatorSet getFullScreenAnim(float f, float f2, float f3, float f4, float f5, float f6, float f7, float f8, float f9, float f10, float f11, float f12, float f13, float f14, float f15, float f16) {
@@ -873,7 +850,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         ofFloat3.setInterpolator(new PhysicBasedInterpolator(this, 0.8f, 0.71f));
         ofFloat3.setDuration(700L);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
-            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass6 */
+            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass5 */
 
             public void onAnimationEnd(Animator animator) {
                 MiuiKeyguardCameraView.this.dismiss();
@@ -921,7 +898,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         backIconAnim.setInterpolator(new PhysicBasedInterpolator(this, 0.8f, 0.71f));
         this.mAnimatorSet.setDuration(1000L);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
-            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass7 */
+            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass6 */
 
             public void onAnimationStart(Animator animator) {
                 MiuiKeyguardCameraView.this.startUpdateAspectRatioAnimation();

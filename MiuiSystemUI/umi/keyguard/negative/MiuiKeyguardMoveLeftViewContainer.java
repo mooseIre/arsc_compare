@@ -99,4 +99,8 @@ public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
         super.onDetachedFromWindow();
         ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).onDetachedFromWindow();
     }
+
+    public MiuiKeyguardMoveLeftBaseView getContentView() {
+        return this.mKeyguardMoveLeftView;
+    }
 }
