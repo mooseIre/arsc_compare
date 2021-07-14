@@ -456,7 +456,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         if (!this.mIsCameraShowing && !this.mIsPendingStartCamera) {
             this.mMovePer = perFromVal(this.mMoveDistance, 0.0f, (float) (this.mScreenWidth / 3));
             notifyAnimUpdate();
-            if (DeviceConfig.isLowGpuDevice()) {
+            if (DeviceConfig.isLowEndDevice()) {
                 updateScrimAlpha();
             } else {
                 updateBlurRatio();
@@ -1035,7 +1035,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         float f3 = ((((float) i) / ((float) i2)) - this.mBackAnimAspectRatio) / (f - 1.0f);
         float f4 = this.mPreViewInitRadius;
         this.mPreViewRadius = valFromPer(f3, f4, (this.mIconCircleWidth / 2.0f) + f4);
-        if (!DeviceConfig.isLowGpuDevice()) {
+        if (!DeviceConfig.isLowEndDevice()) {
             float f5 = this.mIconInitCenterX;
             float f6 = this.mIconCenterX;
             if (f5 - f6 < 270.0f) {
@@ -1061,7 +1061,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         ofFloat.setInterpolator(new PhysicBasedInterpolator(this, 0.99f, 0.67f));
         ofFloat.setDuration(300L);
         ofFloat.start();
-        if (!DeviceConfig.isLowGpuDevice()) {
+        if (!DeviceConfig.isLowEndDevice()) {
             applyBlurRatio(1.0f);
         }
         this.mBackgroundView.setAlpha(1.0f);

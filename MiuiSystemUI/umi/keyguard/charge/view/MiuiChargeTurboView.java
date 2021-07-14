@@ -15,8 +15,10 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
+import com.android.keyguard.charge.MiuiChargeController;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
+import com.android.systemui.Dependency;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeTurboView extends RelativeLayout {
@@ -38,6 +40,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
     private int mTurboIconWidth;
     private Drawable mTurboTailIconDrawable;
     private WindowManager mWindowManager;
+    private Drawable mWiredSDCIconDrawable;
     protected ImageView mWiredStrongChargeIcon;
     private Drawable mWiredStrongChargeIconDrawable;
     private int mWiredStrongChargeIconHeight;
@@ -103,7 +106,14 @@ public class MiuiChargeTurboView extends RelativeLayout {
         ImageView imageView4 = new ImageView(context);
         this.mWiredStrongChargeIcon = imageView4;
         imageView4.setId(View.generateViewId());
-        this.mWiredStrongChargeIcon.setImageDrawable(this.mWiredStrongChargeIconDrawable);
+        boolean isFastCharge = ((MiuiChargeController) Dependency.get(MiuiChargeController.class)).isFastCharge();
+        if (!context.getResources().getBoolean(C0010R$bool.config_strong_double_charge_enable) || isFastCharge) {
+            this.mWiredStrongChargeIcon.setImageDrawable(this.mWiredStrongChargeIconDrawable);
+        } else {
+            Drawable drawable = context.getDrawable(C0013R$drawable.charge_animation_wired_strong_charge_icon_double);
+            this.mWiredSDCIconDrawable = drawable;
+            this.mWiredStrongChargeIcon.setImageDrawable(drawable);
+        }
         this.mWiredStrongChargeIcon.setPivotX((float) this.mWiredStrongChargeIconWidth);
         this.mWiredStrongChargeIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
         RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(this.mWiredStrongChargeIconWidth, this.mWiredStrongChargeIconHeight);

@@ -47,8 +47,10 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private int mChargeSpeed = -1;
     private boolean mClickShowChargeUI;
     private Context mContext;
+    private int mCurrentUser = KeyguardUpdateMonitor.getCurrentUser();
     private Boolean mFoldStatus;
     private Handler mHandler = new Handler();
+    private boolean mIsFastCharge = false;
     private boolean mIsFoldChargeVideo;
     private KeyguardIndicationController mKeyguardIndicationController;
     MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
@@ -109,6 +111,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private SensorManager mSensorManager;
     private boolean mShowChargingFromSetting;
     private boolean mShowChargingInNonLockscreen;
+    private boolean mShowDoubleAnimation = false;
+    private boolean mShowNewAnimation = false;
     private final Runnable mShowSlowlyRunnable = new Runnable() {
         /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass7 */
 
@@ -126,6 +130,10 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private boolean mWirelessCharging = false;
     private boolean mWirelessOnline = false;
 
+    public boolean isFastCharge() {
+        return this.mIsFastCharge;
+    }
+
     public MiuiChargeController(Context context, WakefulnessLifecycle wakefulnessLifecycle) {
         Log.i("MiuiChargeController", "MiuiChargeController: init");
         this.mContext = context;
@@ -135,6 +143,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         wakefulnessLifecycle.addObserver(this);
         this.mKeyguardIndicationController = (KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class);
         ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(this, "show_charging_in_non_lockscreen");
+        ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(this, 1, 1, "key_fast_charge_enabled");
         this.mBatteryStatus = new MiuiBatteryStatus(1, 0, 0, 0, 0, -1, 1, -1);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.USER_PRESENT");
@@ -255,7 +264,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
 
     private void switchChargeItemViewAnimation(MiuiBatteryStatus miuiBatteryStatus, boolean z) {
         int chargeSpeed = ChargeUtils.getChargeSpeed(miuiBatteryStatus.wireState, miuiBatteryStatus.chargeDeviceType);
-        if ((this.mChargeSpeed != chargeSpeed || z) && this.mChargeAnimationView != null) {
+        if ((this.mChargeSpeed != chargeSpeed || this.mShowDoubleAnimation || z) && this.mChargeAnimationView != null) {
             Log.d("MiuiChargeController", "switchChargeItemViewAnimation: " + chargeSpeed + ",chargeDeviceType=" + miuiBatteryStatus.chargeDeviceType);
             this.mChargeSpeed = chargeSpeed;
             this.mChargeAnimationView.switchChargeItemViewAnimation(z, chargeSpeed);
@@ -281,12 +290,13 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private void dealWithAnimationShow(int i) {
         if (shouldShowChargeAnim()) {
             Log.i("MiuiChargeController", "dealWithAnimationShow mWireState=" + this.mWireState + ",wireState=" + i);
-            if (this.mClickShowChargeUI) {
-                if (this.mChargeAnimationShowing) {
+            if (!this.mClickShowChargeUI) {
+                boolean z = this.mShowDoubleAnimation && this.mIsFastCharge;
+                if (this.mWireState == i && !z) {
+                    Log.i("MiuiChargeController", " dealWithAnimationShow 相同 ");
                     return;
                 }
-            } else if (this.mWireState == i) {
-                Log.i("MiuiChargeController", " dealWithAnimationShow 相同 ");
+            } else if (this.mChargeAnimationShowing) {
                 return;
             }
             boolean isKeyguardShowing = this.mUpdateMonitorInjector.isKeyguardShowing();
@@ -323,6 +333,19 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         if ("show_charging_in_non_lockscreen".equals(str)) {
             this.mShowChargingFromSetting = MiuiTextUtils.parseBoolean(str2, true);
             Log.d("MiuiChargeController", "onContentChanged：mShowChargingFromSetting: " + this.mShowChargingFromSetting);
+        }
+        if ("key_fast_charge_enabled".equals(str)) {
+            this.mShowNewAnimation = true;
+            this.mIsFastCharge = MiuiTextUtils.parseInt(str2, 0) != 0;
+            if (this.mCurrentUser != KeyguardUpdateMonitor.getCurrentUser()) {
+                this.mCurrentUser = KeyguardUpdateMonitor.getCurrentUser();
+                return;
+            }
+            this.mShowDoubleAnimation = true;
+            if (this.mIsFastCharge) {
+                Slog.i("MiuiChargeController", "onContentChanged：isSupportDoubleCharge");
+                checkBatteryStatus(false);
+            }
         }
     }
 
@@ -370,7 +393,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
 
     private void prepareChargeAnimation(int i) {
         if (shouldShowChargeAnim()) {
-            if (this.mChargeAnimationView == null) {
+            if (this.mChargeAnimationView == null || this.mShowNewAnimation) {
                 Log.d("MiuiChargeController", "prepareChargeAnimation: init mChargeAnimationView ");
                 MiuiChargeAnimationView miuiChargeAnimationView = new MiuiChargeAnimationView(this.mContext);
                 this.mChargeAnimationView = miuiChargeAnimationView;
@@ -394,6 +417,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             this.mChargeAnimationView.setFocusable(true);
             this.mChargeAnimationView.setFocusableInTouchMode(true);
             this.mChargeAnimationView.requestFocus();
+            this.mShowDoubleAnimation = false;
+            this.mShowNewAnimation = false;
         }
     }
 

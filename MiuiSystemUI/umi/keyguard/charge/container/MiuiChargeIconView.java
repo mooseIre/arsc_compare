@@ -16,8 +16,10 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
+import com.android.keyguard.charge.MiuiChargeController;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
+import com.android.systemui.Dependency;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeIconView extends RelativeLayout {
@@ -102,7 +104,13 @@ public class MiuiChargeIconView extends RelativeLayout {
         ImageView imageView3 = new ImageView(context);
         this.mSpecialDoubleLightningIcon = imageView3;
         imageView3.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        this.mSpecialDoubleLightningIcon.setImageDrawable(this.mSpecialDoubleLightningDrawable);
+        boolean z = context.getResources().getBoolean(C0010R$bool.config_strong_double_charge_enable);
+        boolean isFastCharge = ((MiuiChargeController) Dependency.get(MiuiChargeController.class)).isFastCharge();
+        if (!z || isFastCharge) {
+            this.mSpecialDoubleLightningIcon.setImageDrawable(this.mSpecialDoubleLightningDrawable);
+        } else {
+            this.mSpecialDoubleLightningIcon.setImageDrawable(this.mDoubleLightningDrawable);
+        }
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(this.mSpecialDoubleLightningIconWidth, this.mSpecialDoubleLightningIconHeight + this.mIconPaddingTop);
         layoutParams3.addRule(13);
         this.mSpecialDoubleLightningIcon.setPadding(0, this.mIconPaddingTop, 0, 0);
