@@ -13,7 +13,7 @@ final class ControlsListingControllerImpl$changeUser$1 implements Runnable {
     }
 
     public final void run() {
-        if (ControlsListingControllerImpl.access$getUserChangeInProgress$p(this.this$0).decrementAndGet() == 0) {
+        if (this.this$0.userChangeInProgress.decrementAndGet() == 0) {
             this.this$0.currentUserId = this.$newUser.getIdentifier();
             this.this$0.context.createContextAsUser(this.$newUser, 0);
         }

@@ -51,7 +51,7 @@ public class BubbleIconFactory extends BaseIconFactory {
             shadowGenerator.recreateIcon(Bitmap.createBitmap(createIconBitmap), canvas);
             return createIconBitmap(createIconBitmap);
         }
-        float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(17105236);
+        float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(17105241);
         int color = this.mContext.getResources().getColor(R$color.important_conversation, null);
         Bitmap createBitmap = Bitmap.createBitmap(createIconBitmap.getWidth(), createIconBitmap.getHeight(), createIconBitmap.getConfig());
         Canvas canvas2 = new Canvas(createBitmap);

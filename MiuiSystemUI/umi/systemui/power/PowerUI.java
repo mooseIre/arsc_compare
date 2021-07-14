@@ -165,15 +165,15 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
 
     /* access modifiers changed from: package-private */
     public void updateBatteryWarningLevels() {
-        int integer = this.mContext.getResources().getInteger(17694765);
-        int integer2 = this.mContext.getResources().getInteger(17694831);
+        int integer = this.mContext.getResources().getInteger(17694770);
+        int integer2 = this.mContext.getResources().getInteger(17694836);
         if (integer2 < integer) {
             integer2 = integer;
         }
         int[] iArr = this.mLowBatteryReminderLevels;
         iArr[0] = integer2;
         iArr[1] = integer;
-        this.mLowBatteryAlertCloseLevel = iArr[0] + this.mContext.getResources().getInteger(17694829);
+        this.mLowBatteryAlertCloseLevel = iArr[0] + this.mContext.getResources().getInteger(17694834);
     }
 
     /* access modifiers changed from: private */

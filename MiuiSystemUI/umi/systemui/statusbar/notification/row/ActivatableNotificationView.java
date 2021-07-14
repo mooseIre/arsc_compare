@@ -150,7 +150,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     }
 
     private void initDimens() {
-        this.mHeadsUpAddStartLocation = getResources().getDimensionPixelSize(17105356);
+        this.mHeadsUpAddStartLocation = getResources().getDimensionPixelSize(17105361);
     }
 
     @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView

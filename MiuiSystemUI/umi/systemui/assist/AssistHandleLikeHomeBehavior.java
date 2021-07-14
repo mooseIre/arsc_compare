@@ -8,7 +8,6 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import dagger.Lazy;
 import java.io.PrintWriter;
 
-/* access modifiers changed from: package-private */
 public final class AssistHandleLikeHomeBehavior implements AssistHandleBehaviorController.BehaviorController {
     private AssistHandleCallbacks mAssistHandleCallbacks;
     private boolean mIsAwake;
@@ -86,8 +85,6 @@ public final class AssistHandleLikeHomeBehavior implements AssistHandleBehaviorC
         this.mSysUiFlagContainer.get().removeCallback(this.mSysUiStateCallback);
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleDozingChanged(boolean z) {
         if (this.mIsDozing != z) {
             this.mIsDozing = z;
@@ -95,8 +92,6 @@ public final class AssistHandleLikeHomeBehavior implements AssistHandleBehaviorC
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleWakefullnessChanged(boolean z) {
         if (this.mIsAwake != z) {
             this.mIsAwake = z;
@@ -104,8 +99,8 @@ public final class AssistHandleLikeHomeBehavior implements AssistHandleBehaviorC
         }
     }
 
-    /* access modifiers changed from: private */
-    public void handleSystemUiStateChange(int i) {
+    /* access modifiers changed from: public */
+    private void handleSystemUiStateChange(int i) {
         boolean isHomeHandleHiding = isHomeHandleHiding(i);
         if (this.mIsHomeHandleHiding != isHomeHandleHiding) {
             this.mIsHomeHandleHiding = isHomeHandleHiding;

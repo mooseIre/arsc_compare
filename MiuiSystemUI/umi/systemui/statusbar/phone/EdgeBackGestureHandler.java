@@ -229,7 +229,7 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
         this.mEdgeWidthRight = this.mGestureNavigationSettingsObserver.getRightSensitivity(resources);
         this.mIsBackGestureAllowed = !this.mGestureNavigationSettingsObserver.areNavigationButtonForcedVisible();
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        this.mBottomGestureHeight = TypedValue.applyDimension(1, DeviceConfig.getFloat("systemui", "back_gesture_bottom_height", resources.getDimension(17105335) / displayMetrics.density), displayMetrics);
+        this.mBottomGestureHeight = TypedValue.applyDimension(1, DeviceConfig.getFloat("systemui", "back_gesture_bottom_height", resources.getDimension(17105340) / displayMetrics.density), displayMetrics);
         this.mTouchSlop = ((float) ViewConfiguration.get(this.mContext).getScaledTouchSlop()) * DeviceConfig.getFloat("systemui", "back_gesture_slop_multiplier", 0.75f);
     }
 

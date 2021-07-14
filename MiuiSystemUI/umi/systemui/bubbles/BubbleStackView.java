@@ -515,7 +515,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         this.mBubbleElevation = resources.getDimensionPixelSize(C0012R$dimen.bubble_elevation);
         this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
         this.mBubbleTouchPadding = resources.getDimensionPixelSize(C0012R$dimen.bubble_touch_padding);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105490);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105495);
         this.mImeOffset = resources.getDimensionPixelSize(C0012R$dimen.pip_ime_offset);
         this.mDisplaySize = new Point();
         ((WindowManager) context.getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
@@ -987,7 +987,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         this.mOrientation = i;
         ((WindowManager) getContext().getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
         Resources resources = getContext().getResources();
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105490);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105495);
         this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
         RectF allowableStackPositionRegion = this.mStackAnimationController.getAllowableStackPositionRegion();
         this.mWasOnLeftBeforeRotation = this.mStackAnimationController.isStackOnLeftSide();
@@ -1021,7 +1021,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         setUpOverflow();
         ((WindowManager) getContext().getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
         Resources resources = getContext().getResources();
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105490);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105495);
         this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
         this.mBubbleSize = getResources().getDimensionPixelSize(C0012R$dimen.individual_bubble_size);
         for (Bubble bubble : this.mBubbleData.getBubbles()) {

@@ -2355,6 +2355,7 @@ public final class R {
         public static final int config_smart_replies_in_notifications_requires_targeting_p;
         public static final int config_smart_replies_in_notifications_show_in_heads_up;
         public static final int config_statusBarShowNumber;
+        public static final int config_strong_double_charge_enable;
         public static final int config_support_night_mode;
         public static final int config_switch_sim_locked_tips;
         public static final int config_system_icons_clip_child;
@@ -7455,6 +7456,7 @@ public final class R {
         public static final int charge_animation_turbo_tail_icon;
         public static final int charge_animation_wired_rotate_circle_icon;
         public static final int charge_animation_wired_strong_charge_icon;
+        public static final int charge_animation_wired_strong_charge_icon_double;
         public static final int charge_animation_wireless_strong_charge_icon;
         public static final int charge_animation_wireless_strong_charge_ssw_icon;
         public static final int choose_clock_panel_bar;

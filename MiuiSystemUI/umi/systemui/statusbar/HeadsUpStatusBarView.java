@@ -65,8 +65,8 @@ public class HeadsUpStatusBarView extends AlphaOptimizedLinearLayout {
             }
         };
         Resources resources = getResources();
-        this.mAbsoluteStartPadding = resources.getDimensionPixelSize(C0012R$dimen.notification_side_paddings) + resources.getDimensionPixelSize(17105356);
-        int dimensionPixelSize = resources.getDimensionPixelSize(17105355);
+        this.mAbsoluteStartPadding = resources.getDimensionPixelSize(C0012R$dimen.notification_side_paddings) + resources.getDimensionPixelSize(17105361);
+        int dimensionPixelSize = resources.getDimensionPixelSize(17105360);
         this.mEndMargin = dimensionPixelSize;
         setPaddingRelative(this.mAbsoluteStartPadding, 0, dimensionPixelSize, 0);
         updateMaxWidth();

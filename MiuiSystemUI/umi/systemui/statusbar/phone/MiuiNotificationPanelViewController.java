@@ -1922,7 +1922,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             valueAnimator3.cancel();
         }
         this.mBouncerFractionAnimator = ObjectAnimator.ofFloat(this.mKeyguardBouncerFraction, 0.0f);
-        if (z && KeyguardWallpaperUtils.isWallpaperShouldBlur() && !DeviceConfig.isLowGpuDevice() && !DeviceConfig.isLowEndDevice() && (valueAnimator2 = this.mBouncerFractionAnimator) != null) {
+        if (z && KeyguardWallpaperUtils.isWallpaperShouldBlur() && !DeviceConfig.isLowEndDevice() && (valueAnimator2 = this.mBouncerFractionAnimator) != null) {
             valueAnimator2.setFloatValues(this.mKeyguardBouncerFraction, 1.0f);
         }
         ValueAnimator valueAnimator4 = this.mBouncerFractionAnimator;

@@ -159,7 +159,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
         this.mStatusBar = statusBar;
         this.mKeyguardStateController = keyguardStateController;
         this.mHandler = handler;
-        this.mWakeUpDelay = resources.getInteger(17694925);
+        this.mWakeUpDelay = resources.getInteger(17694930);
         this.mKeyguardBypassController = keyguardBypassController;
         keyguardBypassController.setUnlockController(this);
         this.mMetricsLogger = metricsLogger;

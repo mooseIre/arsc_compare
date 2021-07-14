@@ -184,7 +184,7 @@ public class KeyguardBouncer {
         if (this.mBgImageView == null) {
             return;
         }
-        if (!this.isDefaultTheme || !KeyguardWallpaperUtils.isWallpaperShouldBlur() || DeviceConfig.isLowGpuDevice() || DeviceConfig.isLowEndDevice()) {
+        if (!this.isDefaultTheme || !KeyguardWallpaperUtils.isWallpaperShouldBlur() || DeviceConfig.isLowEndDevice()) {
             new AsyncTask<Void, Void, Drawable>() {
                 /* class com.android.systemui.statusbar.phone.KeyguardBouncer.AnonymousClass4 */
 

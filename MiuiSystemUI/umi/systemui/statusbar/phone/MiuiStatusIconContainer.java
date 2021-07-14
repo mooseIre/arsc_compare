@@ -50,7 +50,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
     }
 
     private void initDimens() {
-        this.mIconDotFrameWidth = getResources().getDimensionPixelSize(17105493);
+        this.mIconDotFrameWidth = getResources().getDimensionPixelSize(17105498);
         this.mDotPadding = getResources().getDimensionPixelSize(C0012R$dimen.overflow_icon_dot_padding);
         this.mIconSpacing = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_system_icon_spacing);
         int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.overflow_dot_radius) * 2;

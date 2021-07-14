@@ -49,7 +49,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
     }
 
     private void initDimens() {
-        getResources().getDimensionPixelSize(17105493);
+        getResources().getDimensionPixelSize(17105498);
         getResources().getDimensionPixelSize(C0012R$dimen.overflow_icon_dot_padding);
         this.mIconSpacing = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_system_icon_spacing);
         getResources().getDimensionPixelSize(C0012R$dimen.overflow_dot_radius);

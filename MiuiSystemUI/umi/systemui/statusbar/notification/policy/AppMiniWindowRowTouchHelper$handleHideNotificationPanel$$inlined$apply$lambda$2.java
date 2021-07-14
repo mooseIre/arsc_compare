@@ -17,12 +17,12 @@ public final class AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inli
 
     public void onAnimationEnd(@Nullable Animator animator) {
         NotificationEntry entry;
-        AppMiniWindowRowTouchHelper.access$onMiniWindowReset(this.this$0);
-        AppMiniWindowRowTouchHelper.access$getMTouchCallback$p(this.this$0).onMiniWindowAppLaunched();
-        MiuiExpandableNotificationRow access$getMPickedMiniWindowChild$p = AppMiniWindowRowTouchHelper.access$getMPickedMiniWindowChild$p(this.this$0);
-        ExpandedNotification sbn = (access$getMPickedMiniWindowChild$p == null || (entry = access$getMPickedMiniWindowChild$p.getEntry()) == null) ? null : entry.getSbn();
+        this.this$0.onMiniWindowReset();
+        this.this$0.mTouchCallback.onMiniWindowAppLaunched();
+        MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.this$0.mPickedMiniWindowChild;
+        ExpandedNotification sbn = (miuiExpandableNotificationRow == null || (entry = miuiExpandableNotificationRow.getEntry()) == null) ? null : entry.getSbn();
         if (sbn != null) {
-            AppMiniWindowRowTouchHelper.access$getMNotificationEntryManager$p(this.this$0).performRemoveNotification(sbn, 1);
+            this.this$0.mNotificationEntryManager.performRemoveNotification(sbn, 1);
         }
     }
 }

@@ -121,30 +121,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         this.paddingHorizontal = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
     }
 
-    public static final /* synthetic */ void access$calculateTransitionValues(ControlCenterPanelViewController controlCenterPanelViewController) {
-        controlCenterPanelViewController.calculateTransitionValues();
-    }
-
-    public static final /* synthetic */ int access$getExpandThreshold$p(ControlCenterPanelViewController controlCenterPanelViewController) {
-        return controlCenterPanelViewController.expandThreshold;
-    }
-
-    public static final /* synthetic */ ControlCenterPanelView access$getPanelView$p(ControlCenterPanelViewController controlCenterPanelViewController) {
-        return controlCenterPanelViewController.panelView;
-    }
-
-    public static final /* synthetic */ int access$getTileLayoutMinHeight$p(ControlCenterPanelViewController controlCenterPanelViewController) {
-        return controlCenterPanelViewController.tileLayoutMinHeight;
-    }
-
-    public static final /* synthetic */ void access$setAnimatingToCollapse$p(ControlCenterPanelViewController controlCenterPanelViewController, boolean z) {
-        controlCenterPanelViewController.animatingToCollapse = z;
-    }
-
-    public static final /* synthetic */ void access$setTransRatio$p(ControlCenterPanelViewController controlCenterPanelViewController, float f) {
-        controlCenterPanelViewController.setTransRatio(f);
-    }
-
     public final boolean isPortrait() {
         return this.orientation == 1;
     }
@@ -212,6 +188,8 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return this.transRatio;
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void setTransRatio(float f) {
         if (this.transRatio != f && isExpandable()) {
             this.transRatio = f;
@@ -467,7 +445,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                                 Intrinsics.throwNpe();
                                 throw null;
                             } else if (bool3.booleanValue()) {
-                                ControlPanelWindowView controlPanelWindowView2 = ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getControlPanelWindowView();
+                                ControlPanelWindowView controlPanelWindowView2 = ControlCenterPanelViewController.this.panelView.getControlPanelWindowView();
                                 if (controlPanelWindowView2 != null) {
                                     controlPanelWindowView2.handleMotionEvent(motionEvent, false);
                                 }
@@ -487,7 +465,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 }
                 Boolean bool4 = this.eventAborted;
                 if (bool4 != null && bool4.booleanValue()) {
-                    ControlPanelWindowView controlPanelWindowView3 = ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getControlPanelWindowView();
+                    ControlPanelWindowView controlPanelWindowView3 = ControlCenterPanelViewController.this.panelView.getControlPanelWindowView();
                     if (controlPanelWindowView3 != null) {
                         controlPanelWindowView3.handleMotionEvent(motionEvent, false);
                     }
@@ -499,7 +477,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 this.initialTouchY = rawY;
                 boolean shouldCollapseBySwipeUp = shouldCollapseBySwipeUp();
                 this.swipeCollapse = shouldCollapseBySwipeUp;
-                if (shouldCollapseBySwipeUp && (controlPanelWindowView = ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getControlPanelWindowView()) != null) {
+                if (shouldCollapseBySwipeUp && (controlPanelWindowView = ControlCenterPanelViewController.this.panelView.getControlPanelWindowView()) != null) {
                     controlPanelWindowView.handleMotionEvent(motionEvent, false, false);
                 }
             }
@@ -522,7 +500,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         public boolean onTouch(@NotNull View view, @NotNull MotionEvent motionEvent) {
             Intrinsics.checkParameterIsNotNull(view, "v");
             Intrinsics.checkParameterIsNotNull(motionEvent, "event");
-            boolean z = ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).isExpanded() && !ControlCenterPanelViewController.this.ccController.isNCSwitching();
+            boolean z = ControlCenterPanelViewController.this.panelView.isExpanded() && !ControlCenterPanelViewController.this.ccController.isNCSwitching();
             if (!this.startOnBrightness && ControlCenterPanelViewController.this.ncSwitchController.handleCNSwitchTouch(motionEvent, z)) {
                 return true;
             }
@@ -548,15 +526,15 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
             if (!ControlCenterPanelViewController.this.isExpandable() || ControlCenterPanelViewController.this.getTransRatio() == 0.0f || ControlCenterPanelViewController.this.getTransRatio() == 1.0f) {
                 return false;
             }
-            float access$getTileLayoutMinHeight$p = (ControlCenterPanelViewController.this.tileLayoutLastHeight + this.transY) - ((float) ControlCenterPanelViewController.access$getTileLayoutMinHeight$p(ControlCenterPanelViewController.this));
+            float f = (ControlCenterPanelViewController.this.tileLayoutLastHeight + this.transY) - ((float) ControlCenterPanelViewController.this.tileLayoutMinHeight);
             ControlCenterPanelViewController.this.velocityTracker.computeCurrentVelocity(1000, (float) ControlCenterPanelViewController.this.maxVelocity);
             float yVelocity = ControlCenterPanelViewController.this.velocityTracker.getYVelocity();
-            float f = (float) 0;
-            if (yVelocity > f && Math.abs(yVelocity) > ((float) ControlCenterPanelViewController.this.minVelocity)) {
+            float f2 = (float) 0;
+            if (yVelocity > f2 && Math.abs(yVelocity) > ((float) ControlCenterPanelViewController.this.minVelocity)) {
                 ControlCenterPanelViewController.this.toExpandAnimation();
                 return true;
-            } else if (yVelocity >= f || Math.abs(yVelocity) <= ((float) ControlCenterPanelViewController.this.minVelocity)) {
-                if (access$getTileLayoutMinHeight$p > ((float) (ControlCenterPanelViewController.access$getExpandThreshold$p(ControlCenterPanelViewController.this) / 2))) {
+            } else if (yVelocity >= f2 || Math.abs(yVelocity) <= ((float) ControlCenterPanelViewController.this.minVelocity)) {
+                if (f > ((float) (ControlCenterPanelViewController.this.expandThreshold / 2))) {
                     ControlCenterPanelViewController.this.toExpandAnimation();
                 } else {
                     ControlCenterPanelViewController.this.toCollapseAnimation();
@@ -577,12 +555,12 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
 
         private final boolean startOnBottomSpace(float f, float f2) {
             int[] iArr = new int[2];
-            Space navigationBarSpace = ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getContentContainer().getNavigationBarSpace();
+            Space navigationBarSpace = ControlCenterPanelViewController.this.panelView.getContentContainer().getNavigationBarSpace();
             navigationBarSpace.getLocationOnScreen(iArr);
             if (f < ((float) iArr[0]) || f > ((float) (iArr[0] + navigationBarSpace.getWidth())) || f2 < ((float) (iArr[1] + navigationBarSpace.getHeight()))) {
                 return false;
             }
-            ControlCenterContentContainer contentContainer = ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getContentContainer();
+            ControlCenterContentContainer contentContainer = ControlCenterPanelViewController.this.panelView.getContentContainer();
             contentContainer.getLocationOnScreen(iArr);
             if (f2 > ((float) (iArr[1] + contentContainer.getHeight()))) {
                 return false;
@@ -592,11 +570,11 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
 
         private final boolean startOnFooter(float f, float f2) {
             int[] iArr = new int[2];
-            ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getFooter().getLocationOnScreen(iArr);
-            if (f2 < ((float) iArr[1]) || f < ((float) iArr[0]) || f > ((float) (iArr[0] + ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getFooter().getWidth()))) {
+            ControlCenterPanelViewController.this.panelView.getFooter().getLocationOnScreen(iArr);
+            if (f2 < ((float) iArr[1]) || f < ((float) iArr[0]) || f > ((float) (iArr[0] + ControlCenterPanelViewController.this.panelView.getFooter().getWidth()))) {
                 return false;
             }
-            ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getPluginViewContainer().getLocationOnScreen(iArr);
+            ControlCenterPanelViewController.this.panelView.getPluginViewContainer().getLocationOnScreen(iArr);
             if (f2 > ((float) iArr[1])) {
                 return false;
             }
@@ -604,7 +582,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         }
 
         private final boolean startOnBrightnessView(float f, float f2) {
-            QCToggleSliderView brightnessView = ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getBrightnessView().getBrightnessView();
+            QCToggleSliderView brightnessView = ControlCenterPanelViewController.this.panelView.getBrightnessView().getBrightnessView();
             int[] iArr = new int[2];
             brightnessView.getLocationOnScreen(iArr);
             if (f2 >= ((float) iArr[1]) && f >= ((float) iArr[0]) && f <= ((float) (iArr[0] + brightnessView.getWidth())) && f2 <= ((float) (iArr[1] + brightnessView.getHeight()))) {
@@ -615,8 +593,8 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
 
         private final boolean startOnTile(float f, float f2) {
             int[] iArr = new int[2];
-            ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getTileContainer().getLocationOnScreen(iArr);
-            if (f2 >= ((float) iArr[1]) && f >= ((float) iArr[0]) && f <= ((float) (iArr[0] + ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getTileContainer().getWidth())) && f2 <= ((float) (iArr[1] + ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getTileContainer().getHeight()))) {
+            ControlCenterPanelViewController.this.panelView.getTileContainer().getLocationOnScreen(iArr);
+            if (f2 >= ((float) iArr[1]) && f >= ((float) iArr[0]) && f <= ((float) (iArr[0] + ControlCenterPanelViewController.this.panelView.getTileContainer().getWidth())) && f2 <= ((float) (iArr[1] + ControlCenterPanelViewController.this.panelView.getTileContainer().getHeight()))) {
                 return true;
             }
             return false;
@@ -627,10 +605,12 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         }
 
         public final boolean shouldCollapseBySwipeUp() {
-            return (ControlCenterPanelViewController.this.getTransRatio() <= ((float) 0) || ControlCenterPanelViewController.this.animatingToCollapse) && ControlCenterPanelViewController.access$getPanelView$p(ControlCenterPanelViewController.this).getContentContainer().isScrolledToBottom();
+            return (ControlCenterPanelViewController.this.getTransRatio() <= ((float) 0) || ControlCenterPanelViewController.this.animatingToCollapse) && ControlCenterPanelViewController.this.panelView.getContentContainer().isScrolledToBottom();
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void calculateTransitionValues() {
         int height = this.panelView.getBigTileLayout().getHeight();
         ViewGroup.LayoutParams layoutParams = this.panelView.getBigTileLayout().getLayoutParams();

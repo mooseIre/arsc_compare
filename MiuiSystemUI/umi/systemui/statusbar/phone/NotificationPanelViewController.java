@@ -673,7 +673,7 @@ public class NotificationPanelViewController extends PanelViewController {
         builder.reset();
         builder.setMaxLengthSeconds(0.4f);
         this.mFlingAnimationUtils = builder.build();
-        this.mStatusBarMinHeight = this.mResources.getDimensionPixelSize(17105490);
+        this.mStatusBarMinHeight = this.mResources.getDimensionPixelSize(17105495);
         this.mQsPeekHeight = this.mResources.getDimensionPixelSize(C0012R$dimen.qs_peek_height);
         this.mNotificationsHeaderCollideDistance = this.mResources.getDimensionPixelSize(C0012R$dimen.header_notifications_collide_distance);
         this.mClockPositionAlgorithm.loadDimens(this.mResources);
@@ -683,7 +683,7 @@ public class NotificationPanelViewController extends PanelViewController {
         this.mQsNotificationTopPadding = this.mResources.getDimensionPixelSize(C0012R$dimen.qs_notification_padding);
         this.mShelfHeight = this.mResources.getDimensionPixelSize(C0012R$dimen.notification_shelf_height);
         this.mDarkIconSize = this.mResources.getDimensionPixelSize(C0012R$dimen.status_bar_icon_drawing_size_dark);
-        this.mHeadsUpInset = this.mResources.getDimensionPixelSize(17105490) + this.mResources.getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
+        this.mHeadsUpInset = this.mResources.getDimensionPixelSize(17105495) + this.mResources.getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
     }
 
     public boolean hasCustomClock() {

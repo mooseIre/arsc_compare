@@ -539,7 +539,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
         this.mBubbleOffscreen = resources.getDimensionPixelSize(C0012R$dimen.bubble_stack_offscreen);
         this.mStackStartingVerticalOffset = resources.getDimensionPixelSize(C0012R$dimen.bubble_stack_starting_offset_y);
-        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105490);
+        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105495);
     }
 
     public void updateResources(int i) {
@@ -547,7 +547,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         if (physicsAnimationLayout != null) {
             Resources resources = physicsAnimationLayout.getContext().getResources();
             this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
-            this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105490);
+            this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105495);
         }
     }
 

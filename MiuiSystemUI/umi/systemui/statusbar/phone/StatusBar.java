@@ -1123,7 +1123,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mNotificationPanelViewController.initDependencies(this, this.mGroupManager, this.mNotificationShelf, this.mNotificationIconAreaController, this.mScrimController);
         BackDropView backDropView = (BackDropView) this.mNotificationShadeWindowView.findViewById(C0015R$id.backdrop);
         this.mMediaManager.setup(backDropView, (ImageView) backDropView.findViewById(C0015R$id.backdrop_front), (ImageView) backDropView.findViewById(C0015R$id.backdrop_back), this.mScrimController, this.mLockscreenWallpaper);
-        this.mNotificationShadeDepthControllerLazy.get().addListener(new NotificationShadeDepthController.DepthListener(this.mContext.getResources().getFloat(17105099), backDropView) {
+        this.mNotificationShadeDepthControllerLazy.get().addListener(new NotificationShadeDepthController.DepthListener(this.mContext.getResources().getFloat(17105104), backDropView) {
             /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$W_OHXSTtWfSDBaVhSdiHPl7N8Fg */
             public final /* synthetic */ float f$0;
             public final /* synthetic */ BackDropView f$1;
@@ -2827,7 +2827,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
-    /* JADX WARN: Type inference failed for: r9v0, types: [int, boolean] */
+    /* JADX WARN: Type inference failed for: r9v0, types: [boolean, int] */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void logStateToEventlog() {

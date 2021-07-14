@@ -261,8 +261,8 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         if (z) {
             this.mDotRadius = (float) this.mStaticDotRadius;
         }
-        this.mSystemIconDesiredHeight = resources.getDimension(17105495);
-        this.mSystemIconIntrinsicHeight = resources.getDimension(17105494);
+        this.mSystemIconDesiredHeight = resources.getDimension(17105500);
+        this.mSystemIconIntrinsicHeight = resources.getDimension(17105499);
     }
 
     public void setNotification(ExpandedNotification expandedNotification) {

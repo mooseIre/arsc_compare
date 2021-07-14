@@ -159,8 +159,8 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         FrameLayout frameLayout = this.mIconContainer;
         if (frameLayout != null) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) frameLayout.getLayoutParams();
-            marginLayoutParams.width = this.mIconContainer.getContext().getResources().getDimensionPixelSize(17105109);
-            marginLayoutParams.setMarginStart(this.mIconContainer.getContext().getResources().getDimensionPixelSize(17105356) * -1);
+            marginLayoutParams.width = this.mIconContainer.getContext().getResources().getDimensionPixelSize(17105114);
+            marginLayoutParams.setMarginStart(this.mIconContainer.getContext().getResources().getDimensionPixelSize(17105361) * -1);
         }
         CachingIconView cachingIconView = this.mIcon;
         if (cachingIconView != null) {
@@ -172,7 +172,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         TextView textView = this.mAppNameText;
         if (textView != null) {
             this.mAppNameText.setTextAppearance(Utils.getThemeAttr(textView.getContext(), 17957006, 16974722));
-            ((ViewGroup.MarginLayoutParams) this.mAppNameText.getLayoutParams()).setMarginStart(this.mAppNameText.getContext().getResources().getDimensionPixelSize(17105364));
+            ((ViewGroup.MarginLayoutParams) this.mAppNameText.getLayoutParams()).setMarginStart(this.mAppNameText.getContext().getResources().getDimensionPixelSize(17105369));
         }
         FrameLayout frameLayout = this.mIconContainer;
         if (frameLayout != null) {
@@ -182,7 +182,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         }
         CachingIconView cachingIconView = this.mIcon;
         if (cachingIconView != null) {
-            ((ViewGroup.MarginLayoutParams) cachingIconView.getLayoutParams()).setMarginEnd(this.mIcon.getContext().getResources().getDimensionPixelSize(17105368));
+            ((ViewGroup.MarginLayoutParams) cachingIconView.getLayoutParams()).setMarginEnd(this.mIcon.getContext().getResources().getDimensionPixelSize(17105373));
         }
     }
 

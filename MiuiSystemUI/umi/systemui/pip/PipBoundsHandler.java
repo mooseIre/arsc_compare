@@ -66,9 +66,9 @@ public class PipBoundsHandler {
     private void reloadResources() {
         Point point;
         Resources resources = this.mContext.getResources();
-        this.mDefaultAspectRatio = resources.getFloat(17105072);
-        this.mDefaultStackGravity = resources.getInteger(17694782);
-        int dimensionPixelSize = resources.getDimensionPixelSize(17105157);
+        this.mDefaultAspectRatio = resources.getFloat(17105077);
+        this.mDefaultStackGravity = resources.getInteger(17694787);
+        int dimensionPixelSize = resources.getDimensionPixelSize(17105162);
         this.mDefaultMinSize = dimensionPixelSize;
         this.mCurrentMinSize = dimensionPixelSize;
         String string = resources.getString(17039894);
@@ -79,8 +79,8 @@ public class PipBoundsHandler {
             point = new Point(dpToPx((float) parseSize.getWidth(), resources.getDisplayMetrics()), dpToPx((float) parseSize.getHeight(), resources.getDisplayMetrics()));
         }
         this.mScreenEdgeInsets = point;
-        this.mMinAspectRatio = resources.getFloat(17105075);
-        this.mMaxAspectRatio = resources.getFloat(17105074);
+        this.mMinAspectRatio = resources.getFloat(17105080);
+        this.mMaxAspectRatio = resources.getFloat(17105079);
     }
 
     public void setMinEdgeSize(int i) {

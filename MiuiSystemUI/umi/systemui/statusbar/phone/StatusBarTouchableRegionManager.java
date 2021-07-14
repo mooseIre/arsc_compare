@@ -141,8 +141,8 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
     /* access modifiers changed from: public */
     private void initResources() {
         Resources resources = this.mContext.getResources();
-        this.mDisplayCutoutTouchableRegionSize = resources.getDimensionPixelSize(17105175);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105490);
+        this.mDisplayCutoutTouchableRegionSize = resources.getDimensionPixelSize(17105180);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105495);
     }
 
     /* access modifiers changed from: private */

@@ -68,13 +68,13 @@ public class NotificationInlineImageResolver implements ImageResolver {
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public int getMaxImageWidth() {
-        return this.mContext.getResources().getDimensionPixelSize(isLowRam() ? 17105362 : 17105361);
+        return this.mContext.getResources().getDimensionPixelSize(isLowRam() ? 17105367 : 17105366);
     }
 
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public int getMaxImageHeight() {
-        return this.mContext.getResources().getDimensionPixelSize(isLowRam() ? 17105360 : 17105359);
+        return this.mContext.getResources().getDimensionPixelSize(isLowRam() ? 17105365 : 17105364);
     }
 
     /* access modifiers changed from: protected */

@@ -768,7 +768,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         if (string3 == null || this.mTrustedSoundId == 0) {
             Log.w("KeyguardViewMediator", "failed to load trusted sound from " + string3);
         }
-        this.mLockSoundVolume = (float) Math.pow(10.0d, (double) (((float) this.mContext.getResources().getInteger(17694824)) / 20.0f));
+        this.mLockSoundVolume = (float) Math.pow(10.0d, (double) (((float) this.mContext.getResources().getInteger(17694829)) / 20.0f));
         this.mHideAnimation = AnimationUtils.loadAnimation(this.mContext, 17432683);
         new WorkLockActivityController(this.mContext);
         this.mBleUnlockHelper = new MiuiBleUnlockHelper(this.mContext, this);

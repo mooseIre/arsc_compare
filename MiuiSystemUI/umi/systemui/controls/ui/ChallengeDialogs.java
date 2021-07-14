@@ -24,6 +24,10 @@ public final class ChallengeDialogs {
     private ChallengeDialogs() {
     }
 
+    public static final /* synthetic */ ControlAction access$addChallengeValue(ChallengeDialogs challengeDialogs, ControlAction controlAction, String str) {
+        return challengeDialogs.addChallengeValue(controlAction, str);
+    }
+
     public final Dialog createPinDialog(ControlViewHolder controlViewHolder, boolean z, boolean z2, Function0<Unit> function0) {
         Pair pair;
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");

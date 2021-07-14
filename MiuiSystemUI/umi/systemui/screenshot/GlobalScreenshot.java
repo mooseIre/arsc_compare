@@ -289,7 +289,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         L_0x004b:
             android.content.Context r5 = r4.mContext
             android.content.res.Resources r5 = r5.getResources()
-            r0 = 17694853(0x10e0085, float:2.6081654E-38)
+            r0 = 17694858(0x10e008a, float:2.6081668E-38)
             int r5 = r5.getInteger(r0)
             r4.mNavMode = r5
             return

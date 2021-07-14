@@ -911,20 +911,20 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         }
         if (QuickStepContract.isGesturalMode(this.mNavBarMode)) {
             if (this.mIsVertical) {
-                i3 = getResources().getDimensionPixelSize(17105338);
+                i3 = getResources().getDimensionPixelSize(17105343);
             } else {
-                i3 = getResources().getDimensionPixelSize(17105336);
+                i3 = getResources().getDimensionPixelSize(17105341);
             }
-            this.mBarTransitions.setBackgroundFrame(new Rect(0, getResources().getDimensionPixelSize(17105333) - i3, size, size2));
+            this.mBarTransitions.setBackgroundFrame(new Rect(0, getResources().getDimensionPixelSize(17105338) - i3, size, size2));
         }
         super.onMeasure(i, i2);
     }
 
     private int getNavBarHeight() {
         if (this.mIsVertical) {
-            return getResources().getDimensionPixelSize(17105338);
+            return getResources().getDimensionPixelSize(17105343);
         }
-        return getResources().getDimensionPixelSize(17105336);
+        return getResources().getDimensionPixelSize(17105341);
     }
 
     private void notifyVerticalChangedListener(boolean z) {

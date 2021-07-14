@@ -18,6 +18,7 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.MiuiNotificationEntryManager;
@@ -39,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: FoldNotifController.kt */
 public final class FoldNotifController {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
+    private final Lazy activityStarter$delegate = LazyKt__LazyJVMKt.lazy(FoldNotifController$activityStarter$2.INSTANCE);
     @NotNull
     private final Lazy cache$delegate = LazyKt__LazyJVMKt.lazy(new FoldNotifController$cache$2(this));
     @NotNull
@@ -58,11 +60,19 @@ public final class FoldNotifController {
         Reflection.property1(propertyReference1Impl2);
         PropertyReference1Impl propertyReference1Impl3 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(FoldNotifController.class), "mNm", "getMNm()Landroid/app/NotificationManager;");
         Reflection.property1(propertyReference1Impl3);
-        PropertyReference1Impl propertyReference1Impl4 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(FoldNotifController.class), "cache", "getCache()Lcom/android/systemui/statusbar/notification/unimportant/PackageScoreCache;");
+        PropertyReference1Impl propertyReference1Impl4 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(FoldNotifController.class), "activityStarter", "getActivityStarter()Lcom/android/systemui/plugins/ActivityStarter;");
         Reflection.property1(propertyReference1Impl4);
-        PropertyReference1Impl propertyReference1Impl5 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(FoldNotifController.class), "entryManager", "getEntryManager()Lcom/android/systemui/statusbar/notification/MiuiNotificationEntryManager;");
+        PropertyReference1Impl propertyReference1Impl5 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(FoldNotifController.class), "cache", "getCache()Lcom/android/systemui/statusbar/notification/unimportant/PackageScoreCache;");
         Reflection.property1(propertyReference1Impl5);
-        $$delegatedProperties = new KProperty[]{propertyReference1Impl, propertyReference1Impl2, propertyReference1Impl3, propertyReference1Impl4, propertyReference1Impl5};
+        PropertyReference1Impl propertyReference1Impl6 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(FoldNotifController.class), "entryManager", "getEntryManager()Lcom/android/systemui/statusbar/notification/MiuiNotificationEntryManager;");
+        Reflection.property1(propertyReference1Impl6);
+        $$delegatedProperties = new KProperty[]{propertyReference1Impl, propertyReference1Impl2, propertyReference1Impl3, propertyReference1Impl4, propertyReference1Impl5, propertyReference1Impl6};
+    }
+
+    private final ActivityStarter getActivityStarter() {
+        Lazy lazy = this.activityStarter$delegate;
+        KProperty kProperty = $$delegatedProperties[3];
+        return (ActivityStarter) lazy.getValue();
     }
 
     private final int getIconMargin() {
@@ -86,14 +96,14 @@ public final class FoldNotifController {
     @NotNull
     public final PackageScoreCache getCache() {
         Lazy lazy = this.cache$delegate;
-        KProperty kProperty = $$delegatedProperties[3];
+        KProperty kProperty = $$delegatedProperties[4];
         return (PackageScoreCache) lazy.getValue();
     }
 
     @NotNull
     public final MiuiNotificationEntryManager getEntryManager() {
         Lazy lazy = this.entryManager$delegate;
-        KProperty kProperty = $$delegatedProperties[4];
+        KProperty kProperty = $$delegatedProperties[5];
         return (MiuiNotificationEntryManager) lazy.getValue();
     }
 
@@ -125,7 +135,7 @@ public final class FoldNotifController {
 
             @Override // com.android.systemui.statusbar.NotificationLockscreenUserManager.UserChangedListener
             public void onUserChanged(int i) {
-                this.this$0.getEntryManager().onUserChanged(i);
+                this.this$0.getEntryManager().onUserChanged(i, ((SettingsManager) Dependency.get(SettingsManager.class)).getNotifFold());
             }
         });
         this.context.getContentResolver().registerContentObserver(NotificationProvider.URI_FOLD_IMPORTANCE, false, new ContentObserver(this, (Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
@@ -258,11 +268,10 @@ public final class FoldNotifController {
         return true;
     }
 
-    public final boolean jump2FoldSettings(@Nullable ExpandedNotification expandedNotification) {
-        if (expandedNotification == null) {
-            return false;
-        }
-        this.context.startActivityAsUser(getFoldSettingsIntent(), getEntryManager().getCurrentUser());
+    public final boolean jump2FoldSettings() {
+        Intent foldSettingsIntent = getFoldSettingsIntent();
+        foldSettingsIntent.addFlags(268435456);
+        getActivityStarter().startActivity(foldSettingsIntent, true);
         return true;
     }
 
@@ -272,6 +281,7 @@ public final class FoldNotifController {
         intent.addFlags(67108864);
         intent.setComponent(new ComponentName("com.miui.notification", "miui.notification.management.activity.settings.AggregateSettingActivity"));
         intent.putExtra("fold_or_aggregate_settings", "fold");
+        intent.addFlags(268435456);
         return intent;
     }
 }

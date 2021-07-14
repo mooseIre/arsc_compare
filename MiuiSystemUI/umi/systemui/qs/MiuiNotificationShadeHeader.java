@@ -169,7 +169,7 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (!this.mUseControlPanel || this.mOrientation != 1) {
             if (this.mOrientation != 1) {
-                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105490);
+                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105495);
             } else if (((MiuiQSHeaderView) this.mHeaderView).showCarrier()) {
                 layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height_with_carrier);
             } else {

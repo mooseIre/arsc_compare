@@ -117,7 +117,7 @@ public class NavigationModeController implements Dumpable {
     }
 
     private int getCurrentInteractionMode(Context context) {
-        int integer = context.getResources().getInteger(17694853);
+        int integer = context.getResources().getInteger(17694858);
         String str = TAG;
         Log.d(str, "getCurrentInteractionMode: mode=" + integer + " contextUser=" + context.getUserId());
         return integer;

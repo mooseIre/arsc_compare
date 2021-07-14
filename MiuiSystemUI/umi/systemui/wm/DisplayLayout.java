@@ -194,9 +194,9 @@ public class DisplayLayout {
 
     static int getStatusBarHeight(boolean z, Resources resources) {
         if (z) {
-            return resources.getDimensionPixelSize(17105491);
+            return resources.getDimensionPixelSize(17105496);
         }
-        return resources.getDimensionPixelSize(17105492);
+        return resources.getDimensionPixelSize(17105497);
     }
 
     public static DisplayCutout calculateDisplayCutoutForRotation(DisplayCutout displayCutout, int i, int i2, int i3) {
@@ -291,17 +291,17 @@ public class DisplayLayout {
     public static int getNavigationBarSize(Resources resources, int i, boolean z, int i2) {
         if ((i2 & 15) == 3) {
             if (i != 4) {
-                return resources.getDimensionPixelSize(17105342);
+                return resources.getDimensionPixelSize(17105347);
             }
-            return resources.getDimensionPixelSize(z ? 17105339 : 17105337);
+            return resources.getDimensionPixelSize(z ? 17105344 : 17105342);
         } else if (i != 4) {
-            return resources.getDimensionPixelSize(17105341);
+            return resources.getDimensionPixelSize(17105346);
         } else {
-            return resources.getDimensionPixelSize(z ? 17105338 : 17105336);
+            return resources.getDimensionPixelSize(z ? 17105343 : 17105341);
         }
     }
 
     public static int getNavigationBarFrameHeight(Resources resources, boolean z) {
-        return resources.getDimensionPixelSize(z ? 17105334 : 17105333);
+        return resources.getDimensionPixelSize(z ? 17105339 : 17105338);
     }
 }

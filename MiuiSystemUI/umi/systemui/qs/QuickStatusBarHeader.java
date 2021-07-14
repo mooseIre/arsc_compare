@@ -223,7 +223,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
     }
 
     private void updateMinimumHeight() {
-        setMinimumHeight(((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105490) + ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_quick_header_panel_height));
+        setMinimumHeight(((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105495) + ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_quick_header_panel_height));
     }
 
     private void updateResources() {
@@ -234,12 +234,12 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         this.mHeaderTextContainerView.getLayoutParams().height = resources.getDimensionPixelSize(C0012R$dimen.qs_header_tooltip_height);
         View view = this.mHeaderTextContainerView;
         view.setLayoutParams(view.getLayoutParams());
-        this.mSystemIconsView.getLayoutParams().height = resources.getDimensionPixelSize(17105441);
+        this.mSystemIconsView.getLayoutParams().height = resources.getDimensionPixelSize(17105446);
         View view2 = this.mSystemIconsView;
         view2.setLayoutParams(view2.getLayoutParams());
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (this.mQsDisabled) {
-            layoutParams.height = resources.getDimensionPixelSize(17105441);
+            layoutParams.height = resources.getDimensionPixelSize(17105446);
         } else {
             layoutParams.height = -2;
         }

@@ -68,7 +68,7 @@ public final class ClickableToast implements IClickableToast {
         }
         View view = this.mView;
         Configuration configuration = (view == null || (context3 = view.getContext()) == null || (resources = context3.getResources()) == null) ? null : resources.getConfiguration();
-        int integer = this.context.getResources().getInteger(17694915);
+        int integer = this.context.getResources().getInteger(17694920);
         if (configuration != null) {
             int absoluteGravity = Gravity.getAbsoluteGravity(integer, configuration.getLayoutDirection());
             WindowManager.LayoutParams layoutParams7 = this.mParams;
@@ -77,7 +77,7 @@ public final class ClickableToast implements IClickableToast {
             }
             WindowManager.LayoutParams layoutParams8 = this.mParams;
             if (layoutParams8 != null) {
-                layoutParams8.y = this.context.getResources().getDimensionPixelOffset(17105548);
+                layoutParams8.y = this.context.getResources().getDimensionPixelOffset(17105553);
             }
             this.mCancelRunnable = new Runnable(this) {
                 /* class com.android.systemui.statusbar.views.ClickableToast.AnonymousClass1 */

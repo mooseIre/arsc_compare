@@ -535,8 +535,8 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
                 miuiQSCustomizer.updateResources(height);
             }
             this.sideMargins = getResources().getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
-            this.contentPaddingStart = getResources().getDimensionPixelSize(17105356);
-            int dimensionPixelSize = getResources().getDimensionPixelSize(17105355);
+            this.contentPaddingStart = getResources().getDimensionPixelSize(17105361);
+            int dimensionPixelSize = getResources().getDimensionPixelSize(17105360);
             boolean z2 = dimensionPixelSize != this.contentPaddingEnd;
             this.contentPaddingEnd = dimensionPixelSize;
             if (z2 || z) {

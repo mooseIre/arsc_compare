@@ -92,7 +92,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                 return ((float) ((transformState2.getLaidOutLocationOnScreen()[1] + transformState2.getTransformedView().getHeight()) - transformState.getLaidOutLocationOnScreen()[1])) * 0.33f;
             }
         }, 2);
-        this.mFullHeaderTranslation = context.getResources().getDimensionPixelSize(17105354) - context.getResources().getDimensionPixelSize(17105357);
+        this.mFullHeaderTranslation = context.getResources().getDimensionPixelSize(17105359) - context.getResources().getDimensionPixelSize(17105362);
     }
 
     private void resolveTemplateViews(StatusBarNotification statusBarNotification) {
@@ -157,7 +157,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             ColorStateList textColors = button.getTextColors();
             int[] colors = textColors.getColors();
             int[] iArr = new int[colors.length];
-            float f = this.mView.getResources().getFloat(17105343);
+            float f = this.mView.getResources().getFloat(17105348);
             for (int i = 0; i < colors.length; i++) {
                 iArr[i] = blendColorWithBackground(colors[i], f);
             }
@@ -173,7 +173,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             this.mReplyAction.setEnabled(false);
             Drawable mutate = this.mReplyAction.getDrawable().mutate();
             PorterDuffColorFilter porterDuffColorFilter = (PorterDuffColorFilter) mutate.getColorFilter();
-            float f = this.mView.getResources().getFloat(17105343);
+            float f = this.mView.getResources().getFloat(17105348);
             if (porterDuffColorFilter != null) {
                 mutate.mutate().setColorFilter(blendColorWithBackground(porterDuffColorFilter.getColor(), f), porterDuffColorFilter.getMode());
                 return;

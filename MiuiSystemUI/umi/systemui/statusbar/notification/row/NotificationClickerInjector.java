@@ -45,9 +45,7 @@ public final class NotificationClickerInjector {
                 return ((FoldNotifController) Dependency.get(FoldNotifController.class)).jump2Fold(entry4.getSbn());
             }
             ((ShadeController) Dependency.get(ShadeController.class)).animateCollapsePanels(0);
-            NotificationEntry entry5 = miuiExpandableNotificationRow.getEntry();
-            Intrinsics.checkExpressionValueIsNotNull(entry5, "row.entry");
-            return ((FoldNotifController) Dependency.get(FoldNotifController.class)).jump2FoldSettings(entry5.getSbn());
+            return ((FoldNotifController) Dependency.get(FoldNotifController.class)).jump2FoldSettings();
         }
         miuiExpandableNotificationRow.getExpandClickListener().onClick(expandableNotificationRow);
         return true;

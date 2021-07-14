@@ -142,7 +142,7 @@ public class NotificationContentView extends FrameLayout {
 
     public void initView() {
         this.mMinContractedHeight = getResources().getDimensionPixelSize(C0012R$dimen.min_notification_layout_height);
-        this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105355);
+        this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105360);
     }
 
     public void setHeights(int i, int i2, int i3) {
@@ -250,7 +250,7 @@ public class NotificationContentView extends FrameLayout {
             return 0;
         }
         if (remoteInputView.isActive() || remoteInputView.isSending()) {
-            return getResources().getDimensionPixelSize(17105354);
+            return getResources().getDimensionPixelSize(17105359);
         }
         return 0;
     }
@@ -509,7 +509,7 @@ public class NotificationContentView extends FrameLayout {
         int i;
         int i2;
         if (this.mIsChildInGroup && isVisibleOrTransitioning(3)) {
-            return ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(17105345);
+            return ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(17105350);
         }
         if (!(this.mHeadsUpChild == null || this.mExpandedChild == null)) {
             boolean z = isTransitioningFromTo(2, 1) || isTransitioningFromTo(1, 2);

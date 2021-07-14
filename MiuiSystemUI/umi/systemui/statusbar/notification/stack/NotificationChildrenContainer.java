@@ -160,11 +160,11 @@ public class NotificationChildrenContainer extends ViewGroup {
         int notificationTopPadding = getNotificationTopPadding();
         this.mNotificatonTopPadding = notificationTopPadding;
         this.mHeaderHeight = this.mNotificationHeaderMargin + notificationTopPadding;
-        this.mCollapsedBottompadding = (float) resources.getDimensionPixelSize(17105354);
+        this.mCollapsedBottompadding = (float) resources.getDimensionPixelSize(17105359);
         this.mEnableShadowOnChildNotifications = resources.getBoolean(C0010R$bool.config_enableShadowOnChildNotifications);
         this.mShowDividersWhenExpanded = resources.getBoolean(C0010R$bool.config_showDividersWhenGroupNotificationExpanded);
         this.mHideDividersDuringExpand = resources.getBoolean(C0010R$bool.config_hideDividersDuringExpand);
-        this.mTranslationForHeader = resources.getDimensionPixelSize(17105354) - this.mNotificationHeaderMargin;
+        this.mTranslationForHeader = resources.getDimensionPixelSize(17105359) - this.mNotificationHeaderMargin;
         this.mHybridGroupManager.initDimens();
     }
 

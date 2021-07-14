@@ -127,13 +127,7 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
 
     private final void checkFoldEntrance(StatusBarNotification statusBarNotification) {
         if (statusBarNotification != null && !NotificationUtil.isFoldEntrance(statusBarNotification).booleanValue()) {
-            NotificationListenerService.RankingMap rankingMap = this.rankingManager.getRankingMap();
-            if (rankingMap != null) {
-                updateFoldRankingAndSort(rankingMap, "checkFoldEntrance", true);
-            } else {
-                Intrinsics.throwNpe();
-                throw null;
-            }
+            updateFoldRankingAndSort(this.rankingManager.getRankingMap(), "checkFoldEntrance", true);
         }
     }
 
@@ -313,26 +307,13 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
                     notificationGroupManager.updateSuppression((NotificationGroupManager.NotificationGroup) t);
                 }
                 if (this.rankingManager.getRankingMap() != null) {
-                    NotificationListenerService.RankingMap rankingMap = this.rankingManager.getRankingMap();
-                    if (rankingMap != null) {
-                        updateRankingAndSort(rankingMap, str2);
-                    } else {
-                        Intrinsics.throwNpe();
-                        throw null;
-                    }
+                    updateRankingAndSort(this.rankingManager.getRankingMap(), str2);
                 }
                 boolean shouldShow$default = shouldShow$default(this, 0, 1, null);
-                NotificationListenerService.RankingMap rankingMap2 = this.rankingManager.getRankingMap();
-                if (rankingMap2 != null) {
-                    updateFoldRankingAndSort$default(this, rankingMap2, "transferNotifications", false, 4, null);
-                    if (this.isShowingUnimportant && !shouldShow$default) {
-                        FoldManager.Companion.notifyListeners(5);
-                        return;
-                    }
-                    return;
+                updateFoldRankingAndSort$default(this, this.rankingManager.getRankingMap(), "transferNotifications", false, 4, null);
+                if (this.isShowingUnimportant && !shouldShow$default) {
+                    FoldManager.Companion.notifyListeners(5);
                 }
-                Intrinsics.throwNpe();
-                throw null;
             }
         }
     }
@@ -353,19 +334,14 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
         return arrayList;
     }
 
-    public final void onUserChanged(int i) {
-        NotificationListenerService.RankingMap rankingMap = this.rankingManager.getRankingMap();
-        if (rankingMap != null) {
-            updateFoldRankingAndSort$default(this, rankingMap, "onUserChanged", false, 4, null);
-            FoldManager.Companion companion = FoldManager.Companion;
-            boolean shouldShow = shouldShow(i);
-            UserHandle currentUser = i == 999 ? getCurrentUser() : UserHandle.of(i);
-            Intrinsics.checkExpressionValueIsNotNull(currentUser, "if (userId == DOUBLE_OPE…lse UserHandle.of(userId)");
-            companion.checkFoldNotification(shouldShow, currentUser);
-            return;
-        }
-        Intrinsics.throwNpe();
-        throw null;
+    public final void onUserChanged(int i, boolean z) {
+        changeFoldEnabled(z);
+        updateFoldRankingAndSort$default(this, this.rankingManager.getRankingMap(), "onUserChanged", false, 4, null);
+        FoldManager.Companion companion = FoldManager.Companion;
+        boolean shouldShow = shouldShow(i);
+        UserHandle currentUser = i == 999 ? getCurrentUser() : UserHandle.of(i);
+        Intrinsics.checkExpressionValueIsNotNull(currentUser, "if (userId == DOUBLE_OPE…lse UserHandle.of(userId)");
+        companion.checkFoldNotification(shouldShow, currentUser);
     }
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener

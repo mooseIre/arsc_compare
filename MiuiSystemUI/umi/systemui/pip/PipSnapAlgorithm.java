@@ -13,8 +13,8 @@ public class PipSnapAlgorithm {
 
     public PipSnapAlgorithm(Context context) {
         Resources resources = context.getResources();
-        this.mDefaultSizePercent = resources.getFloat(17105073);
-        float f = resources.getFloat(17105071);
+        this.mDefaultSizePercent = resources.getFloat(17105078);
+        float f = resources.getFloat(17105076);
         this.mMaxAspectRatioForMinSize = f;
         this.mMinAspectRatioForMinSize = 1.0f / f;
     }

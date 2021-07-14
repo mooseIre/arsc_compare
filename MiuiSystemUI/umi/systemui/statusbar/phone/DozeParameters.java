@@ -43,7 +43,7 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public float getScreenBrightnessDoze() {
-        return ((float) this.mResources.getInteger(17694890)) / 255.0f;
+        return ((float) this.mResources.getInteger(17694895)) / 255.0f;
     }
 
     public int getPulseVisibleDuration() {

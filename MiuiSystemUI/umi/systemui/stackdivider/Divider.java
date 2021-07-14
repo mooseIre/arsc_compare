@@ -480,7 +480,7 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
 
     /* access modifiers changed from: package-private */
     public long getAnimDuration() {
-        return (long) (Settings.Global.getFloat(this.mContext.getContentResolver(), "transition_animation_scale", this.mContext.getResources().getFloat(17105053)) * 336.0f);
+        return (long) (Settings.Global.getFloat(this.mContext.getContentResolver(), "transition_animation_scale", this.mContext.getResources().getFloat(17105058)) * 336.0f);
     }
 
     public void registerInSplitScreenListener(Consumer<Boolean> consumer) {

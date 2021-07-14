@@ -489,8 +489,8 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         this.mBurnInYOffset = getResources().getDimensionPixelSize(C0012R$dimen.default_burn_in_prevention_offset);
-        this.mEnterpriseDisclosure.setTextSize(0, (float) getResources().getDimensionPixelSize(17105519));
-        this.mIndicationText.setTextSize(0, (float) getResources().getDimensionPixelSize(17105519));
+        this.mEnterpriseDisclosure.setTextSize(0, (float) getResources().getDimensionPixelSize(17105524));
+        this.mIndicationText.setTextSize(0, (float) getResources().getDimensionPixelSize(17105524));
         updateEmergencyButton();
         if ((this.mConfiguration.updateFrom(configuration) & 2048) != 0) {
             updateViewsLayoutParams();

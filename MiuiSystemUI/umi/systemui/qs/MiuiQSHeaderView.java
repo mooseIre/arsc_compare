@@ -95,7 +95,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         setNormalHeight((float) i);
         setUnimportantHeight((float) getContext().getResources().getDimensionPixelSize(C0012R$dimen.unimportant_miui_header_height));
         int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(C0012R$dimen.unimportant_miui_qs_dif);
-        this.mNormalHeightLandscape = (float) getContext().getResources().getDimensionPixelSize(17105490);
+        this.mNormalHeightLandscape = (float) getContext().getResources().getDimensionPixelSize(17105495);
         this.mUnimportantHeightLandscape = super.getUnimportantHeight();
         FoldManager.Companion.setNormalTarget(getNormalHeight());
         FoldManager.Companion.setUnimportantTarget(getUnimportantHeight());
