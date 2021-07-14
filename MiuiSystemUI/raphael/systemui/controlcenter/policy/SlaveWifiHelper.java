@@ -20,16 +20,13 @@ import java.util.ArrayList;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import miuix.appcompat.app.AlertDialog;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: SlaveWifiHelper.kt */
 public final class SlaveWifiHelper {
     private final ConnectivityManager connectivityManager;
-    @NotNull
     private final Context context;
     private final SlaveWifiUtils slaveWifiUtils;
 
-    public SlaveWifiHelper(@NotNull Context context2) {
+    public SlaveWifiHelper(Context context2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         this.context = context2;
         this.slaveWifiUtils = new SlaveWifiUtils(context2);
@@ -41,7 +38,7 @@ public final class SlaveWifiHelper {
         throw new TypeCastException("null cannot be cast to non-null type android.net.ConnectivityManager");
     }
 
-    public final void updateItem(@NotNull Context context2, @NotNull NetworkController.AccessPointController accessPointController, @NotNull MiuiQSDetailItems miuiQSDetailItems, @NotNull ArrayList<MiuiQSDetailItems.Item> arrayList, @NotNull AccessPoint accessPoint) {
+    public final void updateItem(Context context2, NetworkController.AccessPointController accessPointController, MiuiQSDetailItems miuiQSDetailItems, ArrayList<MiuiQSDetailItems.Item> arrayList, AccessPoint accessPoint) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(accessPointController, "accessPointController");
         Intrinsics.checkParameterIsNotNull(miuiQSDetailItems, "qsDetailItems");
@@ -76,7 +73,7 @@ public final class SlaveWifiHelper {
         }
     }
 
-    public final boolean connect(@NotNull Context context2, @NotNull AccessPoint accessPoint, @NotNull NetworkController.AccessPointController accessPointController) {
+    public final boolean connect(Context context2, AccessPoint accessPoint, NetworkController.AccessPointController accessPointController) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(accessPoint, "ap");
         Intrinsics.checkParameterIsNotNull(accessPointController, "accessPointController");

@@ -28,12 +28,12 @@ public final class ControlsControllerImpl$loadForComponent$2 implements Controls
 
     public void accept(@NotNull List<Control> list) {
         Intrinsics.checkParameterIsNotNull(list, "controls");
-        ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$loadForComponent$2$accept$1(this, list));
+        this.this$0.executor.execute(new ControlsControllerImpl$loadForComponent$2$accept$1(this, list));
     }
 
     @Override // com.android.systemui.controls.controller.ControlsBindingController.LoadCallback
     public void error(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "message");
-        ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$loadForComponent$2$error$1(this));
+        this.this$0.executor.execute(new ControlsControllerImpl$loadForComponent$2$error$1(this));
     }
 }

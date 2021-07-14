@@ -383,9 +383,13 @@ public class MiuiQSDetail extends LinearLayout {
             /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$AdNHpUBZdRe21F6S_5YM97n9iFM */
 
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                DetailAdapter.this.setToggleState(z);
+                MiuiQSDetail.lambda$setupDetailHeader$2(DetailAdapter.this, compoundButton, z);
             }
         });
+    }
+
+    static /* synthetic */ void lambda$setupDetailHeader$2(DetailAdapter detailAdapter, CompoundButton compoundButton, boolean z) {
+        detailAdapter.setToggleState(z);
     }
 
     /* access modifiers changed from: private */

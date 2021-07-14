@@ -31,13 +31,16 @@ public class PhysicsAnimationLayout extends FrameLayout {
     protected PhysicsAnimationController mController;
     protected final HashMap<DynamicAnimation.ViewProperty, Runnable> mEndActionForProperty = new HashMap<>();
 
+    /* access modifiers changed from: package-private */
     public static abstract class PhysicsAnimationController {
         protected PhysicsAnimationLayout mLayout;
 
+        /* access modifiers changed from: package-private */
         public interface ChildAnimationConfigurator {
             void configureAnimationForChildAtIndex(int i, PhysicsPropertyAnimator physicsPropertyAnimator);
         }
 
+        /* access modifiers changed from: package-private */
         public interface MultiAnimationStarter {
             void startAll(Runnable... runnableArr);
         }
@@ -69,16 +72,19 @@ public class PhysicsAnimationLayout extends FrameLayout {
         PhysicsAnimationController() {
         }
 
+        /* access modifiers changed from: protected */
         public boolean isActiveController() {
             PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
             return physicsAnimationLayout != null && this == physicsAnimationLayout.mController;
         }
 
+        /* access modifiers changed from: protected */
         public void setLayout(PhysicsAnimationLayout physicsAnimationLayout) {
             this.mLayout = physicsAnimationLayout;
             onActiveControllerForLayout(physicsAnimationLayout);
         }
 
+        /* access modifiers changed from: protected */
         public PhysicsPropertyAnimator animationForChild(View view) {
             PhysicsPropertyAnimator physicsPropertyAnimator = (PhysicsPropertyAnimator) view.getTag(C0015R$id.physics_animator_tag);
             if (physicsPropertyAnimator == null) {
@@ -92,10 +98,12 @@ public class PhysicsAnimationLayout extends FrameLayout {
             return physicsPropertyAnimator;
         }
 
+        /* access modifiers changed from: protected */
         public PhysicsPropertyAnimator animationForChildAtIndex(int i) {
             return animationForChild(this.mLayout.getChildAt(i));
         }
 
+        /* access modifiers changed from: protected */
         public MultiAnimationStarter animationsForChildrenFromIndex(int i, ChildAnimationConfigurator childAnimationConfigurator) {
             HashSet hashSet = new HashSet();
             ArrayList arrayList = new ArrayList();
@@ -123,7 +131,6 @@ public class PhysicsAnimationLayout extends FrameLayout {
             };
         }
 
-        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$animationsForChildrenFromIndex$1 */
         public /* synthetic */ void lambda$animationsForChildrenFromIndex$1$PhysicsAnimationLayout$PhysicsAnimationController(Set set, List list, Runnable[] runnableArr) {
@@ -158,10 +165,12 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
         }
 
+        /* access modifiers changed from: protected */
         public void setEndActionForProperty(Runnable runnable, DynamicAnimation.ViewProperty viewProperty) {
             this.mLayout.mEndActionForProperty.put(viewProperty, runnable);
         }
 
+        /* access modifiers changed from: protected */
         public void setEndActionForMultipleProperties(Runnable runnable, DynamicAnimation.ViewProperty... viewPropertyArr) {
             $$Lambda$PhysicsAnimationLayout$PhysicsAnimationController$k470cCDrnNZB7vKHsf7OzOwkMRY r0 = new Runnable(viewPropertyArr, runnable) {
                 /* class com.android.systemui.bubbles.animation.$$Lambda$PhysicsAnimationLayout$PhysicsAnimationController$k470cCDrnNZB7vKHsf7OzOwkMRY */
@@ -182,7 +191,6 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
         }
 
-        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$setEndActionForMultipleProperties$2 */
         public /* synthetic */ void lambda$setEndActionForMultipleProperties$2$PhysicsAnimationLayout$PhysicsAnimationController(DynamicAnimation.ViewProperty[] viewPropertyArr, Runnable runnable) {
@@ -194,6 +202,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
         }
 
+        /* access modifiers changed from: protected */
         public void removeEndActionForProperty(DynamicAnimation.ViewProperty viewProperty) {
             this.mLayout.mEndActionForProperty.remove(viewProperty);
         }
@@ -240,7 +249,6 @@ public class PhysicsAnimationLayout extends FrameLayout {
         super.removeView(view);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$removeView$0 */
     public /* synthetic */ void lambda$removeView$0$PhysicsAnimationLayout(View view) {
@@ -320,10 +328,12 @@ public class PhysicsAnimationLayout extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: protected */
     public boolean isActiveController(PhysicsAnimationController physicsAnimationController) {
         return this.mController == physicsAnimationController;
     }
 
+    /* access modifiers changed from: protected */
     public boolean isFirstChildXLeftOfCenter(float f) {
         if (getChildCount() <= 0 || f + ((float) (getChildAt(0).getWidth() / 2)) >= ((float) (getWidth() / 2))) {
             return false;
@@ -362,10 +372,14 @@ public class PhysicsAnimationLayout extends FrameLayout {
         return getAnimationFromView(viewProperty, getChildAt(i));
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private SpringAnimation getAnimationFromView(DynamicAnimation.ViewProperty viewProperty, View view) {
         return (SpringAnimation) view.getTag(getTagIdForProperty(viewProperty));
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private ObjectAnimator getTargetAnimatorFromView(View view) {
         return (ObjectAnimator) view.getTag(C0015R$id.target_animator_tag);
     }
@@ -398,7 +412,6 @@ public class PhysicsAnimationLayout extends FrameLayout {
         view.setTag(getTagIdForProperty(viewProperty), springAnimation);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$setUpAnimationForChild$1 */
     public /* synthetic */ void lambda$setUpAnimationForChild$1$PhysicsAnimationLayout(View view, DynamicAnimation.ViewProperty viewProperty, DynamicAnimation dynamicAnimation, float f, float f2) {
@@ -413,6 +426,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private int getTagIdForProperty(DynamicAnimation.ViewProperty viewProperty) {
         if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
             return C0015R$id.translation_x_dynamicanimation_tag;
@@ -432,11 +447,11 @@ public class PhysicsAnimationLayout extends FrameLayout {
         return -1;
     }
 
+    /* access modifiers changed from: protected */
     public class AllAnimationsForPropertyFinishedEndListener implements DynamicAnimation.OnAnimationEndListener {
         private DynamicAnimation.ViewProperty mProperty;
 
         AllAnimationsForPropertyFinishedEndListener(DynamicAnimation.ViewProperty viewProperty) {
-            PhysicsAnimationLayout.this = r1;
             this.mProperty = viewProperty;
         }
 
@@ -449,6 +464,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: protected */
     public class PhysicsPropertyAnimator {
         private Map<DynamicAnimation.ViewProperty, Float> mAnimatedProperties = new HashMap();
         private PhysicsAnimationController mAssociatedController;
@@ -487,7 +503,6 @@ public class PhysicsAnimationLayout extends FrameLayout {
         private View mView;
 
         protected PhysicsPropertyAnimator(View view) {
-            PhysicsAnimationLayout.this = r3;
             this.mView = view;
         }
 
@@ -659,7 +674,6 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
         }
 
-        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$start$1 */
         public /* synthetic */ void lambda$start$1$PhysicsAnimationLayout$PhysicsPropertyAnimator(SpringAnimation springAnimation, SpringAnimation springAnimation2) {
@@ -674,6 +688,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
         }
 
+        /* access modifiers changed from: protected */
         public Set<DynamicAnimation.ViewProperty> getAnimatedProperties() {
             HashSet hashSet = new HashSet(this.mAnimatedProperties.keySet());
             if (this.mPathAnimator != null) {
@@ -683,6 +698,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
             return hashSet;
         }
 
+        /* access modifiers changed from: protected */
         public void animateValueForChild(DynamicAnimation.ViewProperty viewProperty, View view, float f, float f2, long j, float f3, float f4, final Runnable... runnableArr) {
             SpringAnimation springAnimation;
             if (view != null && (springAnimation = (SpringAnimation) view.getTag(PhysicsAnimationLayout.this.getTagIdForProperty(viewProperty))) != null) {
@@ -749,6 +765,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
         }
 
+        /* access modifiers changed from: protected */
         public void startPathAnimation() {
             final SpringForce springForce = PhysicsAnimationLayout.this.mController.getSpringForce(DynamicAnimation.TRANSLATION_X, this.mView);
             final SpringForce springForce2 = PhysicsAnimationLayout.this.mController.getSpringForce(DynamicAnimation.TRANSLATION_Y, this.mView);
@@ -772,7 +789,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
                 }
 
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    PhysicsAnimationLayout.PhysicsPropertyAnimator.lambda$startPathAnimation$4(this.f$0, valueAnimator);
+                    this.f$0.run();
                 }
             });
             this.mPathAnimator.addListener(new AnimatorListenerAdapter() {
@@ -819,7 +836,6 @@ public class PhysicsAnimationLayout extends FrameLayout {
             this.mPathAnimator.start();
         }
 
-        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$startPathAnimation$3 */
         public /* synthetic */ void lambda$startPathAnimation$3$PhysicsAnimationLayout$PhysicsPropertyAnimator() {
@@ -827,6 +843,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
             updateValueForChild(DynamicAnimation.TRANSLATION_Y, this.mView, this.mCurrentPointOnPath.y);
         }
 
+        /* access modifiers changed from: private */
+        /* access modifiers changed from: public */
         private void clearAnimator() {
             this.mInitialPropertyValues.clear();
             this.mAnimatedProperties.clear();
@@ -840,6 +858,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
             this.mPositionEndActions = null;
         }
 
+        /* access modifiers changed from: private */
+        /* access modifiers changed from: public */
         private void setAssociatedController(PhysicsAnimationController physicsAnimationController) {
             this.mAssociatedController = physicsAnimationController;
         }

@@ -212,10 +212,6 @@ public class ActivityStarterDelegate implements ActivityStarter {
         });
     }
 
-    static /* synthetic */ void lambda$postQSRunnableDismissingKeyguard$9(boolean z, Runnable runnable, Lazy lazy) {
-        ((StatusBar) lazy.get()).postQSRunnableDismissingKeyguard(z, runnable);
-    }
-
     @Override // com.android.systemui.plugins.ActivityStarter
     public void dismissKeyguardThenExecute(ActivityStarter.OnDismissAction onDismissAction, Runnable runnable, boolean z) {
         this.mActualStarter.ifPresent(new Consumer(runnable, z) {
