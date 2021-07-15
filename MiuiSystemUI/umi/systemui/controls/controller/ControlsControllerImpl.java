@@ -134,10 +134,6 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.listingController.addCallback(this.listingCallback);
     }
 
-    public static final /* synthetic */ ControlsFavoritePersistenceWrapper access$getPersistenceWrapper$p(ControlsControllerImpl controlsControllerImpl) {
-        return controlsControllerImpl.persistenceWrapper;
-    }
-
     public static final class Companion {
         private Companion() {
         }

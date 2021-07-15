@@ -26,7 +26,6 @@ import android.widget.FrameLayout;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.util.LatencyTracker;
 import com.android.keyguard.AwesomeLockScreen;
-import com.android.keyguard.KeyguardMoveHelper;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiFastUnlockController;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
@@ -34,13 +33,10 @@ import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.clock.KeyguardClockContainer;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.injector.KeyguardClockInjector;
-import com.android.keyguard.injector.KeyguardNegative1PageInjector;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.magazine.LockScreenMagazinePreView;
-import com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView;
-import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
@@ -1360,14 +1356,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.PanelViewController
     public boolean isStatusBarExpandable() {
-        KeyguardMoveHelper keyguardMoveHelper;
-        if ((!isOnKeyguard() || MiuiKeyguardUtils.supportExpandableStatusbarUnderKeyguard()) && (keyguardMoveHelper = this.mKeyguardPanelViewInjector.getKeyguardMoveHelper()) != null && !keyguardMoveHelper.isInLeftView()) {
-            MiuiKeyguardMoveLeftViewContainer leftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
-            if ((leftView != null ? leftView.getContentView() : null) instanceof MiuiKeyguardMoveLeftControlCenterView) {
-                return true;
-            }
-        }
-        return false;
+        return !isOnKeyguard() || MiuiKeyguardUtils.supportExpandableStatusbarUnderKeyguard();
     }
 
     @Override // com.android.systemui.statusbar.phone.PanelViewController

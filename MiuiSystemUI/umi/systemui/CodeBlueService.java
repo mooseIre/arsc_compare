@@ -8,24 +8,16 @@ import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.miui.systemui.EventTracker;
 import com.miui.systemui.events.CodeBlueEvent;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: CodeBlueService.kt */
 public final class CodeBlueService {
-    @NotNull
     private final Looper bgLooper;
-    @NotNull
     private final Context context;
-    @NotNull
     private final NotificationEntryManager entryManager;
-    @NotNull
     private final EventTracker eventTracker;
-    @Nullable
     private String latestNotificationPkgName;
     private long latestNotificationTimeMillis;
 
-    public CodeBlueService(@NotNull Context context2, @NotNull Looper looper, @NotNull NotificationEntryManager notificationEntryManager, @NotNull EventTracker eventTracker2) {
+    public CodeBlueService(Context context2, Looper looper, NotificationEntryManager notificationEntryManager, EventTracker eventTracker2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(looper, "bgLooper");
         Intrinsics.checkParameterIsNotNull(notificationEntryManager, "entryManager");
@@ -36,17 +28,15 @@ public final class CodeBlueService {
         this.eventTracker = eventTracker2;
     }
 
-    @NotNull
     public final Context getContext() {
         return this.context;
     }
 
-    @Nullable
     public final String getLatestNotificationPkgName() {
         return this.latestNotificationPkgName;
     }
 
-    public final void setLatestNotificationPkgName(@Nullable String str) {
+    public final void setLatestNotificationPkgName(String str) {
         this.latestNotificationPkgName = str;
     }
 
@@ -71,8 +61,8 @@ public final class CodeBlueService {
         new Handler(this.bgLooper).post(new CodeBlueService$trackCodeBlue$1(this));
     }
 
-    /* access modifiers changed from: private */
-    public final void trackCodeBlueEvent() {
+    /* access modifiers changed from: public */
+    private final void trackCodeBlueEvent() {
         EventTracker eventTracker2 = this.eventTracker;
         int crashCount = CodeBlueConfig.Companion.getCrashCount(this.context);
         String exceptionHandler = CodeBlueConfig.Companion.getExceptionHandler(this.context);
