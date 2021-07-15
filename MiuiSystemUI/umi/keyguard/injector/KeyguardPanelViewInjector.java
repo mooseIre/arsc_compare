@@ -200,11 +200,6 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         this.wakefulnessLifecycle = wakefulnessLifecycle2;
     }
 
-    @Nullable
-    public final KeyguardMoveHelper getKeyguardMoveHelper() {
-        return this.mKeyguardMoveHelper;
-    }
-
     public final void init(@NotNull MiuiNotificationPanelViewController miuiNotificationPanelViewController) {
         Intrinsics.checkParameterIsNotNull(miuiNotificationPanelViewController, "notificationPanelViewController");
         this.mPanelView = miuiNotificationPanelViewController.getPanelView();
