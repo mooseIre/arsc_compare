@@ -34,11 +34,13 @@ public class ScreenshotActionChip extends FrameLayout {
         this.mIconColor = context.getColor(C0011R$color.global_screenshot_button_icon);
     }
 
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         this.mIcon = (ImageView) findViewById(C0015R$id.screenshot_action_chip_icon);
         this.mText = (TextView) findViewById(C0015R$id.screenshot_action_chip_text);
     }
 
+    /* access modifiers changed from: package-private */
     public void setIcon(Icon icon, boolean z) {
         if (z) {
             icon.setTint(this.mIconColor);
@@ -46,10 +48,12 @@ public class ScreenshotActionChip extends FrameLayout {
         this.mIcon.setImageIcon(icon);
     }
 
+    /* access modifiers changed from: package-private */
     public void setText(CharSequence charSequence) {
         this.mText.setText(charSequence);
     }
 
+    /* access modifiers changed from: package-private */
     public void setPendingIntent(PendingIntent pendingIntent, Runnable runnable) {
         setOnClickListener(new View.OnClickListener(pendingIntent, runnable) {
             /* class com.android.systemui.screenshot.$$Lambda$ScreenshotActionChip$ESyR9a8Hwpm3rCY_qaXPGrIojI */

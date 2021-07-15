@@ -4,9 +4,8 @@ import android.util.Log;
 import com.android.systemui.controls.controller.ControlsBindingControllerImpl;
 import kotlin.jvm.functions.Function0;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsBindingControllerImpl.kt */
-public final class ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1 implements Runnable {
+final class ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1 implements Runnable {
     final /* synthetic */ ControlsBindingControllerImpl.LoadSubscriber this$0;
 
     ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1(ControlsBindingControllerImpl.LoadSubscriber loadSubscriber) {
@@ -14,10 +13,10 @@ public final class ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1 imp
     }
 
     public final void run() {
-        Function0 function0 = this.this$0._loadCancelInternal;
-        if (function0 != null) {
+        Function0 access$get_loadCancelInternal$p = ControlsBindingControllerImpl.LoadSubscriber.access$get_loadCancelInternal$p(this.this$0);
+        if (access$get_loadCancelInternal$p != null) {
             Log.d("ControlsBindingControllerImpl", "Canceling loadSubscribtion");
-            function0.invoke();
+            access$get_loadCancelInternal$p.invoke();
         }
     }
 }

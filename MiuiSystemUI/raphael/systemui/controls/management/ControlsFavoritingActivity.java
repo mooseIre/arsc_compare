@@ -128,10 +128,6 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
-    public static final /* synthetic */ void access$setCancelLoadRunnable$p(ControlsFavoritingActivity controlsFavoritingActivity, Runnable runnable) {
-        controlsFavoritingActivity.cancelLoadRunnable = runnable;
-    }
-
     public ControlsFavoritingActivity(Executor executor2, ControlsControllerImpl controlsControllerImpl, ControlsListingController controlsListingController, BroadcastDispatcher broadcastDispatcher, GlobalActionsComponent globalActionsComponent2) {
         Intrinsics.checkParameterIsNotNull(executor2, "executor");
         Intrinsics.checkParameterIsNotNull(controlsControllerImpl, "controller");
