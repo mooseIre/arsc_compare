@@ -6,9 +6,8 @@ import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
-/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowRowTouchHelper.kt */
-public final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ Rect $from$inlined;
     final /* synthetic */ Rect $to$inlined;
     final /* synthetic */ AppMiniWindowRowTouchHelper this$0;

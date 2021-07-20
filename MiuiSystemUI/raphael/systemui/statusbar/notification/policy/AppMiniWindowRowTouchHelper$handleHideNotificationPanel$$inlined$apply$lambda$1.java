@@ -4,9 +4,8 @@ import android.animation.ValueAnimator;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
-/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowRowTouchHelper.kt */
-public final class AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+final class AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
 
     AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$apply$lambda$1(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper) {
