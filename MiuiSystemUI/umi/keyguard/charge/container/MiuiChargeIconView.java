@@ -128,7 +128,7 @@ public class MiuiChargeIconView extends RelativeLayout {
     }
 
     private void resetCarMode() {
-        this.mIsCarMode = ChargeUtils.isWirelessCarMode(ChargeUtils.sBatteryStatus.chargeDeviceType);
+        this.mIsCarMode = ChargeUtils.sBatteryStatus.isCarCharge();
     }
 
     public void startLightningAnimation() {

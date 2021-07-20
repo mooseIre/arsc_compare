@@ -37,7 +37,6 @@ public class MiuiChargeLogoView extends RelativeLayout {
     private int mTurboViewAlpha;
     private int mTurboViewTranslationY;
     private WindowManager mWindowManager;
-    private int mWireState;
 
     public MiuiChargeLogoView(Context context) {
         this(context, null);
@@ -52,7 +51,6 @@ public class MiuiChargeLogoView extends RelativeLayout {
         this.mCubicInterpolator = new CubicEaseOutInterpolater();
         this.mIsFoldChargeVideo = false;
         this.mChargeSpeed = 0;
-        this.mWireState = -1;
         init(context);
     }
 
@@ -86,14 +84,14 @@ public class MiuiChargeLogoView extends RelativeLayout {
 
     public void startLogoAnimation(boolean z) {
         Log.d("MiuiChargeLogoView", "startLogoAnimation: mChargeSpeed=" + this.mChargeSpeed);
-        this.mWireState = ChargeUtils.sBatteryStatus.wireState;
+        int i = ChargeUtils.sBatteryStatus.wireState;
         resetLogoViewState(z);
     }
 
     public void switchLogoAnimation(int i) {
         Log.d("MiuiChargeLogoView", "switchLogoAnimation: mChargeSpeed=" + i);
         this.mChargeSpeed = i;
-        this.mWireState = ChargeUtils.sBatteryStatus.wireState;
+        int i2 = ChargeUtils.sBatteryStatus.wireState;
         switchChargeLogo();
     }
 
@@ -146,15 +144,11 @@ public class MiuiChargeLogoView extends RelativeLayout {
                     MiuiChargeLogoView.this.mChargeTurboView.setVisibility(0);
                     if (3 == MiuiChargeLogoView.this.mChargeSpeed) {
                         MiuiChargeLogoView.this.mChargeTurboView.setStrongViewInitState();
-                        if (MiuiChargeLogoView.this.mWireState == 10) {
-                            MiuiChargeLogoView.this.mChargeTurboView.animationWirelessStrongToShow();
-                        } else if (MiuiChargeLogoView.this.mWireState == 11) {
-                            MiuiChargeLogoView.this.mChargeTurboView.animationWiredStrongToShow();
-                        }
-                    } else {
-                        MiuiChargeLogoView.this.mChargeTurboView.setViewInitState();
-                        MiuiChargeLogoView.this.mChargeTurboView.animationToShow();
+                        MiuiChargeLogoView.this.mChargeTurboView.animationStrongToShow();
+                        return;
                     }
+                    MiuiChargeLogoView.this.mChargeTurboView.setViewInitState();
+                    MiuiChargeLogoView.this.mChargeTurboView.animationToShow();
                 }
             }
 
@@ -207,12 +201,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
             this.mChargeTurboView.setStrongViewInitState();
             this.mChargeTurboView.setVisibility(0);
             if (z) {
-                int i2 = this.mWireState;
-                if (i2 == 10) {
-                    this.mChargeTurboView.setWirelessStrongViewShowState();
-                } else if (i2 == 11) {
-                    this.mChargeTurboView.setWiredStrongViewShowState();
-                }
+                this.mChargeTurboView.setStrongViewShowState();
             } else {
                 this.mChargeTurboView.setStrongViewInitState();
             }

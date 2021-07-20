@@ -6,6 +6,7 @@ import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Property;
@@ -14,21 +15,30 @@ import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.MiuiChargeController;
 import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
+import java.util.Locale;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeTurboView extends RelativeLayout {
     private AnimatorSet animatorSet;
-    private Interpolator cubicEaseOutInterpolator;
+    private final Interpolator cubicEaseOutInterpolator;
     private ImageView mChargeIcon;
     private Drawable mChargeIconDrawable;
     private int mChargeIconHeight;
     private int mChargeIconWidth;
     private boolean mIsFoldChargeVideo;
+    private boolean mIsSDC;
+    private TextView mMaxChargePowerTx;
+    private float mMaxChargePowerTxSize;
+    private int mSDCChargeIconHeight;
+    private int mSDCChargeIconWidth;
+    protected ImageView mSDWChargeIcon;
     private Point mScreenSize;
     private ImageView mTailIcon;
     private int mTailIconHeight;
@@ -41,15 +51,6 @@ public class MiuiChargeTurboView extends RelativeLayout {
     private Drawable mTurboTailIconDrawable;
     private WindowManager mWindowManager;
     private Drawable mWiredSDCIconDrawable;
-    protected ImageView mWiredStrongChargeIcon;
-    private Drawable mWiredStrongChargeIconDrawable;
-    private int mWiredStrongChargeIconHeight;
-    private int mWiredStrongChargeIconWidth;
-    protected ImageView mWirelessStrongChargeIcon;
-    private Drawable mWirelessStrongChargeIconDrawable;
-    private int mWirelessStrongChargeIconHeight;
-    private Drawable mWirelessStrongChargeIconSswDrawable;
-    private int mWirelessStrongChargeIconWidth;
 
     public MiuiChargeTurboView(Context context) {
         this(context, null);
@@ -63,18 +64,19 @@ public class MiuiChargeTurboView extends RelativeLayout {
         super(context, attributeSet, i);
         this.cubicEaseOutInterpolator = new CubicEaseOutInterpolater();
         this.mIsFoldChargeVideo = false;
+        this.mMaxChargePowerTxSize = 54.0f;
+        this.mIsSDC = false;
         init(context);
     }
 
     private void init(Context context) {
         this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
+        boolean z = false;
         setLayoutDirection(0);
         this.mChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_charge_icon);
         this.mTurboIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_icon);
         this.mTurboTailIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_tail_icon);
-        this.mWiredStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wired_strong_charge_icon);
-        this.mWirelessStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_charge_icon);
-        this.mWirelessStrongChargeIconSswDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_charge_ssw_icon);
+        this.mWiredSDCIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wired_strong_charge_icon_double);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
@@ -103,31 +105,30 @@ public class MiuiChargeTurboView extends RelativeLayout {
         layoutParams3.addRule(1, this.mChargeIcon.getId());
         layoutParams3.leftMargin = this.mChargeIconWidth + 10;
         addView(this.mTurboIcon, layoutParams3);
-        ImageView imageView4 = new ImageView(context);
-        this.mWiredStrongChargeIcon = imageView4;
-        imageView4.setId(View.generateViewId());
-        boolean isFastCharge = ((MiuiChargeController) Dependency.get(MiuiChargeController.class)).isFastCharge();
-        if (!context.getResources().getBoolean(C0010R$bool.config_strong_double_charge_enable) || isFastCharge) {
-            this.mWiredStrongChargeIcon.setImageDrawable(this.mWiredStrongChargeIconDrawable);
-        } else {
-            Drawable drawable = context.getDrawable(C0013R$drawable.charge_animation_wired_strong_charge_icon_double);
-            this.mWiredSDCIconDrawable = drawable;
-            this.mWiredStrongChargeIcon.setImageDrawable(drawable);
-        }
-        this.mWiredStrongChargeIcon.setPivotX((float) this.mWiredStrongChargeIconWidth);
-        this.mWiredStrongChargeIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(this.mWiredStrongChargeIconWidth, this.mWiredStrongChargeIconHeight);
+        TextView textView = new TextView(context);
+        this.mMaxChargePowerTx = textView;
+        textView.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Flynnsans-charge.otf"));
+        this.mMaxChargePowerTx.setTextSize(0, this.mMaxChargePowerTxSize);
+        this.mMaxChargePowerTx.setTextColor(context.getColor(C0011R$color.super_charge_max_power_hint));
+        RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(-2, -2);
         layoutParams4.addRule(14);
-        addView(this.mWiredStrongChargeIcon, layoutParams4);
-        ImageView imageView5 = new ImageView(context);
-        this.mWirelessStrongChargeIcon = imageView5;
-        imageView5.setId(View.generateViewId());
-        this.mWirelessStrongChargeIcon.setImageDrawable(this.mWirelessStrongChargeIconDrawable);
-        this.mWirelessStrongChargeIcon.setPivotX((float) this.mWirelessStrongChargeIconWidth);
-        this.mWirelessStrongChargeIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        RelativeLayout.LayoutParams layoutParams5 = new RelativeLayout.LayoutParams(this.mWirelessStrongChargeIconWidth, this.mWirelessStrongChargeIconHeight);
-        layoutParams5.addRule(14);
-        addView(this.mWirelessStrongChargeIcon, layoutParams5);
+        addView(this.mMaxChargePowerTx, layoutParams4);
+        boolean isFastCharge = ((MiuiChargeController) Dependency.get(MiuiChargeController.class)).isFastCharge();
+        if (context.getResources().getBoolean(C0010R$bool.config_strong_double_charge_enable) && !isFastCharge) {
+            z = true;
+        }
+        this.mIsSDC = z;
+        if (z) {
+            ImageView imageView4 = new ImageView(context);
+            this.mSDWChargeIcon = imageView4;
+            imageView4.setImageDrawable(this.mWiredSDCIconDrawable);
+            this.mSDWChargeIcon.setPivotX((float) this.mSDCChargeIconWidth);
+            this.mSDWChargeIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            RelativeLayout.LayoutParams layoutParams5 = new RelativeLayout.LayoutParams(this.mSDCChargeIconWidth, this.mSDCChargeIconHeight);
+            layoutParams5.addRule(14);
+            addView(this.mSDWChargeIcon, layoutParams5);
+            this.mMaxChargePowerTx.setVisibility(4);
+        }
         this.mTranslation = this.mTailIconWidth;
     }
 
@@ -138,8 +139,11 @@ public class MiuiChargeTurboView extends RelativeLayout {
         this.mTailIcon.setScaleX(1.0f);
         this.mTailIcon.setTranslationX((float) (-this.mTranslation));
         this.mTurboIcon.setTranslationX((float) (-this.mTranslation));
-        this.mWiredStrongChargeIcon.setAlpha(0.0f);
-        this.mWirelessStrongChargeIcon.setAlpha(0.0f);
+        this.mMaxChargePowerTx.setAlpha(0.0f);
+        ImageView imageView = this.mSDWChargeIcon;
+        if (imageView != null) {
+            imageView.setAlpha(0.0f);
+        }
     }
 
     public void setViewShowState() {
@@ -149,8 +153,11 @@ public class MiuiChargeTurboView extends RelativeLayout {
         this.mTailIcon.setAlpha(0.0f);
         this.mTailIcon.setScaleX(0.0f);
         this.mTurboIcon.setAlpha(1.0f);
-        this.mWiredStrongChargeIcon.setAlpha(0.0f);
-        this.mWirelessStrongChargeIcon.setAlpha(0.0f);
+        this.mMaxChargePowerTx.setAlpha(0.0f);
+        ImageView imageView = this.mSDWChargeIcon;
+        if (imageView != null) {
+            imageView.setAlpha(0.0f);
+        }
     }
 
     public void animationToShow() {
@@ -179,54 +186,41 @@ public class MiuiChargeTurboView extends RelativeLayout {
         this.animatorSet.start();
     }
 
-    public void setWiredStrongViewShowState() {
+    public void setStrongViewShowState() {
         this.mChargeIcon.setAlpha(0.0f);
         this.mTailIcon.setAlpha(0.0f);
         this.mTurboIcon.setAlpha(0.0f);
-        this.mWiredStrongChargeIcon.setAlpha(1.0f);
-        this.mWirelessStrongChargeIcon.setAlpha(0.0f);
-    }
-
-    public void setWirelessStrongViewShowState() {
-        updateWirelessStrongChargeIcon();
-        this.mChargeIcon.setAlpha(0.0f);
-        this.mTailIcon.setAlpha(0.0f);
-        this.mTurboIcon.setAlpha(0.0f);
-        this.mWiredStrongChargeIcon.setAlpha(0.0f);
-        this.mWirelessStrongChargeIcon.setAlpha(1.0f);
-    }
-
-    public void setStrongViewInitState() {
-        updateWirelessStrongChargeIcon();
-        this.mChargeIcon.setAlpha(0.0f);
-        this.mTailIcon.setAlpha(0.0f);
-        this.mTurboIcon.setAlpha(0.0f);
-        this.mWiredStrongChargeIcon.setAlpha(0.0f);
-        this.mWirelessStrongChargeIcon.setAlpha(0.0f);
-    }
-
-    private void updateWirelessStrongChargeIcon() {
-        if (ChargeUtils.isSupportWirelessStrongChargeSsw()) {
-            this.mWirelessStrongChargeIcon.setImageDrawable(this.mWirelessStrongChargeIconSswDrawable);
-        } else {
-            this.mWirelessStrongChargeIcon.setImageDrawable(this.mWirelessStrongChargeIconDrawable);
+        this.mMaxChargePowerTx.setAlpha(1.0f);
+        ImageView imageView = this.mSDWChargeIcon;
+        if (imageView != null) {
+            imageView.setAlpha(1.0f);
         }
     }
 
-    public void animationWiredStrongToShow() {
-        setStrongViewInitState();
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(RelativeLayout.ALPHA, 0.0f, 1.0f);
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mWiredStrongChargeIcon, ofFloat).setDuration(300L);
-        duration.setInterpolator(this.cubicEaseOutInterpolator);
-        duration.start();
+    public void setStrongViewInitState() {
+        this.mChargeIcon.setAlpha(0.0f);
+        this.mTailIcon.setAlpha(0.0f);
+        this.mTurboIcon.setAlpha(0.0f);
+        this.mMaxChargePowerTx.setAlpha(0.0f);
+        this.mMaxChargePowerTx.setText(String.format(Locale.US, "%dW MAX", Integer.valueOf(ChargeUtils.sBatteryStatus.maxChargingWattage)));
+        ImageView imageView = this.mSDWChargeIcon;
+        if (imageView != null) {
+            imageView.setAlpha(0.0f);
+        }
     }
 
-    public void animationWirelessStrongToShow() {
+    public void animationStrongToShow() {
+        ObjectAnimator objectAnimator;
         setStrongViewInitState();
         PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(RelativeLayout.ALPHA, 0.0f, 1.0f);
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mWirelessStrongChargeIcon, ofFloat).setDuration(300L);
-        duration.setInterpolator(this.cubicEaseOutInterpolator);
-        duration.start();
+        ImageView imageView = this.mSDWChargeIcon;
+        if (imageView != null) {
+            objectAnimator = ObjectAnimator.ofPropertyValuesHolder(imageView, ofFloat).setDuration(300L);
+        } else {
+            objectAnimator = ObjectAnimator.ofPropertyValuesHolder(this.mMaxChargePowerTx, ofFloat).setDuration(300L);
+        }
+        objectAnimator.setInterpolator(this.cubicEaseOutInterpolator);
+        objectAnimator.start();
     }
 
     /* access modifiers changed from: protected */
@@ -273,16 +267,12 @@ public class MiuiChargeTurboView extends RelativeLayout {
             this.mTailIconWidth = (int) (((float) drawable3.getIntrinsicWidth()) * min);
             this.mTailIconHeight = (int) (((float) this.mTurboTailIconDrawable.getIntrinsicHeight()) * min);
         }
-        Drawable drawable4 = this.mWiredStrongChargeIconDrawable;
+        Drawable drawable4 = this.mWiredSDCIconDrawable;
         if (drawable4 != null) {
-            this.mWiredStrongChargeIconWidth = (int) (((float) drawable4.getIntrinsicWidth()) * min);
-            this.mWiredStrongChargeIconHeight = (int) (((float) this.mWiredStrongChargeIconDrawable.getIntrinsicHeight()) * min);
+            this.mSDCChargeIconWidth = (int) (((float) drawable4.getIntrinsicWidth()) * min);
+            this.mSDCChargeIconHeight = (int) (((float) this.mWiredSDCIconDrawable.getIntrinsicHeight()) * min);
         }
-        Drawable drawable5 = this.mWirelessStrongChargeIconDrawable;
-        if (drawable5 != null) {
-            this.mWirelessStrongChargeIconWidth = (int) (((float) drawable5.getIntrinsicWidth()) * min);
-            this.mWirelessStrongChargeIconHeight = (int) (min * ((float) this.mWirelessStrongChargeIconDrawable.getIntrinsicHeight()));
-        }
+        this.mMaxChargePowerTxSize = min * 54.0f;
         this.mTranslation = this.mTailIconWidth;
     }
 
@@ -301,15 +291,14 @@ public class MiuiChargeTurboView extends RelativeLayout {
         layoutParams3.height = this.mTurboIconHeight;
         layoutParams3.leftMargin = this.mChargeIconWidth + 10;
         this.mTurboIcon.setLayoutParams(layoutParams3);
-        RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) this.mWiredStrongChargeIcon.getLayoutParams();
-        int i2 = this.mWiredStrongChargeIconWidth;
-        layoutParams4.width = i2;
-        layoutParams4.height = this.mWiredStrongChargeIconHeight;
-        this.mWiredStrongChargeIcon.setPivotX((float) i2);
-        RelativeLayout.LayoutParams layoutParams5 = (RelativeLayout.LayoutParams) this.mWirelessStrongChargeIcon.getLayoutParams();
-        int i3 = this.mWirelessStrongChargeIconWidth;
-        layoutParams5.width = i3;
-        layoutParams5.height = this.mWirelessStrongChargeIconHeight;
-        this.mWirelessStrongChargeIcon.setPivotX((float) i3);
+        ImageView imageView = this.mSDWChargeIcon;
+        if (imageView != null) {
+            RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+            int i2 = this.mSDCChargeIconWidth;
+            layoutParams4.width = i2;
+            layoutParams4.height = this.mSDCChargeIconHeight;
+            this.mSDWChargeIcon.setPivotX((float) i2);
+        }
+        this.mMaxChargePowerTx.setTextSize(0, this.mMaxChargePowerTxSize);
     }
 }

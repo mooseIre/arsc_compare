@@ -144,7 +144,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         this.mKeyguardIndicationController = (KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class);
         ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(this, "show_charging_in_non_lockscreen");
         ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(this, 1, 1, "key_fast_charge_enabled");
-        this.mBatteryStatus = new MiuiBatteryStatus(1, 0, 0, 0, 0, -1, 1, -1);
+        this.mBatteryStatus = new MiuiBatteryStatus(1, 0, 0, 0, 0, -1, 1, -1, -1);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.USER_PRESENT");
         intentFilter.addAction("miui.intent.action.ACTION_SOC_DECIMAL");
@@ -203,45 +203,28 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void checkBatteryStatus(MiuiBatteryStatus miuiBatteryStatus, boolean z) {
-        boolean z2;
-        boolean z3;
-        boolean z4;
         MiuiBatteryStatus miuiBatteryStatus2;
         if (miuiBatteryStatus != null) {
             this.mBatteryStatus = miuiBatteryStatus;
             this.mChargeDeviceType = miuiBatteryStatus.chargeDeviceType;
             this.mClickShowChargeUI = z;
             int i = miuiBatteryStatus.status;
-            boolean z5 = false;
-            boolean z6 = miuiBatteryStatus.wireState == 10;
+            boolean z2 = false;
+            boolean z3 = miuiBatteryStatus.wireState == 10;
             int checkChargeState = checkChargeState(miuiBatteryStatus);
             int i2 = this.mWireState;
             if (!(i2 == -1 || checkChargeState == i2)) {
                 this.mChargeDeviceType = -1;
             }
-            boolean isWirelessCarMode = ChargeUtils.isWirelessCarMode(this.mChargeDeviceType);
-            if (checkChargeState == 10) {
-                boolean isWirelessSuperRapidCharge = ChargeUtils.isWirelessSuperRapidCharge(this.mChargeDeviceType);
-                z2 = ChargeUtils.isWirelessStrongSuperRapidCharge(this.mChargeDeviceType);
-                z3 = isWirelessSuperRapidCharge;
-                z4 = false;
-            } else if (checkChargeState == 11) {
-                z4 = ChargeUtils.isRapidCharge(this.mChargeDeviceType);
-                z3 = ChargeUtils.isSuperRapidCharge(this.mChargeDeviceType);
-                z2 = ChargeUtils.isStrongSuperRapidCharge(this.mChargeDeviceType);
-            } else {
-                z4 = false;
-                z3 = false;
-                z2 = false;
-            }
-            Log.i("MiuiChargeController", "checkBatteryStatus: wireState " + checkChargeState + " status " + i + " plugged " + miuiBatteryStatus.plugged + " chargeSpeed " + miuiBatteryStatus.chargeSpeed + " maxChargingWattage " + miuiBatteryStatus.maxChargingWattage + " isRapidCharge " + z4 + " isSuperCharge " + z3 + " isStrongSuperCharge " + z2 + " isCarMode " + isWirelessCarMode + " mChargeDeviceType " + this.mChargeDeviceType + " mChargeDeviceForAnalytic " + this.mChargeDeviceForAnalytic + " SUPPORT_NEW_ANIMATION " + this.SUPPORT_NEW_ANIMATION + " isChargeAnimationDisabled " + ChargeUtils.isChargeAnimationDisabled());
+            boolean isCarCharge = this.mBatteryStatus.isCarCharge();
+            Log.i("MiuiChargeController", "checkBatteryStatus: wireState " + checkChargeState + " status " + i + " plugged " + miuiBatteryStatus.plugged + " chargeSpeed " + miuiBatteryStatus.chargeSpeed + " maxChargingWattage " + miuiBatteryStatus.maxChargingWattage + " isRapidCharge " + ChargeUtils.isRapidCharge(this.mChargeDeviceType) + " isSuperCharge " + ChargeUtils.isSuperRapidCharge(this.mChargeDeviceType) + " isStrongSuperCharge " + ChargeUtils.isStrongSuperRapidCharge(this.mChargeDeviceType) + " isCarMode " + isCarCharge + " mChargeDeviceType " + this.mChargeDeviceType + " mChargeDeviceForAnalytic " + this.mChargeDeviceForAnalytic + " SUPPORT_NEW_ANIMATION " + this.SUPPORT_NEW_ANIMATION + " isChargeAnimationDisabled " + ChargeUtils.isChargeAnimationDisabled());
             if (this.mKeyguardIndicationController != null && ((miuiBatteryStatus2 = ChargeUtils.sBatteryStatus) == null || this.mBatteryStatus.level != miuiBatteryStatus2.level)) {
                 this.mKeyguardIndicationController.updatePowerIndication(this.mChargeAnimationShowing);
             }
             ChargeUtils.setBatteryStatus(this.mBatteryStatus);
             if (this.mStateInitialized) {
                 dealWithAnimationShow(checkChargeState);
-                dealWithBadlyCharge(z6, checkChargeState);
+                dealWithBadlyCharge(z3, checkChargeState);
             }
             dealWithWirelessChargeAnalyticEvent(checkChargeState == 10, miuiBatteryStatus.level, this.mWireState != checkChargeState);
             MiuiChargeAnimationView miuiChargeAnimationView = this.mChargeAnimationView;
@@ -249,11 +232,11 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
                 miuiChargeAnimationView.setProgress(miuiBatteryStatus.level);
                 switchChargeItemViewAnimation(miuiBatteryStatus, z);
             }
-            this.mWirelessOnline = z6;
+            this.mWirelessOnline = z3;
             if (checkChargeState == 10) {
-                z5 = true;
+                z2 = true;
             }
-            this.mWirelessCharging = z5;
+            this.mWirelessCharging = z2;
             this.mWireState = checkChargeState;
             this.mStateInitialized = true;
             if (!miuiBatteryStatus.isPluggedIn()) {

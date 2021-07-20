@@ -1469,7 +1469,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         if (!this.mDeviceProvisioned) {
             watchForDeviceProvisioning();
         }
-        this.mBatteryStatus = new MiuiBatteryStatus(1, 0, 0, 0, 0, -1, 1, -1);
+        this.mBatteryStatus = new MiuiBatteryStatus(1, 0, 0, 0, 0, -1, 1, -1, 0);
         int i = Settings.Secure.getInt(context.getContentResolver(), "sim_lock_enable", 0);
         this.mUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class);
         IntentFilter intentFilter = new IntentFilter();

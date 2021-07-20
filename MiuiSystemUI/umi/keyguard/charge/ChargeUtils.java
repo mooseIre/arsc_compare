@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.android.systemui.C0008R$array;
-import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.C0019R$plurals;
 import com.android.systemui.C0021R$string;
@@ -31,7 +30,6 @@ public class ChargeUtils {
     private static final boolean SUPPORT_WIRELESS_CHARGE = new File("/sys/class/power_supply/wireless/signal_strength").exists();
     private static List<String> mIsExceptLiteChargeList = new ArrayList();
     private static List<String> mIsSupportLiteChargeList = new ArrayList();
-    private static List<String> mIsSupportStrongSuperRapidChargeList = new ArrayList();
     public static MiuiBatteryStatus sBatteryStatus = null;
     private static boolean sChargeAnimationDisabled = false;
     private static boolean sNeedRepositionDevice = SUPPORT_WIRELESS_CHARGE;
@@ -57,25 +55,8 @@ public class ChargeUtils {
         return SUPPORT_WIRELESS_CHARGE;
     }
 
-    public static boolean isWirelessCarMode(int i) {
-        if (i == 11) {
-            return true;
-        }
-        return SUPPORT_WIRELESS_CHARGE;
-    }
-
-    public static boolean isWirelessStrongSuperRapidCharge(int i) {
-        if (i == 14 || i == 15) {
-            return true;
-        }
-        return SUPPORT_WIRELESS_CHARGE;
-    }
-
-    public static boolean isWirelessSuperRapidCharge(int i) {
-        if (i < 9 || i == 14 || i == 15) {
-            return SUPPORT_WIRELESS_CHARGE;
-        }
-        return true;
+    static {
+        new ArrayList();
     }
 
     public static boolean supportWirelessCharge() {
@@ -197,15 +178,6 @@ public class ChargeUtils {
         return ((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).isStrongSuperQuickCharging();
     }
 
-    public static boolean isSupportWirelessStrongChargeSsw() {
-        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
-        boolean z = contextForUser != null ? contextForUser.getResources().getBoolean(C0010R$bool.keyguard_wireless_strong_charge_ssw) : false;
-        if (((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).getCurrentChargeDeviceType() != 15 || !z) {
-            return SUPPORT_WIRELESS_CHARGE;
-        }
-        return true;
-    }
-
     public static long getHours(long j) {
         return j / 3600000;
     }
@@ -216,14 +188,6 @@ public class ChargeUtils {
 
     public static void setBatteryStatus(MiuiBatteryStatus miuiBatteryStatus) {
         sBatteryStatus = miuiBatteryStatus;
-    }
-
-    private static boolean supportStrongSuperRapidCharge() {
-        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
-        if (mIsSupportStrongSuperRapidChargeList.isEmpty() && contextForUser != null) {
-            mIsSupportStrongSuperRapidChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0008R$array.config_charge_supportWirelessStrongSuper));
-        }
-        return mIsSupportStrongSuperRapidChargeList.contains(android.os.Build.DEVICE);
     }
 
     private static boolean supportLiteChargeAnimation() {
@@ -243,27 +207,18 @@ public class ChargeUtils {
     }
 
     public static int getChargeSpeed(int i, int i2) {
-        if (i != 10) {
-            if (i == 11) {
-                if (isStrongSuperRapidCharge(i2)) {
-                    return 3;
-                }
-                if (!isSuperRapidCharge(i2)) {
-                    if (isRapidCharge(i2)) {
-                        return 1;
-                    }
-                }
+        if (i == 10 || i == 11) {
+            if (isStrongSuperRapidCharge(i2)) {
+                return 3;
             }
-            return 0;
-        } else if (!isWirelessSuperRapidCharge(i2)) {
-            if (isWirelessStrongSuperRapidCharge(i2)) {
-                if (supportStrongSuperRapidCharge()) {
-                    return 3;
-                }
+            if (isSuperRapidCharge(i2)) {
+                return 2;
             }
-            return 0;
+            if (isRapidCharge(i2)) {
+                return 1;
+            }
         }
-        return 2;
+        return 0;
     }
 
     public static int getTextDelayTime() {
