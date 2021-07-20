@@ -105,7 +105,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
             public final ControlsFavoritePersistenceWrapper get() {
                 File file = this.this$0.userStructure.getFile();
                 Intrinsics.checkExpressionValueIsNotNull(file, "userStructure.file");
-                return new ControlsFavoritePersistenceWrapper(file, this.this$0.executor, new BackupManager(this.this$0.userStructure.getUserContext()));
+                return new ControlsFavoritePersistenceWrapper(file, ControlsControllerImpl.access$getExecutor$p(this.this$0), new BackupManager(this.this$0.userStructure.getUserContext()));
             }
         });
         Intrinsics.checkExpressionValueIsNotNull(orElseGet, "optionalWrapper.orElseGe…)\n            )\n        }");
@@ -132,6 +132,10 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.context.registerReceiver(this.restoreFinishedReceiver, new IntentFilter("com.android.systemui.backup.RESTORE_FINISHED"), "com.android.systemui.permission.SELF", null);
         getContentResolver().registerContentObserver(URI, false, this.settingObserver, -1);
         this.listingController.addCallback(this.listingCallback);
+    }
+
+    public static final /* synthetic */ DelayableExecutor access$getExecutor$p(ControlsControllerImpl controlsControllerImpl) {
+        return controlsControllerImpl.executor;
     }
 
     public static final class Companion {
@@ -286,7 +290,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.LAUNCHER");
         intent.setPackage(componentName.getPackageName());
-        Control build = new Control.StatelessBuilder(controlInfo.getControlId(), PendingIntent.getActivity(this.context, componentName.hashCode(), intent, 0)).setTitle(controlInfo.getControlTitle()).setSubtitle(controlInfo.getControlSubtitle()).setStructure(charSequence).setDeviceType(controlInfo.getDeviceType()).build();
+        Control build = new Control.StatelessBuilder(controlInfo.getControlId(), PendingIntent.getActivity(this.context, componentName.hashCode(), intent, 67108864)).setTitle(controlInfo.getControlTitle()).setSubtitle(controlInfo.getControlSubtitle()).setStructure(charSequence).setDeviceType(controlInfo.getDeviceType()).build();
         Intrinsics.checkExpressionValueIsNotNull(build, "control");
         return new ControlStatus(build, componentName, true, z);
     }

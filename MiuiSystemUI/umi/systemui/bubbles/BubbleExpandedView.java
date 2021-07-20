@@ -477,7 +477,7 @@ public class BubbleExpandedView extends LinearLayout {
 
     public void setOverflow(boolean z) {
         this.mIsOverflow = z;
-        this.mPendingIntent = PendingIntent.getActivity(((LinearLayout) this).mContext, 0, new Intent(((LinearLayout) this).mContext, BubbleOverflowActivity.class), 134217728);
+        this.mPendingIntent = PendingIntent.getActivity(((LinearLayout) this).mContext, 0, new Intent(((LinearLayout) this).mContext, BubbleOverflowActivity.class), 201326592);
         this.mSettingsIcon.setVisibility(8);
     }
 

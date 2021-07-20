@@ -759,7 +759,7 @@ public class QSControlDetail extends FrameLayout {
         objArr[15] = Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]);
         AnimConfig animConfig = new AnimConfig();
         if (this.mShowingMiPlayDetail) {
-            easeStyle = EaseManager.getStyle(-2, 0.7f, 0.3f);
+            easeStyle = EaseManager.getStyle(-2, 0.75f, 0.3f);
         } else {
             easeStyle = EaseManager.getStyle(-2, 0.8f, 0.3f);
         }
@@ -942,7 +942,7 @@ public class QSControlDetail extends FrameLayout {
             AnimConfig[] animConfigArr = new AnimConfig[1];
             AnimConfig animConfig = new AnimConfig();
             if (this.mShowingMiPlayDetail) {
-                easeStyle2 = EaseManager.getStyle(-2, 0.95f, 0.2f);
+                easeStyle2 = EaseManager.getStyle(0, 300.0f, 0.8f, 0.6666f);
             } else {
                 easeStyle2 = EaseManager.getStyle(0, 300.0f, 0.8f, 0.6666f);
             }
@@ -976,7 +976,7 @@ public class QSControlDetail extends FrameLayout {
         AnimConfig[] animConfigArr2 = new AnimConfig[1];
         AnimConfig animConfig2 = new AnimConfig();
         if (this.mShowingMiPlayDetail) {
-            easeStyle = EaseManager.getStyle(-2, 0.95f, 0.2f);
+            easeStyle = EaseManager.getStyle(0, 200.0f, 0.8f, 0.6666f);
         } else {
             easeStyle = EaseManager.getStyle(0, 300.0f, 0.8f, 0.6666f);
         }

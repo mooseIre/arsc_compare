@@ -228,7 +228,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
                 keyguardSliceProvider.onDestroy();
             }
             this.mDatePattern = getContext().getString(C0021R$string.system_ui_aod_date_pattern);
-            this.mPendingIntent = PendingIntent.getActivity(getContext(), 0, new Intent(getContext(), KeyguardSliceProvider.class), 0);
+            this.mPendingIntent = PendingIntent.getActivity(getContext(), 0, new Intent(getContext(), KeyguardSliceProvider.class), 67108864);
             this.mMediaManager.addCallback(this);
             this.mStatusBarStateController.addCallback(this);
             this.mNextAlarmController.addCallback(this);

@@ -449,16 +449,17 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         @Override // miuix.animation.listener.TransitionListener
         public void onUpdate(@Nullable Object obj, @Nullable Collection<UpdateInfo> collection) {
             UpdateInfo findByName = UpdateInfo.findByName(collection, "PanelBlurRatio");
-            Intrinsics.checkExpressionValueIsNotNull(findByName, "info");
-            float floatValue = findByName.getFloatValue();
-            MiuiNotificationPanelViewController miuiNotificationPanelViewController = MiuiNotificationPanelViewController.this;
-            float f = 0.0f;
-            if (!Float.isNaN(floatValue)) {
-                f = RangesKt.coerceIn(floatValue, 0.0f, 1.0f);
-            }
-            miuiNotificationPanelViewController.setMBlurRatio(f);
-            if (PanelViewController.DEBUG) {
-                MiuiNotificationPanelViewController.this.panelBlurLogger.logBlurAnimUpdate(MiuiNotificationPanelViewController.this.getMBlurRatio(), floatValue);
+            if (findByName != null) {
+                float floatValue = findByName.getFloatValue();
+                MiuiNotificationPanelViewController miuiNotificationPanelViewController = MiuiNotificationPanelViewController.this;
+                float f = 0.0f;
+                if (!Float.isNaN(floatValue)) {
+                    f = RangesKt.coerceIn(floatValue, 0.0f, 1.0f);
+                }
+                miuiNotificationPanelViewController.setMBlurRatio(f);
+                if (PanelViewController.DEBUG) {
+                    MiuiNotificationPanelViewController.this.panelBlurLogger.logBlurAnimUpdate(MiuiNotificationPanelViewController.this.getMBlurRatio(), floatValue);
+                }
             }
         }
 
@@ -765,6 +766,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.PanelViewController
     public void fling(float f, boolean z, float f2, boolean z2) {
+        if (z && !isNCSwitching()) {
+            setExpandedHeightInternal((float) getMaxPanelHeight());
+        }
         super.fling(f, z, f2, z2);
         if (getMPanelAppeared() != z) {
             setMPanelAppeared(z);

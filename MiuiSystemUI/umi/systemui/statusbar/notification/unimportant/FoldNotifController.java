@@ -24,6 +24,7 @@ import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.MiuiNotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationProvider;
 import com.android.systemui.statusbar.notification.NotificationUtil;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.NotificationSettings;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.graphics.BitmapUtils;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: FoldNotifController.kt */
-public final class FoldNotifController {
+public final class FoldNotifController implements ConfigurationController.ConfigurationListener {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
     private final Lazy activityStarter$delegate = LazyKt__LazyJVMKt.lazy(FoldNotifController$activityStarter$2.INSTANCE);
     @NotNull
@@ -162,6 +163,7 @@ public final class FoldNotifController {
                 }
             }
         }, -1);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
     }
 
     @NotNull
@@ -223,7 +225,7 @@ public final class FoldNotifController {
     public final void sendFoldNotification(@NotNull UserHandle userHandle) {
         Intrinsics.checkParameterIsNotNull(userHandle, "user");
         PendingIntent broadcast = PendingIntent.getBroadcast(this.context, 0, new Intent(), 134217728);
-        PendingIntent activity = PendingIntent.getActivity(this.context, 1001, new Intent(), 134217728);
+        PendingIntent activity = PendingIntent.getActivity(this.context, 1001, new Intent(), 201326592);
         RemoteViews remoteViews = new RemoteViews(this.context.getPackageName(), C0017R$layout.unimportant_notification);
         remoteViews.setTextViewText(C0015R$id.aggregate_title, this.context.getResources().getString(C0021R$string.miui_unimportant_notifications));
         if (this.showNotifFoldFooterIcon) {
@@ -283,5 +285,17 @@ public final class FoldNotifController {
         intent.putExtra("fold_or_aggregate_settings", "fold");
         intent.addFlags(268435456);
         return intent;
+    }
+
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+    public void onMiuiThemeChanged(boolean z) {
+        super.onMiuiThemeChanged(z);
+        getEntryManager().recheckFoldNotificationDelayed();
+    }
+
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+    public void onLocaleListChanged() {
+        super.onLocaleListChanged();
+        getEntryManager().recheckFoldNotificationDelayed();
     }
 }

@@ -153,7 +153,7 @@ public class ResumeMediaBrowser {
     }
 
     public PendingIntent getAppIntent() {
-        return PendingIntent.getActivity(this.mContext, 0, this.mContext.getPackageManager().getLaunchIntentForPackage(this.mComponentName.getPackageName()), 0);
+        return PendingIntent.getActivity(this.mContext, 0, this.mContext.getPackageManager().getLaunchIntentForPackage(this.mComponentName.getPackageName()), 67108864);
     }
 
     public void testConnection() {

@@ -20,14 +20,19 @@ import org.jetbrains.annotations.NotNull;
 public final class NotificationGroupManagerInjectorKt {
     public static final boolean shouldSuppressed(@NotNull NotificationGroupManager.NotificationGroup notificationGroup, int i) {
         Intrinsics.checkParameterIsNotNull(notificationGroup, "group");
-        if (notificationGroup.summary == null || notificationGroup.expanded) {
+        if (notificationGroup.summary == null) {
             return false;
         }
-        if (!suppressEmpty(i, notificationGroup)) {
-            Collection<NotificationEntry> values = notificationGroup.children.values();
-            Intrinsics.checkExpressionValueIsNotNull(values, "group.children.values");
-            if (!hasMediaOrCustomChildren(values) && (i <= 1 || !((SettingsManager) Dependency.get(SettingsManager.class)).getNotifFold() || !hasFoldChild(notificationGroup))) {
+        if (i > 1) {
+            if (notificationGroup.expanded) {
                 return false;
+            }
+            if (!suppressEmpty(i, notificationGroup)) {
+                Collection<NotificationEntry> values = notificationGroup.children.values();
+                Intrinsics.checkExpressionValueIsNotNull(values, "group.children.values");
+                if (!hasMediaOrCustomChildren(values) && (i <= 1 || !((SettingsManager) Dependency.get(SettingsManager.class)).getNotifFold() || !hasFoldChild(notificationGroup))) {
+                    return false;
+                }
             }
         }
         return true;

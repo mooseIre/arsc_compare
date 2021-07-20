@@ -375,7 +375,7 @@ public class StorageNotification extends SystemUI {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardInit");
         }
         intent.putExtra("android.os.storage.extra.DISK_ID", diskInfo.getId());
-        return PendingIntent.getActivityAsUser(this.mContext, diskInfo.getId().hashCode(), intent, 268435456, null, UserHandle.CURRENT);
+        return PendingIntent.getActivityAsUser(this.mContext, diskInfo.getId().hashCode(), intent, 335544320, null, UserHandle.CURRENT);
     }
 
     private PendingIntent buildInitPendingIntent(VolumeInfo volumeInfo) {
@@ -389,7 +389,7 @@ public class StorageNotification extends SystemUI {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardInit");
         }
         intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
-        return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, null, UserHandle.CURRENT);
+        return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 335544320, null, UserHandle.CURRENT);
     }
 
     private PendingIntent buildUnmountPendingIntent(VolumeInfo volumeInfo) {
@@ -398,7 +398,7 @@ public class StorageNotification extends SystemUI {
             intent.setPackage("com.android.tv.settings");
             intent.setAction("com.android.tv.settings.action.UNMOUNT_STORAGE");
             intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
-            return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, null, UserHandle.CURRENT);
+            return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 335544320, null, UserHandle.CURRENT);
         } else if (isAutomotive()) {
             intent.setClassName("com.android.car.settings", "com.android.car.settings.storage.StorageUnmountReceiver");
             intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
@@ -428,7 +428,7 @@ public class StorageNotification extends SystemUI {
             }
         }
         intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
-        return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, null, UserHandle.CURRENT);
+        return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 335544320, null, UserHandle.CURRENT);
     }
 
     private PendingIntent buildSnoozeIntent(String str) {
@@ -441,7 +441,7 @@ public class StorageNotification extends SystemUI {
         Intent intent = new Intent();
         intent.setClassName("com.android.settings", "com.android.settings.Settings$PrivateVolumeForgetActivity");
         intent.putExtra("android.os.storage.extra.FS_UUID", volumeRecord.getFsUuid());
-        return PendingIntent.getActivityAsUser(this.mContext, volumeRecord.getFsUuid().hashCode(), intent, 268435456, null, UserHandle.CURRENT);
+        return PendingIntent.getActivityAsUser(this.mContext, volumeRecord.getFsUuid().hashCode(), intent, 335544320, null, UserHandle.CURRENT);
     }
 
     private PendingIntent buildWizardMigratePendingIntent(MoveInfo moveInfo) {
@@ -459,7 +459,7 @@ public class StorageNotification extends SystemUI {
         if (findVolumeByQualifiedUuid != null) {
             intent.putExtra("android.os.storage.extra.VOLUME_ID", findVolumeByQualifiedUuid.getId());
         }
-        return PendingIntent.getActivityAsUser(this.mContext, moveInfo.moveId, intent, 268435456, null, UserHandle.CURRENT);
+        return PendingIntent.getActivityAsUser(this.mContext, moveInfo.moveId, intent, 335544320, null, UserHandle.CURRENT);
     }
 
     private PendingIntent buildWizardMovePendingIntent(MoveInfo moveInfo) {
@@ -473,7 +473,7 @@ public class StorageNotification extends SystemUI {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardMoveProgress");
         }
         intent.putExtra("android.content.pm.extra.MOVE_ID", moveInfo.moveId);
-        return PendingIntent.getActivityAsUser(this.mContext, moveInfo.moveId, intent, 268435456, null, UserHandle.CURRENT);
+        return PendingIntent.getActivityAsUser(this.mContext, moveInfo.moveId, intent, 335544320, null, UserHandle.CURRENT);
     }
 
     private PendingIntent buildWizardReadyPendingIntent(DiskInfo diskInfo) {
@@ -487,7 +487,7 @@ public class StorageNotification extends SystemUI {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardReady");
         }
         intent.putExtra("android.os.storage.extra.DISK_ID", diskInfo.getId());
-        return PendingIntent.getActivityAsUser(this.mContext, diskInfo.getId().hashCode(), intent, 268435456, null, UserHandle.CURRENT);
+        return PendingIntent.getActivityAsUser(this.mContext, diskInfo.getId().hashCode(), intent, 335544320, null, UserHandle.CURRENT);
     }
 
     private boolean isAutomotive() {

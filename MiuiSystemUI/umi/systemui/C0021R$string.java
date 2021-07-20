@@ -3678,6 +3678,7 @@ public final class R {
         public static final int structure_keyguard_face_circle_init;
         public static final int structure_keyguard_face_common_text_color;
         public static final int structure_keyguard_face_preview_cameraview;
+        public static final int super_charge_max_power_hint;
         public static final int switch_thumb_disabled_material_dark;
         public static final int switch_thumb_disabled_material_light;
         public static final int switch_thumb_material_dark;
@@ -7455,10 +7456,7 @@ public final class R {
         public static final int charge_animation_turbo_icon;
         public static final int charge_animation_turbo_tail_icon;
         public static final int charge_animation_wired_rotate_circle_icon;
-        public static final int charge_animation_wired_strong_charge_icon;
         public static final int charge_animation_wired_strong_charge_icon_double;
-        public static final int charge_animation_wireless_strong_charge_icon;
-        public static final int charge_animation_wireless_strong_charge_ssw_icon;
         public static final int choose_clock_panel_bar;
         public static final int choose_clock_panel_bg;
         public static final int choose_clock_third_theme_hint_bg;
@@ -13841,6 +13839,8 @@ public final class R {
         public static final int fingerprint_not_identified_title;
         public static final int fingerprint_try_again_msg;
         public static final int fingerprint_try_again_text;
+        public static final int fiveg_sa_switch_summary;
+        public static final int fiveg_sa_vice_switch_title;
         public static final int flash_device;
         public static final int float_notification_snooze_strategy;
         public static final int fmt_chinese_date;

@@ -92,7 +92,6 @@ public class PipMediaController {
         });
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$PipMediaController(String str, Drawable drawable, String str2) {
@@ -156,6 +155,8 @@ public class PipMediaController {
         this.mMediaSessionManager.addOnActiveSessionsChangedListener(this.mSessionsChangedListener, null, -2, null);
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void resolveActiveMediaController(List<MediaController> list) {
         ComponentName componentName;
         if (!(list == null || (componentName = (ComponentName) PipUtils.getTopPipActivity(this.mContext, this.mActivityManager).first) == null)) {
@@ -184,6 +185,8 @@ public class PipMediaController {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void notifyActionsChanged() {
         if (!this.mListeners.isEmpty()) {
             this.mListeners.forEach(new Consumer(getMediaActions()) {

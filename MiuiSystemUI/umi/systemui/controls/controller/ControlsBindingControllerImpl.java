@@ -41,14 +41,6 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         this.lazyController = lazy;
     }
 
-    public static final /* synthetic */ ControlsProviderLifecycleManager access$getCurrentProvider$p(ControlsBindingControllerImpl controlsBindingControllerImpl) {
-        return controlsBindingControllerImpl.currentProvider;
-    }
-
-    public static final /* synthetic */ void access$unbind(ControlsBindingControllerImpl controlsBindingControllerImpl) {
-        controlsBindingControllerImpl.unbind();
-    }
-
     @Override // com.android.systemui.util.UserAwareController
     public int getCurrentUserId() {
         UserHandle userHandle = this.currentUser;
@@ -156,6 +148,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
+    /* access modifiers changed from: public */
     private final void unbind() {
         unsubscribe();
         LoadSubscriber loadSubscriber2 = this.loadSubscriber;
@@ -201,7 +194,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             this.this$0 = controlsBindingControllerImpl;
             this.token = iBinder;
-            this.provider = ControlsBindingControllerImpl.access$getCurrentProvider$p(controlsBindingControllerImpl);
+            this.provider = controlsBindingControllerImpl.currentProvider;
         }
 
         public final ControlsProviderLifecycleManager getProvider() {
@@ -412,9 +405,9 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         private final void maybeTerminateAndRun(Runnable runnable) {
             if (!this.isTerminated.get()) {
                 this._loadCancelInternal = ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1.INSTANCE;
-                ControlsProviderLifecycleManager access$getCurrentProvider$p = ControlsBindingControllerImpl.access$getCurrentProvider$p(this.this$0);
-                if (access$getCurrentProvider$p != null) {
-                    access$getCurrentProvider$p.cancelLoadTimeout();
+                ControlsProviderLifecycleManager controlsProviderLifecycleManager = this.this$0.currentProvider;
+                if (controlsProviderLifecycleManager != null) {
+                    controlsProviderLifecycleManager.cancelLoadTimeout();
                 }
                 this.this$0.backgroundExecutor.execute(new ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$2(this, runnable));
             }

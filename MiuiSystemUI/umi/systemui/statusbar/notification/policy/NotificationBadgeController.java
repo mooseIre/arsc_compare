@@ -161,7 +161,7 @@ public class NotificationBadgeController {
     }
 
     private boolean needStatBadgeNum(ExpandedNotification expandedNotification) {
-        if (!"com.android.systemui".equals(expandedNotification.getPackageName()) && !MediaDataManagerKt.isMediaNotification(expandedNotification) && !NotificationUtil.hasProgressbar(expandedNotification) && !this.mGroupManager.isSummaryOfGroup(expandedNotification)) {
+        if (!"com.android.systemui".equals(expandedNotification.getPackageName()) && !MediaDataManagerKt.isMediaNotification(expandedNotification) && !NotificationUtil.hasProgressbar(expandedNotification) && !this.mGroupManager.isSummaryOfGroup(expandedNotification) && !expandedNotification.getNotification().isGroupSummary()) {
             return expandedNotification.isClearable();
         }
         return false;

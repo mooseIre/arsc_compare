@@ -209,7 +209,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
                 if (i == 16) {
                     if (view == KeyguardBottomAreaView.this.mRightAffordanceView) {
-                        KeyguardBottomAreaView.this.launchCamera("lockscreen_affordance");
+                        ((FrameLayout) KeyguardBottomAreaView.this).mContext.startActivityAsUser(PackageUtils.getCameraIntent(), UserHandle.CURRENT);
                         return true;
                     } else if (view == KeyguardBottomAreaView.this.mLeftAffordanceView) {
                         if (((MiuiQuickConnectController) Dependency.get(MiuiQuickConnectController.class)).isUseXMYZLLeft()) {

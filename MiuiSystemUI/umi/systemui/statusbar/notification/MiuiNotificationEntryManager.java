@@ -21,7 +21,6 @@ import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.notification.unimportant.FoldNotifController;
 import com.android.systemui.statusbar.notification.unimportant.FoldTool;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
-import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.Assert;
 import com.android.systemui.util.leak.LeakDetector;
 import dagger.Lazy;
@@ -35,7 +34,7 @@ import kotlin.collections.MapsKt___MapsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.SequencesKt___SequencesKt;
 
-public class MiuiNotificationEntryManager extends NotificationEntryManager implements ConfigurationController.ConfigurationListener, FoldListener {
+public class MiuiNotificationEntryManager extends NotificationEntryManager implements FoldListener {
     private final ArrayMap<String, NotificationEntry> activeUnimportantNotifications = new ArrayMap<>();
     private final NotificationGroupManager groupManager;
     private List<? extends Drawable> iconList;
@@ -81,7 +80,6 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
             notificationListener.addNotificationHandler(this.notifListener);
         }
         FoldManager.Companion.addListener(this);
-        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
     }
 
     @Override // com.android.systemui.statusbar.notification.NotificationEntryManager
@@ -344,10 +342,8 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
         companion.checkFoldNotification(shouldShow, currentUser);
     }
 
-    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
-    public void onMiuiThemeChanged(boolean z) {
-        super.onMiuiThemeChanged(z);
-        FoldManager.Companion.getHandler().postDelayed(new MiuiNotificationEntryManager$onMiuiThemeChanged$1(this), 500);
+    public final void recheckFoldNotificationDelayed() {
+        FoldManager.Companion.getHandler().postDelayed(new MiuiNotificationEntryManager$recheckFoldNotificationDelayed$1(this), 500);
     }
 
     public final UserHandle getCurrentUser() {

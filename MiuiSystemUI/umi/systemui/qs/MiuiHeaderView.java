@@ -92,9 +92,11 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         ImageView imageView2 = (ImageView) findViewById(C0015R$id.unimportant_back);
         this.mUnimportantBack = imageView2;
         imageView2.setOnClickListener(this);
+        this.mUnimportantBack.setContentDescription(getResources().getString(C0021R$string.accessibility_back));
         ImageView imageView3 = (ImageView) findViewById(C0015R$id.unimportant_icon);
         this.mUnimportantIcon = imageView3;
         imageView3.setOnClickListener(this);
+        this.mUnimportantIcon.setContentDescription(getResources().getString(C0021R$string.accessibility_settings));
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:30:0x0075  */

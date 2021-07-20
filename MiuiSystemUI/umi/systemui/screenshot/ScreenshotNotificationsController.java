@@ -42,7 +42,7 @@ public class ScreenshotNotificationsController {
         Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setTicker(resources.getString(C0021R$string.screenshot_failed_title)).setContentTitle(resources.getString(C0021R$string.screenshot_failed_title)).setContentText(string).setSmallIcon(C0013R$drawable.stat_notify_image_error).setWhen(System.currentTimeMillis()).setVisibility(1).setCategory("err").setAutoCancel(true).setColor(this.mContext.getColor(17170460));
         Intent createAdminSupportIntent = ((DevicePolicyManager) this.mContext.getSystemService("device_policy")).createAdminSupportIntent("policy_disable_screen_capture");
         if (createAdminSupportIntent != null) {
-            color.setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, createAdminSupportIntent, 0, null, UserHandle.CURRENT));
+            color.setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, createAdminSupportIntent, 67108864, null, UserHandle.CURRENT));
         }
         SystemUI.overrideNotificationAppName(this.mContext, color, true);
         this.mNotificationManager.notify(1, new Notification.BigTextStyle(color).bigText(string).build());

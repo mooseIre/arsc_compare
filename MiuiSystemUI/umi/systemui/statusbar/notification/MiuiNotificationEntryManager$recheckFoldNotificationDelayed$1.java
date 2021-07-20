@@ -2,11 +2,12 @@ package com.android.systemui.statusbar.notification;
 
 import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiNotificationEntryManager.kt */
-final class MiuiNotificationEntryManager$onMiuiThemeChanged$1 implements Runnable {
+public final class MiuiNotificationEntryManager$recheckFoldNotificationDelayed$1 implements Runnable {
     final /* synthetic */ MiuiNotificationEntryManager this$0;
 
-    MiuiNotificationEntryManager$onMiuiThemeChanged$1(MiuiNotificationEntryManager miuiNotificationEntryManager) {
+    MiuiNotificationEntryManager$recheckFoldNotificationDelayed$1(MiuiNotificationEntryManager miuiNotificationEntryManager) {
         this.this$0 = miuiNotificationEntryManager;
     }
 

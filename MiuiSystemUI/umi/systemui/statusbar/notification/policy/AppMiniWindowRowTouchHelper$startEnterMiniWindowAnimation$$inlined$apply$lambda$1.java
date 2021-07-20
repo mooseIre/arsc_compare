@@ -6,8 +6,9 @@ import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowRowTouchHelper.kt */
-final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ Rect $from$inlined;
     final /* synthetic */ Rect $to$inlined;
     final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
@@ -32,7 +33,7 @@ final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$a
             miniWindowExpandParameters.setRight((int) (((float) i3) + (((float) (this.$to$inlined.right - i3)) * floatValue)));
             int i4 = this.$from$inlined.bottom;
             miniWindowExpandParameters.setBottom((int) (((float) i4) + (((float) (this.$to$inlined.bottom - i4)) * floatValue)));
-            AppMiniWindowRowTouchHelper.access$onExpandedParamsUpdated(this.this$0);
+            this.this$0.onExpandedParamsUpdated();
             return;
         }
         throw new TypeCastException("null cannot be cast to non-null type kotlin.Float");

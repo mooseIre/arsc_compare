@@ -53,7 +53,7 @@ public class LeakReporter {
                 NotificationChannel notificationChannel = new NotificationChannel("leak", "Leak Alerts", 4);
                 notificationChannel.enableVibration(true);
                 notificationManager.createNotificationChannel(notificationChannel);
-                notificationManager.notify("LeakReporter", 0, new Notification.Builder(this.mContext, notificationChannel.getId()).setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", Integer.valueOf(i))).setSmallIcon(17303652).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, null, UserHandle.CURRENT)).build());
+                notificationManager.notify("LeakReporter", 0, new Notification.Builder(this.mContext, notificationChannel.getId()).setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", Integer.valueOf(i))).setSmallIcon(17303652).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 201326592, null, UserHandle.CURRENT)).build());
                 return;
             } catch (Throwable th) {
                 th.addSuppressed(th);

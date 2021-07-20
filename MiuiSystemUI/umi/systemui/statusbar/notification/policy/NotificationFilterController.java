@@ -17,6 +17,7 @@ import com.android.systemui.media.MediaDataManagerKt;
 import com.android.systemui.plugins.NotificationListenerController;
 import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
+import com.android.systemui.statusbar.NotificationMediaManager;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
@@ -130,7 +131,7 @@ public class NotificationFilterController {
     }
 
     public static boolean shouldShowOnKeyguard(NotificationEntry notificationEntry) {
-        if (MediaDataManagerKt.isMediaNotification(notificationEntry.getSbn())) {
+        if (MediaDataManagerKt.isMediaNotification(notificationEntry.getSbn()) || notificationEntry.getKey().equals(((NotificationMediaManager) Dependency.get(NotificationMediaManager.class)).getMediaNotificationKey())) {
             if (DEBUG) {
                 Log.d("NotificationFilterController", "show media on keyguard " + notificationEntry.getKey());
             }

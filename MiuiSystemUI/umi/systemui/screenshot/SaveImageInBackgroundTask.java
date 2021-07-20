@@ -191,7 +191,7 @@ public class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
         intent.putExtra("android.intent.extra.SUBJECT", format);
         intent.addFlags(1);
         int userId = context.getUserId();
-        return new Notification.Action.Builder(Icon.createWithResource(resources, C0013R$drawable.ic_screenshot_share), resources.getString(17041328), PendingIntent.getBroadcastAsUser(context, userId, new Intent(context, GlobalScreenshot.ActionProxyReceiver.class).putExtra("android:screenshot_action_intent", PendingIntent.getActivityAsUser(context, 0, Intent.createChooser(intent, null, PendingIntent.getBroadcast(context, userId, new Intent(context, GlobalScreenshot.TargetChosenReceiver.class), 1342177280).getIntentSender()).addFlags(268468224).addFlags(1), 268435456, null, UserHandle.CURRENT)).putExtra("android:screenshot_disallow_enter_pip", true).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).setAction("android.intent.action.SEND").addFlags(268435456), 268435456, UserHandle.SYSTEM)).build();
+        return new Notification.Action.Builder(Icon.createWithResource(resources, C0013R$drawable.ic_screenshot_share), resources.getString(17041328), PendingIntent.getBroadcastAsUser(context, userId, new Intent(context, GlobalScreenshot.ActionProxyReceiver.class).putExtra("android:screenshot_action_intent", PendingIntent.getActivityAsUser(context, 0, Intent.createChooser(intent, null, PendingIntent.getBroadcast(context, userId, new Intent(context, GlobalScreenshot.TargetChosenReceiver.class), 1342177280).getIntentSender()).addFlags(268468224).addFlags(1), 335544320, null, UserHandle.CURRENT)).putExtra("android:screenshot_disallow_enter_pip", true).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).setAction("android.intent.action.SEND").addFlags(268435456), 268435456, UserHandle.SYSTEM)).build();
     }
 
     /* access modifiers changed from: package-private */
@@ -208,7 +208,7 @@ public class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
         intent.addFlags(1);
         intent.addFlags(2);
         intent.addFlags(268468224);
-        PendingIntent activityAsUser = PendingIntent.getActivityAsUser(context, 0, intent, 0, null, UserHandle.CURRENT);
+        PendingIntent activityAsUser = PendingIntent.getActivityAsUser(context, 0, intent, 67108864, null, UserHandle.CURRENT);
         int userId = this.mContext.getUserId();
         Intent putExtra = new Intent(context, GlobalScreenshot.ActionProxyReceiver.class).putExtra("android:screenshot_action_intent", activityAsUser);
         if (intent.getComponent() == null) {

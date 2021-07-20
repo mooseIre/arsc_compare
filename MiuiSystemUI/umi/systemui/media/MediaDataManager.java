@@ -559,11 +559,6 @@ public final class MediaDataManager implements Dumpable, MediaDataManagerInterfa
         @NotNull
         private final Context context;
 
-        @Override // com.android.systemui.media.MediaDataManager.Listener
-        public void onMediaDataRemoved(@NotNull String str) {
-            Intrinsics.checkParameterIsNotNull(str, "key");
-        }
-
         public ListenerWrapper(@NotNull Context context2, @Nullable MediaDataManagerInterface.ArtListener artListener2) {
             Intrinsics.checkParameterIsNotNull(context2, "context");
             this.context = context2;
@@ -584,6 +579,15 @@ public final class MediaDataManager implements Dumpable, MediaDataManagerInterfa
                 String packageName = mediaData.getPackageName();
                 Icon artwork = mediaData.getArtwork();
                 artListener2.onMediaDataLoaded(packageName, artwork != null ? artwork.loadDrawable(this.context) : null);
+            }
+        }
+
+        @Override // com.android.systemui.media.MediaDataManager.Listener
+        public void onMediaDataRemoved(@NotNull String str) {
+            Intrinsics.checkParameterIsNotNull(str, "key");
+            MediaDataManagerInterface.ArtListener artListener2 = this.artListener;
+            if (artListener2 != null) {
+                artListener2.onMediaDataLoaded(str, null);
             }
         }
     }
