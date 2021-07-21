@@ -168,7 +168,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             /* class com.android.systemui.$$Lambda$ScreenDecorations$IfAux2ksmJXT9o9i38WaSEQXJTQ */
 
             public final void run() {
-                ScreenDecorations.lambda$IfAux2ksmJXT9o9i38WaSEQXJTQ(ScreenDecorations.this);
+                ScreenDecorations.this.startOnScreenDecorationsThread();
             }
         });
     }
@@ -181,7 +181,8 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     /* access modifiers changed from: private */
-    public void startOnScreenDecorationsThread() {
+    /* access modifiers changed from: public */
+    private void startOnScreenDecorationsThread() {
         this.mSupportRoundCorner = this.mContext.getResources().getBoolean(C0010R$bool.support_round_corner);
         this.mRotation = this.mContext.getDisplay().getRotation();
         this.mWindowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
