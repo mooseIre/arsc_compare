@@ -615,6 +615,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
+    /* access modifiers changed from: public */
     private void onRotate() {
         createActionItems();
     }
@@ -629,7 +630,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$jlxsGoRx8E3djFav9gCad5fjKg0 */
 
             public final void run() {
-                GlobalActionsDialog.this.onRotate();
+                GlobalActionsDialog.lambda$jlxsGoRx8E3djFav9gCad5fjKg0(GlobalActionsDialog.this);
             }
         }, this.mKeyguardShowing, this.mPowerAdapter);
         if (shouldShowLockMessage()) {
@@ -1943,7 +1944,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                 /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$ActionsDialog$pdjB9IUZqjM8heY8C56yJKk6nA */
 
                 public final void run() {
-                    GlobalActionsDialog.ActionsDialog.this.dismissForControlsActivity();
+                    GlobalActionsDialog.ActionsDialog.m15lambda$pdjB9IUZqjM8heY8C56yJKk6nA(GlobalActionsDialog.ActionsDialog.this);
                 }
             });
         }
@@ -2205,7 +2206,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                     /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$ActionsDialog$pdjB9IUZqjM8heY8C56yJKk6nA */
 
                     public final void run() {
-                        GlobalActionsDialog.ActionsDialog.this.dismissForControlsActivity();
+                        GlobalActionsDialog.ActionsDialog.m15lambda$pdjB9IUZqjM8heY8C56yJKk6nA(GlobalActionsDialog.ActionsDialog.this);
                     }
                 });
             }
@@ -2294,6 +2295,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             this.mDepthController.updateGlobalDialogVisibility(animatedFraction, this.mGlobalActionsLayout);
         }
 
+        /* access modifiers changed from: public */
         private void dismissForControlsActivity() {
             dismissWithAnimation(new Runnable() {
                 /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$ActionsDialog$yh8uJQoAv1nRg6YOxU19qycI3Zo */
@@ -2416,7 +2418,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                     /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$ActionsDialog$pdjB9IUZqjM8heY8C56yJKk6nA */
 
                     public final void run() {
-                        GlobalActionsDialog.ActionsDialog.this.dismissForControlsActivity();
+                        GlobalActionsDialog.ActionsDialog.m15lambda$pdjB9IUZqjM8heY8C56yJKk6nA(GlobalActionsDialog.ActionsDialog.this);
                     }
                 });
             }

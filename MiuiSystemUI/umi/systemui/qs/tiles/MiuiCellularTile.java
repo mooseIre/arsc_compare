@@ -458,15 +458,22 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
 
         @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemClick(MiuiQSDetailItems.Item item) {
-            int intValue;
             if (this.mItems != null) {
                 if (((CallStateControllerImpl) Dependency.get(CallStateControllerImpl.class)).getCallState() != 0) {
                     Toast.makeText(((QSTileImpl) MiuiCellularTile.this).mContext, C0021R$string.quick_settings_cellular_detail_unable_change, 0).show();
                     return;
                 }
                 Object obj = item.tag;
-                if (obj != null && this.mDefaultDataSlot != (intValue = ((Integer) obj).intValue())) {
-                    SubscriptionManager.getDefault().setDefaultDataSlotId(intValue);
+                if (obj != null) {
+                    try {
+                        int intValue = ((Integer) obj).intValue();
+                        if (this.mDefaultDataSlot != intValue) {
+                            SubscriptionManager.getDefault().setDefaultDataSlotId(intValue);
+                        }
+                    } catch (Exception e) {
+                        String str = ((QSTileImpl) MiuiCellularTile.this).TAG;
+                        Log.e(str, "ERROR: onDetailItemClick failed:" + e.getMessage());
+                    }
                 }
             }
         }

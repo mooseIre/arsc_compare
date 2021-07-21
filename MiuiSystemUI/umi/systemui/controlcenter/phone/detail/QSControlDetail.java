@@ -724,8 +724,14 @@ public class QSControlDetail extends FrameLayout {
             }
 
             public void onAnimationEnd(Animator animator) {
-                ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
-                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                ViewGroup viewGroup = (ViewGroup) QSControlDetail.this.mFromView.getParent();
+                if (viewGroup != null) {
+                    viewGroup.suppressLayout(false);
+                }
+                ViewGroup viewGroup2 = (ViewGroup) QSControlDetail.this.mToView.getParent();
+                if (viewGroup2 != null) {
+                    viewGroup2.suppressLayout(false);
+                }
             }
         });
         duration.setInterpolator(physicBasedInterpolator);

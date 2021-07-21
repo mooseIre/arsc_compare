@@ -676,7 +676,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         private final ColorDrawable mDrawable;
 
         private TileItemDecoration(Context context) {
-            this.mDrawable = new ColorDrawable(context.getColor(C0011R$color.qs_customize_content_background_color));
+            this.mDrawable = new ColorDrawable(context.getColor(C0011R$color.transparent));
         }
 
         @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration

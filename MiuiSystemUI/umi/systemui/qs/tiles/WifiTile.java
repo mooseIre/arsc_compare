@@ -21,7 +21,6 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.MiuiQSDetailItems;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.qs.tiles.WifiTile;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.List;
@@ -393,13 +392,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
         public void onAccessPointsChanged(List<AccessPoint> list) {
             this.mAccessPoints = (AccessPoint[]) list.toArray(new AccessPoint[list.size()]);
             filterUnreachableAPs();
-            ((QSTileImpl) WifiTile.this).mHandler.post(new Runnable() {
-                /* class com.android.systemui.qs.tiles.$$Lambda$WifiTile$WifiDetailAdapter$3E1TMZjXX80QX2KXBNq_7cNjDR8 */
-
-                public final void run() {
-                    WifiTile.WifiDetailAdapter.this.updateItems();
-                }
-            });
+            updateItems();
         }
 
         private void filterUnreachableAPs() {
@@ -456,7 +449,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
         /* JADX WARNING: Removed duplicated region for block: B:13:0x002b  */
         /* JADX WARNING: Removed duplicated region for block: B:15:0x003b  */
         /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void updateItems() {
+        private void updateItems() {
             /*
             // Method dump skipped, instructions count: 122
             */
