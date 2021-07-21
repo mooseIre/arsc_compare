@@ -5,23 +5,19 @@ import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import kotlin.jvm.internal.Intrinsics;
 import miuix.animation.Folme;
 import miuix.animation.base.AnimConfig;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: RowAnimationUtils.kt */
 public final class RowAnimationUtils {
     public static final RowAnimationUtils INSTANCE = new RowAnimationUtils();
 
     private RowAnimationUtils() {
     }
 
-    @NotNull
-    public final String getFolmeTarget(@NotNull ExpandableView expandableView) {
+    public final String getFolmeTarget(ExpandableView expandableView) {
         Intrinsics.checkParameterIsNotNull(expandableView, "row");
         return "ExpandableView_" + expandableView.hashCode();
     }
 
-    public static final void startTouchAnimationIfNeed(@Nullable ExpandableView expandableView, float f) {
+    public static final void startTouchAnimationIfNeed(ExpandableView expandableView, float f) {
         AnimConfig animConfig;
         RowAnimationUtils rowAnimationUtils = INSTANCE;
         if (expandableView != null) {
@@ -53,7 +49,6 @@ public final class RowAnimationUtils {
         }
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private final void setTouchAnimatingState(ExpandableView expandableView, boolean z) {
         ExpandableViewState viewState;

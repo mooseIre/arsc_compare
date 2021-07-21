@@ -14,7 +14,10 @@ import com.miui.systemui.CloudDataManager;
 import com.miui.systemui.SettingsManager;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt__StringsKt;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: FoldTool.kt */
 public final class FoldTool {
     public static final FoldTool INSTANCE = new FoldTool();
     private static boolean isInit;
@@ -30,7 +33,7 @@ public final class FoldTool {
     private FoldTool() {
     }
 
-    public final void init(Context context) {
+    public final void init(@NotNull Context context) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         if (!isInit) {
             mContext = context;
@@ -44,7 +47,7 @@ public final class FoldTool {
         ((CloudDataManager) Dependency.get(CloudDataManager.class)).registerListener(new FoldTool$registerWhiteListObserver$1());
     }
 
-    public final int canFold(StatusBarNotification statusBarNotification, boolean z, int i) {
+    public final int canFold(@NotNull StatusBarNotification statusBarNotification, boolean z, int i) {
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
         if (!isInit) {
             return 303;
@@ -71,13 +74,13 @@ public final class FoldTool {
         }
         Notification notification = statusBarNotification.getNotification();
         Intrinsics.checkExpressionValueIsNotNull(notification, "sbn.notification");
-        if (FoldToolKt.isXmsfNotificationChannel(targetPkg, notification.getChannelId())) {
+        if (FoldToolKt.access$isXmsfNotificationChannel(targetPkg, notification.getChannelId())) {
             return 309;
         }
         if (Intrinsics.areEqual(packageName, "com.xiaomi.xmsf")) {
             Intrinsics.checkExpressionValueIsNotNull(targetPkg, "targetPkg");
             return fold(statusBarNotification, targetPkg);
-        } else if (!(FoldToolKt.isLocalWhitelist(targetPkg))) {
+        } else if (!FoldToolKt.access$isLocalWhitelist(targetPkg)) {
             return 310;
         } else {
             Intrinsics.checkExpressionValueIsNotNull(targetPkg, "targetPkg");
@@ -89,7 +92,7 @@ public final class FoldTool {
         return ((UnimportantSdk) Dependency.get(UnimportantSdk.class)).foldReason(statusBarNotification, str, ((FoldNotifController) Dependency.get(FoldNotifController.class)).getAllCount(str));
     }
 
-    public final boolean canFoldByAnalyze(StatusBarNotification statusBarNotification) {
+    public final boolean canFoldByAnalyze(@NotNull StatusBarNotification statusBarNotification) {
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
         return isInit && skip(statusBarNotification) == 100;
     }
@@ -128,7 +131,7 @@ public final class FoldTool {
         if (NotificationUtil.isMediaNotification(statusBarNotification)) {
             return R$styleable.Constraint_pathMotionArc;
         }
-        if (NotificationUtil.isCustomViewNotification(statusBarNotification.getNotification()) && (FoldToolKt.isLocalWhitelist(statusBarNotification.getPackageName()))) {
+        if (NotificationUtil.isCustomViewNotification(statusBarNotification.getNotification()) && FoldToolKt.access$isLocalWhitelist(statusBarNotification.getPackageName())) {
             return 108;
         }
         if (!NotificationSettingsHelper.isNotificationsBanned(mContext, NotificationUtil.getTargetPkg(statusBarNotification))) {
@@ -145,7 +148,7 @@ public final class FoldTool {
         return foldTool.isSameUser(statusBarNotification, i);
     }
 
-    public final boolean isSameUser(StatusBarNotification statusBarNotification, int i) {
+    public final boolean isSameUser(@Nullable StatusBarNotification statusBarNotification, int i) {
         int i2;
         if (statusBarNotification == null) {
             return false;

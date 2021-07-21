@@ -16,9 +16,9 @@ final class AppMiniWindowRowTouchHelper$startEnterAndLaunchMiniWindow$1 extends 
 
     @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
-        if (this.this$0.mHandler.hasMessages(1)) {
-            this.this$0.mHandler.removeMessages(1);
-            this.this$0.mHandler.sendEmptyMessage(1);
+        if (AppMiniWindowRowTouchHelper.access$getMHandler$p(this.this$0).hasMessages(1)) {
+            AppMiniWindowRowTouchHelper.access$getMHandler$p(this.this$0).removeMessages(1);
+            AppMiniWindowRowTouchHelper.access$getMHandler$p(this.this$0).sendEmptyMessage(1);
         }
     }
 }

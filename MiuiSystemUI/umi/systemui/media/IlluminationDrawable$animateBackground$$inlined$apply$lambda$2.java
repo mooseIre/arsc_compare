@@ -13,6 +13,6 @@ public final class IlluminationDrawable$animateBackground$$inlined$apply$lambda$
     }
 
     public void onAnimationEnd(@Nullable Animator animator) {
-        this.this$0.backgroundAnimation = null;
+        IlluminationDrawable.access$setBackgroundAnimation$p(this.this$0, null);
     }
 }

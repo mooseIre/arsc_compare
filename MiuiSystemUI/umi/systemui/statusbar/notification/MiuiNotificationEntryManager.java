@@ -45,6 +45,10 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
     private final ArrayList<NotificationEntry> sortedAndFilteredUnimportant;
     private final HashSet<String> transferSet;
 
+    public static final /* synthetic */ NotificationRankingManager access$getRankingManager$p(MiuiNotificationEntryManager miuiNotificationEntryManager) {
+        return miuiNotificationEntryManager.rankingManager;
+    }
+
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiNotificationEntryManager(Context context, NotificationEntryManagerLogger notificationEntryManagerLogger, NotificationGroupManager notificationGroupManager, NotificationRankingManager notificationRankingManager, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment, FeatureFlags featureFlags, Lazy<NotificationRowBinder> lazy, Lazy<NotificationRemoteInputManager> lazy2, LeakDetector leakDetector, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController) {
         super(notificationEntryManagerLogger, notificationGroupManager, notificationRankingManager, keyguardEnvironment, featureFlags, lazy, lazy2, leakDetector, foregroundServiceDismissalFeatureController);

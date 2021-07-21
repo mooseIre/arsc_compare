@@ -22,7 +22,7 @@ public final class AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inli
         MiuiExpandableNotificationRow access$getMPickedMiniWindowChild$p = AppMiniWindowRowTouchHelper.access$getMPickedMiniWindowChild$p(this.this$0);
         ExpandedNotification sbn = (access$getMPickedMiniWindowChild$p == null || (entry = access$getMPickedMiniWindowChild$p.getEntry()) == null) ? null : entry.getSbn();
         if (sbn != null) {
-            this.this$0.mNotificationEntryManager.performRemoveNotification(sbn, 1);
+            AppMiniWindowRowTouchHelper.access$getMNotificationEntryManager$p(this.this$0).performRemoveNotification(sbn, 1);
         }
     }
 }

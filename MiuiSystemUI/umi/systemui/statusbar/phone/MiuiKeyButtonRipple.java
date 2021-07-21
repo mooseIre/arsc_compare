@@ -25,7 +25,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt___RangesKt;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: MiuiKeyButtonRipple.kt */
 public final class MiuiKeyButtonRipple extends Drawable {
     private final AnimatorListenerAdapter mAnimatorListener;
     private CanvasProperty<Float> mBottomProp;
@@ -50,6 +53,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     private boolean mPressed;
     private CanvasProperty<Float> mRightProp;
     private Paint mRipplePaint;
+    @NotNull
     private final HashSet<Animator> mRunningAnimations;
     private CanvasProperty<Float> mRxProp;
     private CanvasProperty<Float> mRyProp;
@@ -68,6 +72,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     private Type mType;
     private boolean mVisible;
 
+    /* compiled from: MiuiKeyButtonRipple.kt */
     public enum Type {
         OVAL,
         ROUNDED_RECT
@@ -88,10 +93,10 @@ public final class MiuiKeyButtonRipple extends Drawable {
     public void setAlpha(int i) {
     }
 
-    public void setColorFilter(ColorFilter colorFilter) {
+    public void setColorFilter(@Nullable ColorFilter colorFilter) {
     }
 
-    public MiuiKeyButtonRipple(View view) {
+    public MiuiKeyButtonRipple(@NotNull View view) {
         Intrinsics.checkParameterIsNotNull(view, "mTargetView");
         this.mTargetView = view;
         this.mSineInterpolator = new SineInterpolator();
@@ -115,12 +120,13 @@ public final class MiuiKeyButtonRipple extends Drawable {
         this.mDrawingHardwareGlow = z;
     }
 
+    @NotNull
     public final HashSet<Animator> getMRunningAnimations() {
         return this.mRunningAnimations;
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
-    public MiuiKeyButtonRipple(Context context, View view) {
+    public MiuiKeyButtonRipple(@NotNull Context context, @NotNull View view) {
         this(view);
         Intrinsics.checkParameterIsNotNull(context, "ctx");
         Intrinsics.checkParameterIsNotNull(view, "targetView");
@@ -136,7 +142,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         this.mDelayTouchFeedback = z;
     }
 
-    public final void setType(Type type) {
+    public final void setType(@NotNull Type type) {
         Intrinsics.checkParameterIsNotNull(type, "type");
         this.mType = type;
     }
@@ -195,7 +201,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         }
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(@NotNull Canvas canvas) {
         Intrinsics.checkParameterIsNotNull(canvas, "canvas");
         boolean isHardwareAccelerated = canvas.isHardwareAccelerated();
         this.mSupportHardware = isHardwareAccelerated;
@@ -285,7 +291,8 @@ public final class MiuiKeyButtonRipple extends Drawable {
         return visible;
     }
 
-    public boolean onStateChange(int[] iArr) {
+    /* access modifiers changed from: protected */
+    public boolean onStateChange(@NotNull int[] iArr) {
         boolean z;
         Intrinsics.checkParameterIsNotNull(iArr, "state");
         int length = iArr.length;
@@ -365,8 +372,8 @@ public final class MiuiKeyButtonRipple extends Drawable {
         }
     }
 
-    /* access modifiers changed from: public */
-    private final void enterSoftware() {
+    /* access modifiers changed from: private */
+    public final void enterSoftware() {
         endAnimations("enterSoftware", true);
         this.mVisible = true;
         this.mGlowAlpha = getMaxGlowAlpha();
@@ -467,8 +474,8 @@ public final class MiuiKeyButtonRipple extends Drawable {
         return RangesKt___RangesKt.coerceAtMost(isHorizontal() ? getBounds().width() : getBounds().height(), this.mMaxWidth);
     }
 
-    /* access modifiers changed from: public */
-    private final void enterHardware() {
+    /* access modifiers changed from: private */
+    public final void enterHardware() {
         endAnimations("enterHardware", true);
         this.mVisible = true;
         this.mDrawingHardwareGlow = true;
@@ -563,7 +570,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         throw null;
     }
 
-    public final void gestureSlideEffect(Rect rect, Rect rect2) {
+    public final void gestureSlideEffect(@NotNull Rect rect, @NotNull Rect rect2) {
         Intrinsics.checkParameterIsNotNull(rect, "startRect");
         Intrinsics.checkParameterIsNotNull(rect2, "endRect");
         this.mStartRect = rect;
@@ -818,8 +825,8 @@ public final class MiuiKeyButtonRipple extends Drawable {
         throw null;
     }
 
-    /* access modifiers changed from: public */
-    private final void sildeSecondPart() {
+    /* access modifiers changed from: private */
+    public final void sildeSecondPart() {
         cancelAnimations();
         this.mDrawingHardwareGlow = true;
         CanvasProperty<Float> createFloat = CanvasProperty.createFloat(this.mSecondLeftStart);
