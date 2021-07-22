@@ -84,6 +84,10 @@ public class DozeTriggers implements DozeMachine.Part {
     private final UiModeManager mUiModeManager;
     private final WakeLock mWakeLock;
 
+    public static /* synthetic */ void lambda$ulqUMEXi8OgK7771oZ9BOr21BBk(DozeTriggers dozeTriggers, boolean z) {
+        dozeTriggers.onProximityFar(z);
+    }
+
     @VisibleForTesting
     public enum DozingUpdateUiEvent implements UiEventLogger.UiEventEnum {
         DOZING_UPDATE_NOTIFICATION(433),
@@ -153,7 +157,7 @@ public class DozeTriggers implements DozeMachine.Part {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                DozeTriggers.this.onProximityFar(((Boolean) obj).booleanValue());
+                DozeTriggers.lambda$ulqUMEXi8OgK7771oZ9BOr21BBk(DozeTriggers.this, ((Boolean) obj).booleanValue());
             }
         }, dozeLog, proximitySensor);
         this.mUiModeManager = (UiModeManager) this.mContext.getSystemService(UiModeManager.class);
@@ -339,8 +343,6 @@ public class DozeTriggers implements DozeMachine.Part {
         this.mMachine.wakeUp();
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void onProximityFar(boolean z) {
         if (this.mMachine.isExecutingTransition()) {
             Log.w("DozeTriggers", "onProximityFar called during transition. Ignoring sensor response.");

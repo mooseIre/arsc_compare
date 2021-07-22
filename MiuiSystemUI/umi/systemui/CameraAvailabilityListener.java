@@ -20,7 +20,6 @@ import kotlin.math.MathKt__MathJVMKt;
 import kotlin.text.StringsKt__StringsKt;
 import org.jetbrains.annotations.NotNull;
 
-/* compiled from: CameraAvailabilityListener.kt */
 public final class CameraAvailabilityListener {
     public static final Factory Factory = new Factory(null);
     private final CameraManager.AvailabilityCallback availabilityCallback = new CameraAvailabilityListener$availabilityCallback$1(this);
@@ -32,14 +31,13 @@ public final class CameraAvailabilityListener {
     private final List<CameraTransitionCallback> listeners = new ArrayList();
     private final String targetCameraId;
 
-    /* compiled from: CameraAvailabilityListener.kt */
     public interface CameraTransitionCallback {
         void onApplyCameraProtection(@NotNull Path path, @NotNull Rect rect);
 
         void onHideCameraProtection();
     }
 
-    public CameraAvailabilityListener(@NotNull CameraManager cameraManager2, @NotNull Path path, @NotNull String str, @NotNull String str2, @NotNull Executor executor2) {
+    public CameraAvailabilityListener(CameraManager cameraManager2, Path path, String str, String str2, Executor executor2) {
         Intrinsics.checkParameterIsNotNull(cameraManager2, "cameraManager");
         Intrinsics.checkParameterIsNotNull(path, "cutoutProtectionPath");
         Intrinsics.checkParameterIsNotNull(str, "targetCameraId");
@@ -59,13 +57,13 @@ public final class CameraAvailabilityListener {
         registerCameraListener();
     }
 
-    public final void addTransitionCallback(@NotNull CameraTransitionCallback cameraTransitionCallback) {
+    public final void addTransitionCallback(CameraTransitionCallback cameraTransitionCallback) {
         Intrinsics.checkParameterIsNotNull(cameraTransitionCallback, "callback");
         this.listeners.add(cameraTransitionCallback);
     }
 
-    /* access modifiers changed from: private */
-    public final boolean isExcluded(String str) {
+    /* access modifiers changed from: public */
+    private final boolean isExcluded(String str) {
         return this.excludedPackageIds.contains(str);
     }
 
@@ -73,23 +71,22 @@ public final class CameraAvailabilityListener {
         this.cameraManager.registerAvailabilityCallback(this.executor, this.availabilityCallback);
     }
 
-    /* access modifiers changed from: private */
-    public final void notifyCameraActive() {
+    /* access modifiers changed from: public */
+    private final void notifyCameraActive() {
         Iterator<T> it = this.listeners.iterator();
         while (it.hasNext()) {
             it.next().onApplyCameraProtection(this.cutoutProtectionPath, this.cutoutBounds);
         }
     }
 
-    /* access modifiers changed from: private */
-    public final void notifyCameraInactive() {
+    /* access modifiers changed from: public */
+    private final void notifyCameraInactive() {
         Iterator<T> it = this.listeners.iterator();
         while (it.hasNext()) {
             it.next().onHideCameraProtection();
         }
     }
 
-    /* compiled from: CameraAvailabilityListener.kt */
     public static final class Factory {
         private Factory() {
         }
@@ -98,8 +95,7 @@ public final class CameraAvailabilityListener {
             this();
         }
 
-        @NotNull
-        public final CameraAvailabilityListener build(@NotNull Context context, @NotNull Executor executor) {
+        public final CameraAvailabilityListener build(Context context, Executor executor) {
             Intrinsics.checkParameterIsNotNull(context, "context");
             Intrinsics.checkParameterIsNotNull(executor, "executor");
             Object systemService = context.getSystemService("camera");

@@ -67,6 +67,10 @@ public final class AppMiniWindowRowTouchHelper {
         this.mHandler = new AppMiniWindowRowTouchHelper$mHandler$1(this, Looper.getMainLooper());
     }
 
+    public static final /* synthetic */ void access$onMiniWindowReset(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper) {
+        appMiniWindowRowTouchHelper.onMiniWindowReset();
+    }
+
     public final boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if ((!this.mTouchingMiniWindowRow || this.mAbandonMiniWindowTracks) && motionEvent.getActionMasked() == 2) {
@@ -204,7 +208,6 @@ public final class AppMiniWindowRowTouchHelper {
         this.mTouchCallback.onMiniWindowTrackingEnd();
     }
 
-    /* access modifiers changed from: public */
     private final void onMiniWindowReset() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {

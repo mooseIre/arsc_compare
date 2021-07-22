@@ -206,7 +206,10 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     }
 
     public boolean panelEnabled() {
-        return (this.mDisabled1 & 65536) == 0 && (this.mDisabled2 & 4) == 0 && !ONLY_CORE_APPS;
+        if ((this.mDisabled1 & 65536) == 0) {
+            int i = this.mDisabled2;
+            return (i & 4) == 0 && (i & 1) == 0 && !ONLY_CORE_APPS;
+        }
     }
 
     public void onUserSwitched(int i) {

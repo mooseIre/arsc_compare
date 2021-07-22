@@ -161,10 +161,6 @@ public class ActivityStarterDelegate implements ActivityStarter {
         });
     }
 
-    static /* synthetic */ void lambda$startActivity$6(Intent intent, boolean z, ActivityStarter.Callback callback, Lazy lazy) {
-        ((StatusBar) lazy.get()).startActivity(intent, z, callback);
-    }
-
     @Override // com.android.systemui.plugins.ActivityStarter
     public void postStartActivityDismissingKeyguard(Intent intent, int i) {
         this.mActualStarter.ifPresent(new Consumer(intent, i) {
