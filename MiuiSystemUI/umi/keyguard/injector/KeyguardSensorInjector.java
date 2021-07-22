@@ -22,41 +22,33 @@ import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.util.CommonUtil;
 import com.miui.systemui.util.MiuiTextUtils;
 import kotlin.TypeCastException;
-import kotlin.collections.ArraysKt;
+import kotlin.collections.ArraysKt___ArraysKt;
 import kotlin.jvm.internal.Intrinsics;
 import miui.os.Build;
 import miui.os.SystemProperties;
 import miui.util.ProximitySensorWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: KeyguardSensorInjector.kt */
 public final class KeyguardSensorInjector implements SettingsObserver.Callback, WakefulnessLifecycle.Observer {
     private final int LARGE_AREA_TOUCH_SENSOR;
     private final String LARGE_AREA_TOUCH_SENSOR_NAME;
     private final String SCREEN_OFF_REASON;
     private final String SCREEN_OPEN_REASON;
-    @NotNull
     private final String TAG = "KeyguardSensorInjector";
     private final int WAKEUP_AND_SLEEP_SENSOR_MTK;
     private final String WAKEUP_AND_SLEEP_SENSOR_NAME1;
     private final String WAKEUP_AND_SLEEP_SENSOR_NAME2;
     private final int WAKEUP_AND_SLEEP_SENSOR_XIAOMI;
-    @NotNull
     private final Context mContext;
     private Display mDisplay;
     private final Handler mHandler;
     private boolean mIsDeviceSupportLargeAreaTouch;
-    @NotNull
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
-    @NotNull
     private final KeyguardViewMediator mKeyguardViewMediator;
     private Sensor mLargeAreaTouchSensor;
     private final SensorEventListener mLargeAreaTouchSensorListener;
     private final SensorEventListener mPickupSensorListener;
     private boolean mPickupSensorSettingsOpened;
-    @NotNull
     private final PowerManager mPowerManager;
     private ProximitySensorChangeCallback mProximitySensorChangeCallback;
     private final ProximitySensorWrapper.ProximitySensorChangeListener mProximitySensorListener;
@@ -68,12 +60,11 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     private boolean mWakeupByPickUp;
     private final boolean sIsEllipticProximity;
 
-    /* compiled from: KeyguardSensorInjector.kt */
     public interface ProximitySensorChangeCallback {
         void onChange(boolean z);
     }
 
-    public KeyguardSensorInjector(@NotNull Context context, @NotNull KeyguardViewMediator keyguardViewMediator, @NotNull PowerManager powerManager, @NotNull KeyguardUpdateMonitor keyguardUpdateMonitor, @NotNull WakefulnessLifecycle wakefulnessLifecycle) {
+    public KeyguardSensorInjector(Context context, KeyguardViewMediator keyguardViewMediator, PowerManager powerManager, KeyguardUpdateMonitor keyguardUpdateMonitor, WakefulnessLifecycle wakefulnessLifecycle) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");
         Intrinsics.checkParameterIsNotNull(keyguardViewMediator, "mKeyguardViewMediator");
         Intrinsics.checkParameterIsNotNull(powerManager, "mPowerManager");
@@ -110,22 +101,18 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         throw new TypeCastException("null cannot be cast to non-null type android.hardware.SensorManager");
     }
 
-    @NotNull
     public final Context getMContext() {
         return this.mContext;
     }
 
-    @NotNull
     public final KeyguardViewMediator getMKeyguardViewMediator() {
         return this.mKeyguardViewMediator;
     }
 
-    @NotNull
     public final PowerManager getMPowerManager() {
         return this.mPowerManager;
     }
 
-    @NotNull
     public final String getTAG() {
         return this.TAG;
     }
@@ -158,7 +145,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         unregisterProximitySensor();
     }
 
-    public final void registerProximitySensor(@Nullable ProximitySensorChangeCallback proximitySensorChangeCallback) {
+    public final void registerProximitySensor(ProximitySensorChangeCallback proximitySensorChangeCallback) {
         if (this.mProximitySensorWrapper == null) {
             ProximitySensorWrapper proximitySensorWrapper = new ProximitySensorWrapper(this.mContext);
             this.mProximitySensorWrapper = proximitySensorWrapper;
@@ -189,7 +176,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:16:0x0036, code lost:
-        if (kotlin.text.StringsKt.equals(r0, r4, true) != false) goto L_0x0038;
+        if (kotlin.text.StringsKt__StringsJVMKt.equals(r0, r4, true) != false) goto L_0x0038;
      */
     /* JADX WARNING: Removed duplicated region for block: B:24:0x0058  */
     /* JADX WARNING: Removed duplicated region for block: B:27:0x005c  */
@@ -202,13 +189,13 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardSensorInjector.registerPickupSensor():void");
     }
 
-    /* access modifiers changed from: private */
-    public final void unregisterPickupSensor() {
+    /* access modifiers changed from: public */
+    private final void unregisterPickupSensor() {
         this.mUiOffloadThread.submit(new KeyguardSensorInjector$unregisterPickupSensor$1(this));
     }
 
     @Override // com.miui.systemui.SettingsObserver.Callback
-    public void onContentChanged(@Nullable String str, @Nullable String str2) {
+    public void onContentChanged(String str, String str2) {
         if (Intrinsics.areEqual("pick_up_gesture_wakeup_mode", str)) {
             this.mPickupSensorSettingsOpened = MiuiTextUtils.parseBoolean(str2);
             String str3 = this.TAG;
@@ -239,8 +226,8 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         return (sensorManager == null || (defaultSensor = sensorManager.getDefaultSensor(this.LARGE_AREA_TOUCH_SENSOR)) == null || !Intrinsics.areEqual(this.LARGE_AREA_TOUCH_SENSOR_NAME, defaultSensor.getName())) ? false : true;
     }
 
-    /* access modifiers changed from: private */
-    public final boolean shouldRegisterLargeAreaSensor() {
+    /* access modifiers changed from: public */
+    private final boolean shouldRegisterLargeAreaSensor() {
         return this.mIsDeviceSupportLargeAreaTouch && this.mSensorManager != null && this.mLargeAreaTouchSensor == null && !this.mKeyguardViewMediator.isHiding() && this.mKeyguardViewMediator.isShowing();
     }
 
@@ -251,7 +238,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     public final boolean isSupportPickupByMTK() {
         String[] stringArray = this.mContext.getResources().getStringArray(C0008R$array.device_support_pickup_by_MTK);
         Intrinsics.checkExpressionValueIsNotNull(stringArray, "mContext.resources.getSt…ce_support_pickup_by_MTK)");
-        return ArraysKt.contains(stringArray, Build.DEVICE);
+        return ArraysKt___ArraysKt.contains(stringArray, Build.DEVICE);
     }
 
     public final void disableFullScreenGesture() {
