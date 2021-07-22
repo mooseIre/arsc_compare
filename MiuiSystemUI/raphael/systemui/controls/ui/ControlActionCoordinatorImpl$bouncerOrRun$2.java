@@ -1,8 +1,7 @@
 package com.android.systemui.controls.ui;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlActionCoordinatorImpl.kt */
-public final class ControlActionCoordinatorImpl$bouncerOrRun$2 implements Runnable {
+final class ControlActionCoordinatorImpl$bouncerOrRun$2 implements Runnable {
     final /* synthetic */ ControlActionCoordinatorImpl this$0;
 
     ControlActionCoordinatorImpl$bouncerOrRun$2(ControlActionCoordinatorImpl controlActionCoordinatorImpl) {
@@ -10,6 +9,6 @@ public final class ControlActionCoordinatorImpl$bouncerOrRun$2 implements Runnab
     }
 
     public final void run() {
-        this.this$0.pendingAction = null;
+        ControlActionCoordinatorImpl.access$setPendingAction$p(this.this$0, null);
     }
 }

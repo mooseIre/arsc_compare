@@ -469,7 +469,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void showDismissTargetMaybe() {
+    public void showDismissTargetMaybe() {
         createOrUpdateDismissTarget();
         if (this.mTargetViewContainer.getVisibility() != 0) {
             this.mTargetView.setTranslationY((float) this.mTargetViewContainer.getHeight());
@@ -513,8 +513,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onRegistrationChanged(boolean z) {
+    public void onRegistrationChanged(boolean z) {
         this.mAccessibilityManager.setPictureInPictureActionReplacingConnection(z ? this.mConnection : null);
         if (!z && this.mTouchState.isUserInteracting()) {
             cleanUpDismissTarget();
@@ -522,18 +521,16 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onAccessibilityShowMenu() {
+    public void onAccessibilityShowMenu() {
         this.mMenuController.showMenu(2, this.mMotionHelper.getBounds(), true, willResizeMenu(), shouldShowResizeHandle());
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     /* JADX WARNING: Code restructure failed: missing block: B:57:0x00dc, code lost:
         if (r11.mGesture.onUp(r11.mTouchState) != false) goto L_0x00fe;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private boolean handleTouchEvent(android.view.InputEvent r12) {
+    public boolean handleTouchEvent(android.view.InputEvent r12) {
         /*
         // Method dump skipped, instructions count: 282
         */
@@ -552,7 +549,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void updateDismissFraction() {
+    public void updateDismissFraction() {
         if (this.mMenuController != null && !this.mIsImeShowing) {
             Rect bounds = this.mMotionHelper.getBounds();
             float f = (float) this.mInsetBounds.bottom;
@@ -731,7 +728,7 @@ public class PipTouchHandler {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$K8tFYcJKtB3Bkuu5piDq01YhA */
 
                     public final void run() {
-                        PipTouchHandler.access$2000(PipTouchHandler.this);
+                        PipTouchHandler.this.updateDismissFraction();
                     }
                 }, new Runnable() {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$c8YgJLEypMoVYe3YjylatK650zk */
@@ -754,8 +751,7 @@ public class PipTouchHandler {
         }
 
         /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
-        private void flingEndAction() {
+        public void flingEndAction() {
             if (this.mShouldHideMenuAfterFling) {
                 PipTouchHandler.this.mMenuController.hideMenu();
             }
@@ -763,8 +759,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void updateMovementBounds() {
+    public void updateMovementBounds() {
         int i = 0;
         this.mSnapAlgorithm.getMovementBounds(this.mMotionHelper.getBounds(), this.mInsetBounds, this.mMovementBounds, this.mIsImeShowing ? this.mImeHeight : 0);
         this.mMotionHelper.setCurrentMovementBounds(this.mMovementBounds);
@@ -777,8 +772,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private Rect getMovementBounds(Rect rect) {
+    public Rect getMovementBounds(Rect rect) {
         Rect rect2 = new Rect();
         this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
         return rect2;

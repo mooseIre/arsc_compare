@@ -11,8 +11,9 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: BackupHelper.kt */
-final class BackupHelperKt$getPPControlsFile$1 extends Lambda implements Function0<Unit> {
+public final class BackupHelperKt$getPPControlsFile$1 extends Lambda implements Function0<Unit> {
     final /* synthetic */ Context $context;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */

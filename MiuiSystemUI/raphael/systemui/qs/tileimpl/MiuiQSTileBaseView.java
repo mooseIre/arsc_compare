@@ -65,19 +65,19 @@ public class MiuiQSTileBaseView extends QSTileView {
             /* class com.android.systemui.qs.tileimpl.$$Lambda$MiuiQSTileBaseView$dC_s3RamS6twpy7OpNmEl3Qlro */
 
             public final void onClick(View view) {
-                MiuiQSTileBaseView.lambda$init$0(QSTile.this, view);
+                QSTile.this.click();
             }
         }, new View.OnClickListener() {
             /* class com.android.systemui.qs.tileimpl.$$Lambda$MiuiQSTileBaseView$_D0fJEIb006C0fXZMLrANeTwuq8 */
 
             public final void onClick(View view) {
-                MiuiQSTileBaseView.lambda$init$1(QSTile.this, view);
+                QSTile.this.secondaryClick();
             }
         }, new View.OnLongClickListener() {
             /* class com.android.systemui.qs.tileimpl.$$Lambda$MiuiQSTileBaseView$C1dZLf8m1_JnnZ1kzAtuKZZQBo0 */
 
             public final boolean onLongClick(View view) {
-                return MiuiQSTileBaseView.lambda$init$2(QSTile.this, view);
+                return QSTile.this.longClick();
             }
         });
     }
