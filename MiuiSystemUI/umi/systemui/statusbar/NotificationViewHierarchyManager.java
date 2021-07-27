@@ -98,8 +98,11 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
                 boolean needsRedaction = this.mLockscreenUserManager.needsRedaction(notificationEntry);
                 boolean z3 = z2 && needsRedaction;
                 if (((NotificationSensitiveController) Dependency.get(NotificationSensitiveController.class)).showSensitive(notificationEntry)) {
+                    notificationEntry.hideSensitiveByAppLock = true;
                     needsRedaction = true;
                     z3 = true;
+                } else {
+                    notificationEntry.hideSensitiveByAppLock = false;
                 }
                 notificationEntry.setSensitive(z3, isLockscreenPublicMode && !this.mLockscreenUserManager.userAllowsPrivateNotificationsInPublic(currentUserId));
                 notificationEntry.getRow().setNeedsRedaction(needsRedaction);

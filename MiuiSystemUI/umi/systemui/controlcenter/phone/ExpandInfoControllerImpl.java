@@ -21,18 +21,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class ExpandInfoControllerImpl implements ExpandInfoController {
     protected ControlCenterActivityStarter mActivityStarter = ((ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class));
-    private HashMap<Integer, BaseInfo> mBaseInfos = new HashMap<>();
-    private ArrayList<ExpandInfoController.Callback> mCallbacks = new ArrayList<>();
+    private HashMap<Integer, BaseInfo> mBaseInfos;
+    private Executor mBgExecutor;
+    private ArrayList<ExpandInfoController.Callback> mCallbacks;
     private ControlPanelContentView mContentView;
     private Context mContext;
     private DataBillInfo mDataBillInfo;
     private DataUsageInfo mDataUsageInfo;
     private HealthDataInfo mHealthDataInfo;
-    private HashMap<Integer, ExpandInfoController.Info> mInfosMap = new HashMap<>();
-    private HashMap<Integer, ExpandInfoController.Info> mInfosMapOld = new HashMap<>();
+    private HashMap<Integer, ExpandInfoController.Info> mInfosMap;
+    private HashMap<Integer, ExpandInfoController.Info> mInfosMapOld;
     private ScreenTimeInfo mScreenTimeInfo;
     private int mSelectedType;
     private SuperPowerInfo mSuperPowerInfo;
@@ -40,8 +42,13 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
     private int mUnAvailableCnt;
     private UserHandle mUserHandler = new UserHandle(KeyguardUpdateMonitor.getCurrentUser());
 
-    public ExpandInfoControllerImpl(Context context) {
+    public ExpandInfoControllerImpl(Context context, Executor executor) {
         this.mContext = context;
+        this.mBgExecutor = executor;
+        this.mCallbacks = new ArrayList<>();
+        this.mInfosMapOld = new HashMap<>();
+        this.mInfosMap = new HashMap<>();
+        this.mBaseInfos = new HashMap<>();
         if (!Constants.IS_INTERNATIONAL) {
             this.mInfosMap.put(0, new ExpandInfoController.Info());
             this.mInfosMap.put(1, new ExpandInfoController.Info());
@@ -76,6 +83,11 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
     @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public UserHandle getUserHandle() {
         return this.mUserHandler;
+    }
+
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
+    public Executor getBgExecutor() {
+        return this.mBgExecutor;
     }
 
     @Override // com.android.systemui.controlcenter.phone.ExpandInfoController

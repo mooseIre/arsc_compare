@@ -372,6 +372,8 @@ public class ExpandedNotification extends StatusBarNotification {
             str18 = "F";
         }
         sb.append(str18);
+        sb.append(" foldReason=");
+        sb.append(NotificationUtil.getFoldReason(this));
         return sb.toString();
     }
 }

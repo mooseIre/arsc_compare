@@ -3,7 +3,6 @@ package com.android.systemui.controlcenter.info;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.UserHandle;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -11,6 +10,13 @@ import com.android.systemui.controlcenter.phone.ExpandInfoController;
 
 public class ScreenTimeInfo extends BaseInfo {
     private Uri mUri = new Uri.Builder().authority("com.xiaomi.misettings.usagestats.screentimecontentprovider").scheme("content").build();
+    private Runnable refreshRunnable = new Runnable() {
+        /* class com.android.systemui.controlcenter.info.$$Lambda$ScreenTimeInfo$Du4Kp5Cz_JhnuJRP3moLt6aEV4 */
+
+        public final void run() {
+            ScreenTimeInfo.this.lambda$new$1$ScreenTimeInfo();
+        }
+    };
 
     public ScreenTimeInfo(Context context, int i, ExpandInfoController expandInfoController) {
         super(context, i, expandInfoController);
@@ -20,7 +26,30 @@ public class ScreenTimeInfo extends BaseInfo {
     @Override // com.android.systemui.controlcenter.info.BaseInfo
     public void requestData(UserHandle userHandle) {
         super.registerObserver();
-        new UpdateTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
+        this.mExpandInfoController.getBgExecutor().execute(this.refreshRunnable);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$1 */
+    public /* synthetic */ void lambda$new$1$ScreenTimeInfo() {
+        ExpandInfoController.Info infoDetail = getInfoDetail();
+        sendUpdate();
+        if (!this.mInfo.equal(infoDetail)) {
+            this.mInfo = infoDetail;
+            this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.controlcenter.info.$$Lambda$ScreenTimeInfo$TKO0d_bNGc88JvCsJGxZQNrALE */
+
+                public final void run() {
+                    ScreenTimeInfo.this.lambda$new$0$ScreenTimeInfo();
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$ScreenTimeInfo() {
+        this.mExpandInfoController.updateInfo(this.mType, this.mInfo);
     }
 
     /* access modifiers changed from: protected */
@@ -54,8 +83,6 @@ public class ScreenTimeInfo extends BaseInfo {
         return info;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void sendUpdate() {
         if (this.mInfo.available) {
             try {
@@ -72,28 +99,5 @@ public class ScreenTimeInfo extends BaseInfo {
     @Override // com.android.systemui.controlcenter.info.BaseInfo
     public Uri getUri() {
         return this.mUri;
-    }
-
-    /* access modifiers changed from: private */
-    public class UpdateTask extends AsyncTask<Void, Void, ExpandInfoController.Info> {
-        private UpdateTask() {
-        }
-
-        /* access modifiers changed from: protected */
-        public ExpandInfoController.Info doInBackground(Void... voidArr) {
-            ExpandInfoController.Info infoDetail = ScreenTimeInfo.this.getInfoDetail();
-            ScreenTimeInfo.this.sendUpdate();
-            return infoDetail;
-        }
-
-        /* access modifiers changed from: protected */
-        public void onPostExecute(ExpandInfoController.Info info) {
-            super.onPostExecute((Object) info);
-            if (!ScreenTimeInfo.this.mInfo.equal(info)) {
-                ScreenTimeInfo screenTimeInfo = ScreenTimeInfo.this;
-                screenTimeInfo.mInfo = info;
-                screenTimeInfo.mExpandInfoController.updateInfo(screenTimeInfo.mType, info);
-            }
-        }
     }
 }

@@ -45,10 +45,6 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
     private final ArrayList<NotificationEntry> sortedAndFilteredUnimportant;
     private final HashSet<String> transferSet;
 
-    public static final /* synthetic */ NotificationRankingManager access$getRankingManager$p(MiuiNotificationEntryManager miuiNotificationEntryManager) {
-        return miuiNotificationEntryManager.rankingManager;
-    }
-
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiNotificationEntryManager(Context context, NotificationEntryManagerLogger notificationEntryManagerLogger, NotificationGroupManager notificationGroupManager, NotificationRankingManager notificationRankingManager, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment, FeatureFlags featureFlags, Lazy<NotificationRowBinder> lazy, Lazy<NotificationRemoteInputManager> lazy2, LeakDetector leakDetector, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController) {
         super(notificationEntryManagerLogger, notificationGroupManager, notificationRankingManager, keyguardEnvironment, featureFlags, lazy, lazy2, leakDetector, foregroundServiceDismissalFeatureController);
@@ -293,6 +289,7 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
             boolean z3 = false;
             for (NotificationEntry notificationEntry : SequencesKt___SequencesKt.filter(SequencesKt___SequencesKt.filter(SequencesKt___SequencesKt.filter(SequencesKt___SequencesKt.filterNotNull(CollectionsKt___CollectionsKt.asSequence(values)), MiuiNotificationEntryManager$transferNotifications$1.INSTANCE), new MiuiNotificationEntryManager$transferNotifications$2(str)), new MiuiNotificationEntryManager$transferNotifications$3(z2, i, z))) {
                 NotificationUtil.setFold(notificationEntry.getSbn(), z);
+                this.groupManager.updateIsolation(notificationEntry);
                 notificationEntry.getRow().onNotificationRankingUpdated();
                 this.transferSet.add(notificationEntry.getKey());
                 arrayMap2.put(notificationEntry.getKey(), notificationEntry);
@@ -301,13 +298,6 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
             arrayMap.removeAll(this.transferSet);
             this.transferSet.clear();
             if (z3) {
-                NotificationGroupManager notificationGroupManager = this.groupManager;
-                List<NotificationGroupManager.NotificationGroup> allGroups = notificationGroupManager.getAllGroups(str);
-                Intrinsics.checkExpressionValueIsNotNull(allGroups, "getAllGroups(packageName)");
-                for (T t : allGroups) {
-                    notificationGroupManager.setGroupExpanded((NotificationGroupManager.NotificationGroup) t, false);
-                    notificationGroupManager.updateSuppression((NotificationGroupManager.NotificationGroup) t);
-                }
                 if (this.rankingManager.getRankingMap() != null) {
                     updateRankingAndSort(this.rankingManager.getRankingMap(), str2);
                 }

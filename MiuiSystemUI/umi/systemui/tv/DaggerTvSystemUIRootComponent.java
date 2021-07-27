@@ -190,14 +190,14 @@ import com.android.systemui.classifier.FalsingManagerProxy_Factory;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.colorextraction.SysuiColorExtractor_Factory;
 import com.android.systemui.controlcenter.ControlCenter;
-import com.android.systemui.controlcenter.dagger.ControlCenterDependenciesModule_ProvideExpandInfoControllerFactory;
 import com.android.systemui.controlcenter.dagger.ControlCenterModule_ProvideControlCenterFactory;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.ControlPanelController_Factory;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager_Factory;
-import com.android.systemui.controlcenter.phone.ExpandInfoController;
+import com.android.systemui.controlcenter.phone.ExpandInfoControllerImpl;
+import com.android.systemui.controlcenter.phone.ExpandInfoControllerImpl_Factory;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager_Factory;
 import com.android.systemui.controlcenter.phone.controls.MiPlayPluginManager;
@@ -581,8 +581,6 @@ import com.android.systemui.statusbar.notification.NotificationSettingsManager_F
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator_Factory;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
-import com.android.systemui.statusbar.notification.analytics.NotificationPanelStat;
-import com.android.systemui.statusbar.notification.analytics.NotificationPanelStat_Factory;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat_Factory;
 import com.android.systemui.statusbar.notification.collection.NotifCollection;
@@ -1126,6 +1124,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private EditTile_Factory editTileProvider;
     private Provider<EnhancedEstimatesImpl> enhancedEstimatesImplProvider;
     private Provider<EventTracker> eventTrackerProvider;
+    private Provider<ExpandInfoControllerImpl> expandInfoControllerImplProvider;
     private Provider<ExpandableNotificationRowComponent.Builder> expandableNotificationRowComponentBuilderProvider;
     private NotificationLogger_ExpansionStateLogger_Factory expansionStateLoggerProvider;
     private Provider<ExtensionControllerImpl> extensionControllerImplProvider;
@@ -1293,7 +1292,6 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<NotificationInteractionTracker> notificationInteractionTrackerProvider;
     private Provider<NotificationLockscreenUserManagerImpl> notificationLockscreenUserManagerImplProvider;
     private Provider<NotificationPanelNavigationBarCoordinator> notificationPanelNavigationBarCoordinatorProvider;
-    private Provider<NotificationPanelStat> notificationPanelStatProvider;
     private Provider<NotificationPersonExtractorPluginBoundary> notificationPersonExtractorPluginBoundaryProvider;
     private NotificationRankingManager_Factory notificationRankingManagerProvider;
     private Provider<NotificationRoundnessManager> notificationRoundnessManagerProvider;
@@ -1386,7 +1384,6 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<Divider> provideDividerProvider;
     private Provider<LogBuffer> provideDozeLogBufferProvider;
     private Provider<Executor> provideExecutorProvider;
-    private Provider<ExpandInfoController> provideExpandInfoControllerProvider;
     private Provider<HeadsUpManagerPhone> provideHeadsUpManagerPhoneProvider;
     private Provider<IActivityManager> provideIActivityManagerProvider;
     private Provider<IBatteryStats> provideIBatteryStatsProvider;
@@ -2191,7 +2188,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.tvStatusBarProvider = DoubleCheck.provider(TvStatusBar_Factory.create(this.contextProvider, this.provideCommandQueueProvider, this.assistManagerProvider));
         this.volumeUIProvider = DoubleCheck.provider(VolumeUI_Factory.create(this.contextProvider, this.volumeDialogComponentProvider));
         this.windowMagnificationProvider = DoubleCheck.provider(WindowMagnification_Factory.create(this.contextProvider, this.provideMainHandlerProvider));
-        this.provideExpandInfoControllerProvider = DoubleCheck.provider(ControlCenterDependenciesModule_ProvideExpandInfoControllerFactory.create(this.contextProvider));
+        this.expandInfoControllerImplProvider = DoubleCheck.provider(ExpandInfoControllerImpl_Factory.create(this.contextProvider, this.provideBackgroundExecutorProvider));
         this.superSaveModeControllerProvider = DoubleCheck.provider(SuperSaveModeController_Factory.create(this.contextProvider, this.settingsObserverImplProvider));
         this.controlCenterActivityStarterProvider = DoubleCheck.provider(ControlCenterActivityStarter_Factory.create(this.contextProvider));
         this.qSTileHostProvider = new DelegateFactory();
@@ -2276,7 +2273,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.controlsPluginManagerProvider = DoubleCheck.provider(ControlsPluginManager_Factory.create());
         Provider<MiPlayPluginManager> provider8 = DoubleCheck.provider(MiPlayPluginManager_Factory.create());
         this.miPlayPluginManagerProvider = provider8;
-        this.provideControlCenterProvider = DoubleCheck.provider(ControlCenterModule_ProvideControlCenterFactory.create(this.contextProvider, this.controlPanelControllerProvider, this.statusBarIconControllerImplProvider, this.provideExpandInfoControllerProvider, this.activityStarterDelegateProvider, this.provideCommandQueueProvider, this.injectionInflationControllerProvider, this.superSaveModeControllerProvider, this.controlCenterActivityStarterProvider, this.qSTileHostProvider, this.controlPanelWindowManagerProvider, this.provideStatusBarProvider, this.controlsPluginManagerProvider, provider8, this.providesBroadcastDispatcherProvider, this.provideConfigurationControllerProvider));
+        this.provideControlCenterProvider = DoubleCheck.provider(ControlCenterModule_ProvideControlCenterFactory.create(this.contextProvider, this.controlPanelControllerProvider, this.statusBarIconControllerImplProvider, this.expandInfoControllerImplProvider, this.activityStarterDelegateProvider, this.provideCommandQueueProvider, this.injectionInflationControllerProvider, this.superSaveModeControllerProvider, this.controlCenterActivityStarterProvider, this.qSTileHostProvider, this.controlPanelWindowManagerProvider, this.provideStatusBarProvider, this.controlsPluginManagerProvider, provider8, this.providesBroadcastDispatcherProvider, this.provideConfigurationControllerProvider));
         Provider<PackageEventController> provider9 = DoubleCheck.provider(PackageEventController_Factory.create(this.contextProvider, this.provideMainHandlerProvider));
         this.packageEventControllerProvider = provider9;
         this.miuiWallpaperZoomOutServiceProvider = DoubleCheck.provider(MiuiWallpaperZoomOutService_Factory.create(this.contextProvider, this.provideStatusBarProvider, this.deviceProvisionedControllerImplProvider, this.providesBroadcastDispatcherProvider, provider9));
@@ -2361,9 +2358,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.provideDevicePolicyManagerWrapperProvider = DoubleCheck.provider(DependencyProvider_ProvideDevicePolicyManagerWrapperFactory.create(builder.dependencyProvider));
         this.keyguardSecurityModelProvider = DoubleCheck.provider(KeyguardSecurityModel_Factory.create(this.contextProvider));
         this.appIconsManagerProvider = DoubleCheck.provider(AppIconsManager_Factory.create(this.contextProvider));
-        Provider<NotificationPanelStat> provider16 = DoubleCheck.provider(NotificationPanelStat_Factory.create(this.contextProvider, this.eventTrackerProvider));
-        this.notificationPanelStatProvider = provider16;
-        this.notificationStatProvider = DoubleCheck.provider(NotificationStat_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.eventTrackerProvider, provider16, this.notificationSettingsManagerProvider));
+        this.notificationStatProvider = DoubleCheck.provider(NotificationStat_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.eventTrackerProvider, this.notificationSettingsManagerProvider, this.provideBatteryControllerProvider));
         this.usbNotificationControllerProvider = DoubleCheck.provider(UsbNotificationController_Factory.create(this.contextProvider));
         this.keyguardNotificationControllerProvider = DoubleCheck.provider(KeyguardNotificationController_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.keyguardStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
         this.notificationBadgeControllerProvider = DoubleCheck.provider(NotificationBadgeController_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.providesBroadcastDispatcherProvider));
@@ -2380,17 +2375,17 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.forceBlackObserverProvider = DoubleCheck.provider(ForceBlackObserver_Factory.create(this.contextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
         this.keyguardClockInjectorProvider = DoubleCheck.provider(KeyguardClockInjector_Factory.create(this.contextProvider));
         this.keyguardBottomAreaInjectorProvider = DoubleCheck.provider(KeyguardBottomAreaInjector_Factory.create(this.contextProvider, this.dumpManagerProvider));
-        Provider<MiuiKeyguardWallpaperControllerImpl> provider17 = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider));
-        this.miuiKeyguardWallpaperControllerImplProvider = provider17;
-        this.keyguardNegative1PageInjectorProvider = DoubleCheck.provider(KeyguardNegative1PageInjector_Factory.create(this.contextProvider, provider17));
+        Provider<MiuiKeyguardWallpaperControllerImpl> provider16 = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider));
+        this.miuiKeyguardWallpaperControllerImplProvider = provider16;
+        this.keyguardNegative1PageInjectorProvider = DoubleCheck.provider(KeyguardNegative1PageInjector_Factory.create(this.contextProvider, provider16));
         this.keyguardSensorInjectorProvider = DoubleCheck.provider(KeyguardSensorInjector_Factory.create(this.contextProvider, this.newKeyguardViewMediatorProvider, this.providePowerManagerProvider, this.keyguardUpdateMonitorProvider, this.wakefulnessLifecycleProvider));
         this.keyguardViewMediatorInjectorProvider = DoubleCheck.provider(KeyguardViewMediatorInjector_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider, this.statusBarKeyguardViewManagerProvider));
         this.smartDarkObserverProvider = DoubleCheck.provider(SmartDarkObserver_Factory.create(this.contextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
         this.miuiStatusBarPromptControllerProvider = DoubleCheck.provider(MiuiStatusBarPromptController_Factory.create(this.contextProvider));
+        this.networkSpeedControllerProvider = DoubleCheck.provider(NetworkSpeedController_Factory.create(this.contextProvider, this.provideBgLooperProvider));
     }
 
     private void initialize6(Builder builder) {
-        this.networkSpeedControllerProvider = DoubleCheck.provider(NetworkSpeedController_Factory.create(this.contextProvider, this.provideBgLooperProvider));
         this.miuiDripLeftStatusBarIconControllerImplProvider = DoubleCheck.provider(MiuiDripLeftStatusBarIconControllerImpl_Factory.create(this.contextProvider));
         this.wallpaperCommandSenderProvider = DoubleCheck.provider(WallpaperCommandSender_Factory.create());
         this.miuiWallpaperClientProvider = DoubleCheck.provider(MiuiWallpaperClient_Factory.create(this.contextProvider, this.wakefulnessLifecycleProvider));
@@ -2777,7 +2772,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             Dependency_MembersInjector.injectMControlPanelController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider));
             Dependency_MembersInjector.injectMControlPanelWindowManager(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.controlPanelWindowManagerProvider));
             Dependency_MembersInjector.injectMControlCenterActivityStarter(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.controlCenterActivityStarterProvider));
-            Dependency_MembersInjector.injectMExpandInfoController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.provideExpandInfoControllerProvider));
+            Dependency_MembersInjector.injectMExpandInfoController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.expandInfoControllerImplProvider));
             Dependency_MembersInjector.injectMControlsPluginManager(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.controlsPluginManagerProvider));
             Dependency_MembersInjector.injectMMiPlayPluginManager(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.miPlayPluginManagerProvider));
             Dependency_MembersInjector.injectMAppMiniWindowManager(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.appMiniWindowManagerProvider));

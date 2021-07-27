@@ -7,15 +7,15 @@ import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.UserHandle;
+import com.android.systemui.controlcenter.info.BaseInfo;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
 
 public abstract class BaseInfo {
     protected Bitmap mBpBitmap;
     private ContentObserver mContentObserver = new ContentObserver(this.mHandler) {
-        /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass3 */
+        /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass4 */
 
         public void onChange(boolean z) {
             BaseInfo.this.refresh();
@@ -23,11 +23,11 @@ public abstract class BaseInfo {
     };
     protected Context mContext;
     protected ExpandInfoController mExpandInfoController;
-    private Handler mHandler;
+    protected Handler mHandler;
     protected ExpandInfoController.Info mInfo = new ExpandInfoController.Info();
     private boolean mObserverRigstered;
     private BroadcastReceiver mSIMDataReceiver = new BroadcastReceiver() {
-        /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass2 */
+        /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass3 */
 
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
@@ -43,6 +43,31 @@ public abstract class BaseInfo {
     };
     protected int mType;
     protected UserHandle mUserHandle;
+    private Runnable refreshRunnable = new Runnable() {
+        /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass1 */
+
+        public void run() {
+            ExpandInfoController.Info infoDetail = BaseInfo.this.getInfoDetail();
+            if (!BaseInfo.this.mInfo.equal(infoDetail)) {
+                BaseInfo baseInfo = BaseInfo.this;
+                baseInfo.mInfo = infoDetail;
+                baseInfo.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.controlcenter.info.$$Lambda$BaseInfo$1$aJhL7m2c0kTU_DR4vJXNDCcNLg */
+
+                    public final void run() {
+                        BaseInfo.AnonymousClass1.this.lambda$run$0$BaseInfo$1();
+                    }
+                });
+            }
+        }
+
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$run$0 */
+        public /* synthetic */ void lambda$run$0$BaseInfo$1() {
+            BaseInfo baseInfo = BaseInfo.this;
+            baseInfo.mExpandInfoController.updateInfo(baseInfo.mType, baseInfo.mInfo);
+        }
+    };
 
     /* access modifiers changed from: protected */
     public abstract ExpandInfoController.Info getInfoDetail();
@@ -101,38 +126,17 @@ public abstract class BaseInfo {
 
     /* access modifiers changed from: protected */
     public void refresh() {
-        new UpdateInfoDetailTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
+        this.mExpandInfoController.getBgExecutor().execute(this.refreshRunnable);
     }
 
     /* access modifiers changed from: protected */
     public void refresh(long j) {
         this.mHandler.postDelayed(new Runnable() {
-            /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass1 */
+            /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass2 */
 
             public void run() {
                 BaseInfo.this.refresh();
             }
         }, j);
-    }
-
-    /* access modifiers changed from: private */
-    public class UpdateInfoDetailTask extends AsyncTask<Void, Void, ExpandInfoController.Info> {
-        private UpdateInfoDetailTask() {
-        }
-
-        /* access modifiers changed from: protected */
-        public ExpandInfoController.Info doInBackground(Void... voidArr) {
-            return BaseInfo.this.getInfoDetail();
-        }
-
-        /* access modifiers changed from: protected */
-        public void onPostExecute(ExpandInfoController.Info info) {
-            super.onPostExecute((Object) info);
-            if (!BaseInfo.this.mInfo.equal(info)) {
-                BaseInfo baseInfo = BaseInfo.this;
-                baseInfo.mInfo = info;
-                baseInfo.mExpandInfoController.updateInfo(baseInfo.mType, info);
-            }
-        }
     }
 }

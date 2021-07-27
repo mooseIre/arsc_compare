@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.UserHandle;
 import codeinjection.CodeInjection;
 import java.util.HashMap;
+import java.util.concurrent.Executor;
 
 public interface ExpandInfoController {
 
@@ -18,6 +19,8 @@ public interface ExpandInfoController {
     }
 
     void addCallback(Callback callback);
+
+    Executor getBgExecutor();
 
     ControlPanelContentView getContentView();
 

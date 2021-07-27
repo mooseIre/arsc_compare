@@ -5303,6 +5303,8 @@ public final class R {
         public static final int miuix_preference_main_margin_end;
         public static final int miuix_preference_main_margin_start;
         public static final int miuix_preference_normal_text_size;
+        public static final int miuix_preference_radio_set_item_padding_start;
+        public static final int miuix_preference_radio_set_radio_item_padding_start;
         public static final int miuix_preference_right_text_size;
         public static final int miuix_preference_rv_bottom_padding;
         public static final int miuix_preference_rv_top_padding;

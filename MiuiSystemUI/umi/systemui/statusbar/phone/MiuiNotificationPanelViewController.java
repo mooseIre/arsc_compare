@@ -1259,7 +1259,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             NotificationPanelView notificationPanelView = ((NotificationPanelViewController) this).mView;
             Intrinsics.checkExpressionValueIsNotNull(notificationPanelView, "mView");
             view.setBackground(notificationPanelView.getContext().getDrawable(C0013R$drawable.notification_panel_window_bg));
-            view.setVisibility((this.mIsDefaultTheme || !isOnShade()) ? 8 : 0);
+            view.setVisibility((MiuiThemeUtils.isDefaultSysUiTheme() || !isOnShade()) ? 8 : 0);
         }
     }
 

@@ -102,6 +102,14 @@ public class NotificationUtil {
         return Boolean.valueOf(statusBarNotification.getNotification().extras.getBoolean("miui_unimportant", false));
     }
 
+    public static int getFoldReason(StatusBarNotification statusBarNotification) {
+        return statusBarNotification.getNotification().extras.getInt("fold_reason", 0);
+    }
+
+    public static void setFoldReason(StatusBarNotification statusBarNotification, int i) {
+        statusBarNotification.getNotification().extras.putInt("fold_reason", i);
+    }
+
     public static int getClickType(StatusBarNotification statusBarNotification) {
         return statusBarNotification.getNotification().extras.getInt("miui_unimportant_click_type", 0);
     }
@@ -274,6 +282,27 @@ public class NotificationUtil {
     public static CharSequence resolveSubText(Notification notification) {
         CharSequence charSequence = notification.extras.getCharSequence("android.subText");
         return charSequence != null ? charSequence : CodeInjection.MD5;
+    }
+
+    public static String resolvePushMsgId(Notification notification) {
+        String string;
+        return (notification == null || (string = notification.extras.getString("message_id")) == null) ? CodeInjection.MD5 : string;
+    }
+
+    public static boolean containsBigPic(Notification notification) {
+        return (notification == null || notification.extras.getParcelable("android.picture") == null) ? false : true;
+    }
+
+    public static boolean containCustomView(Notification notification) {
+        if (notification == null) {
+            return false;
+        }
+        return notification.extras.getBoolean("android.contains.customView");
+    }
+
+    public static String getPushUid(Notification notification) {
+        String string;
+        return (notification == null || (string = notification.extras.getString("pushUid")) == null) ? CodeInjection.MD5 : string;
     }
 
     public static boolean isUserOwner(Context context) {

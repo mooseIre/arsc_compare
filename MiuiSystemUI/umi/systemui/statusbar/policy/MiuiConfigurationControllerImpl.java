@@ -32,12 +32,12 @@ public final class MiuiConfigurationControllerImpl extends ConfigurationControll
     @Override // com.android.systemui.statusbar.policy.ConfigurationController, com.android.systemui.statusbar.phone.ConfigurationControllerImpl
     public void onConfigurationChanged(@NotNull Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
+        MiuiThemeUtils.updateDefaultSysUiTheme(configuration);
         super.onConfigurationChanged(configuration);
         int i = configuration.extraConfig.themeChanged;
         if (i != this.themeChanged) {
             this.themeChanged = i;
             ((AppIconsManager) Dependency.get(AppIconsManager.class)).clearAll();
-            MiuiThemeUtils.updateDefaultSysUiTheme(configuration);
             onMiuiThemeChanged(MiuiKeyguardUtils.isDefaultLockScreenTheme(), MiuiThemeUtils.isDefaultSysUiTheme());
         }
         int i2 = configuration.densityDpi;

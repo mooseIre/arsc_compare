@@ -469,11 +469,6 @@ public class NotificationShadeWindowController implements RemoteInputController.
     }
 
     public void setPanelVisible(boolean z) {
-        if (this.mBlurAnimRunning) {
-            this.deferredPanelVisible = Boolean.valueOf(z);
-            return;
-        }
-        this.deferredPanelVisible = null;
         State state = this.mCurrentState;
         state.mPanelVisible = z;
         state.mNotificationShadeFocusable = z;

@@ -29,7 +29,7 @@ public final class NotificationClickerInjector {
         String targetPackageName = sbn.getTargetPackageName();
         Intrinsics.checkExpressionValueIsNotNull(targetPackageName, "row.entry.sbn.targetPackageName");
         ((FoldNotifController) Dependency.get(FoldNotifController.class)).addClickCount(targetPackageName);
-        if (!miuiExpandableNotificationRow.isSummaryWithChildren() || miuiExpandableNotificationRow.isGroupExpanded()) {
+        if (!miuiExpandableNotificationRow.isSummaryWithChildren() || miuiExpandableNotificationRow.isGroupExpanded() || expandableNotificationRow.shouldShowPublic()) {
             NotificationEntry entry2 = miuiExpandableNotificationRow.getEntry();
             Intrinsics.checkExpressionValueIsNotNull(entry2, "row.entry");
             Boolean isFoldEntrance = NotificationUtil.isFoldEntrance(entry2.getSbn());

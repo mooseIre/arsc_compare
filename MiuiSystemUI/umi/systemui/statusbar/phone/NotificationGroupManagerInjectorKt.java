@@ -2,18 +2,13 @@ package com.android.systemui.statusbar.phone;
 
 import android.app.Notification;
 import android.service.notification.StatusBarNotification;
-import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.miui.systemui.BuildConfig;
-import com.miui.systemui.SettingsManager;
 import java.util.Collection;
-import java.util.HashMap;
-import kotlin.collections.MapsKt___MapsKt;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: NotificationGroupManagerInjector.kt */
@@ -30,18 +25,12 @@ public final class NotificationGroupManagerInjectorKt {
             if (!suppressEmpty(i, notificationGroup)) {
                 Collection<NotificationEntry> values = notificationGroup.children.values();
                 Intrinsics.checkExpressionValueIsNotNull(values, "group.children.values");
-                if (!hasMediaOrCustomChildren(values) && (i <= 1 || !((SettingsManager) Dependency.get(SettingsManager.class)).getNotifFold() || !hasFoldChild(notificationGroup))) {
+                if (!hasMediaOrCustomChildren(values)) {
                     return false;
                 }
             }
         }
         return true;
-    }
-
-    private static final boolean hasFoldChild(NotificationGroupManager.NotificationGroup notificationGroup) {
-        HashMap<String, NotificationEntry> hashMap = notificationGroup.children;
-        Intrinsics.checkExpressionValueIsNotNull(hashMap, "group.children");
-        return SequencesKt___SequencesKt.count(SequencesKt___SequencesKt.filter(SequencesKt___SequencesKt.filterNotNull(MapsKt___MapsKt.asSequence(hashMap)), NotificationGroupManagerInjectorKt$hasFoldChild$1.INSTANCE)) > 0;
     }
 
     public static final boolean shouldHideGroupSummary(@NotNull StatusBarNotification statusBarNotification) {

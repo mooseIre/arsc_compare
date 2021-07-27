@@ -1945,7 +1945,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         if (isChildInGroup() && !isGroupExpanded()) {
             return this.mPrivateLayout.getMinHeight();
         }
-        if (this.mSensitive && this.mHideSensitiveForIntrinsicHeight) {
+        if (shouldShowPublic()) {
             return getMinHeight();
         }
         if (this.mIsSummaryWithChildren) {
@@ -2190,9 +2190,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         return this.mEntry.isClearable() && (!shouldShowPublic() || !this.mSensitiveHiddenInGeneral);
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private boolean shouldShowPublic() {
+    public boolean shouldShowPublic() {
         return this.mSensitive && this.mHideSensitiveForIntrinsicHeight;
     }
 

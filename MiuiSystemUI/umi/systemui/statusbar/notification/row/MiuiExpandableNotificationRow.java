@@ -574,4 +574,12 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             throw null;
         }
     }
+
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
+    public boolean shouldShowPublic() {
+        if (getEntry() == null || !getEntry().hideSensitiveByAppLock) {
+            return super.shouldShowPublic();
+        }
+        return true;
+    }
 }

@@ -29,6 +29,7 @@ public class ControlPanelContentView extends FrameLayout {
         /* class com.android.systemui.controlcenter.phone.ControlPanelContentView.AnonymousClass2 */
 
         public void run() {
+            ControlPanelContentView.this.mExpandInfoController.requestData();
             if (ControlPanelContentView.this.mControlsEditController == null) {
                 ControlPanelContentView controlPanelContentView = ControlPanelContentView.this;
                 ControlPanelContentView controlPanelContentView2 = ControlPanelContentView.this;
@@ -148,7 +149,6 @@ public class ControlPanelContentView extends FrameLayout {
     public void showContent() {
         ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new ExpandPanelEvent());
         setVisibility(0);
-        this.mExpandInfoController.requestData();
         ControlCenterPanelView controlCenterPanelView = this.mControlCenterPanelView;
         if (controlCenterPanelView != null) {
             controlCenterPanelView.showPanel(true, true);

@@ -26,6 +26,7 @@ import com.android.systemui.statusbar.policy.ZenModeController;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class NotificationAlertController {
     private static final boolean DEBUG = DebugConfig.DEBUG_NOTIFICATION;
@@ -140,7 +141,24 @@ public class NotificationAlertController {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void markVisibleNotificationsShown() {
-        this.mEntryManager.getVisibleNotifications().forEach($$Lambda$NotificationAlertController$cnPeo2J1MJMxlulxtwNq2qNkNE.INSTANCE);
+        this.mEntryManager.getVisibleNotifications().forEach(new Consumer() {
+            /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationAlertController$xlV8R1aidO_UBmnSbqTKHA_gUxE */
+
+            @Override // java.util.function.Consumer
+            public final void accept(Object obj) {
+                NotificationAlertController.this.lambda$markVisibleNotificationsShown$1$NotificationAlertController((NotificationEntry) obj);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$markVisibleNotificationsShown$1 */
+    public /* synthetic */ void lambda$markVisibleNotificationsShown$1$NotificationAlertController(NotificationEntry notificationEntry) {
+        notificationEntry.getSbn().setHasShownAfterUnlock(true);
+        NotificationEntry logicalGroupSummary = this.mGroupManager.getLogicalGroupSummary(notificationEntry.getSbn());
+        if (logicalGroupSummary != null && !logicalGroupSummary.getSbn().hasShownAfterUnlock()) {
+            logicalGroupSummary.getSbn().setHasShownAfterUnlock(true);
+        }
     }
 
     /* access modifiers changed from: private */

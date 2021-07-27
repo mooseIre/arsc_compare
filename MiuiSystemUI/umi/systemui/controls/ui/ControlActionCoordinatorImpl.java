@@ -144,7 +144,6 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         this.bgExecutor.execute(new ControlActionCoordinatorImpl$vibrate$1(this, vibrationEffect));
     }
 
-    /* access modifiers changed from: public */
     private final void showDialog(ControlViewHolder controlViewHolder, Intent intent) {
         this.bgExecutor.execute(new ControlActionCoordinatorImpl$showDialog$1(this, controlViewHolder, intent));
     }
