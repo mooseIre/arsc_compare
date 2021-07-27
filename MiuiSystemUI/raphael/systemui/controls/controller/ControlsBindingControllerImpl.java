@@ -401,7 +401,6 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             maybeTerminateAndRun(new OnLoadRunnable(this.this$0, iBinder, this.loadedControls, this.callback));
         }
 
-        /* access modifiers changed from: public */
         private final void maybeTerminateAndRun(Runnable runnable) {
             if (!this.isTerminated.get()) {
                 this._loadCancelInternal = ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1.INSTANCE;

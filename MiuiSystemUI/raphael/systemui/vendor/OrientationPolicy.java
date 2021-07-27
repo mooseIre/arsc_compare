@@ -38,8 +38,7 @@ public class OrientationPolicy {
         }
     }
 
-    /* access modifiers changed from: private */
-    public class CustomDisplayListener implements DisplayManager.DisplayListener {
+    private class CustomDisplayListener implements DisplayManager.DisplayListener {
         public void onDisplayAdded(int i) {
         }
 

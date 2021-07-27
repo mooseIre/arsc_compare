@@ -481,6 +481,8 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         setPadding(dimensionPixelSize, 0, dimensionPixelSize, 0);
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void requestChildrenUpdate() {
         if (!this.mChildrenUpdateRequested) {
             getViewTreeObserver().addOnPreDrawListener(this.mChildrenUpdater);
@@ -528,7 +530,6 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         this.mEntry = null;
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$exitModal$0 */
     public /* synthetic */ void lambda$exitModal$0$ModalWindowView(Property property) {
@@ -536,6 +537,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         removeMenu();
     }
 
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         updateResource();
@@ -629,7 +631,6 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         });
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$addModalDialog$2 */
     public /* synthetic */ void lambda$addModalDialog$2$ModalWindowView() {
@@ -675,7 +676,6 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         requestChildrenUpdate();
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$removeModalDialog$3 */
     public /* synthetic */ void lambda$removeModalDialog$3$ModalWindowView(Property property) {
@@ -733,6 +733,8 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         return getRowTranslationY(expandableNotificationRow) + ((float) expandableNotificationRow.getActualHeight()) + ((float) this.mModalMenuMarginTop);
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private float getMenuYInModal(ExpandableNotificationRow expandableNotificationRow, boolean z) {
         return expandableNotificationRow.getViewState().yTranslation + ((float) (z ? expandableNotificationRow.getActualHeight() : expandableNotificationRow.getIntrinsicHeight())) + ((float) this.mModalMenuMarginTop);
     }

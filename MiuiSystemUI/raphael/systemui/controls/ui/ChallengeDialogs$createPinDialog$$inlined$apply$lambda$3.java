@@ -8,8 +8,9 @@ import android.widget.EditText;
 import com.android.systemui.C0015R$id;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ChallengeDialogs.kt */
-final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3 implements DialogInterface.OnShowListener {
+public final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3 implements DialogInterface.OnShowListener {
     final /* synthetic */ int $instructions$inlined;
     final /* synthetic */ AlertDialog $this_apply;
     final /* synthetic */ boolean $useAlphaNumeric$inlined;

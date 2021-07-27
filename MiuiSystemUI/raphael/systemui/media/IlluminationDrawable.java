@@ -12,19 +12,14 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.MathUtils;
 import android.view.View;
-import androidx.annotation.Keep;
 import com.android.internal.graphics.ColorUtils;
 import com.android.systemui.Interpolators;
 import com.android.systemui.R$styleable;
 import java.util.ArrayList;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.xmlpull.v1.XmlPullParser;
 
-@Keep
-/* compiled from: IlluminationDrawable.kt */
 public final class IlluminationDrawable extends Drawable {
     private ValueAnimator backgroundAnimation;
     private int backgroundColor;
@@ -40,27 +35,31 @@ public final class IlluminationDrawable extends Drawable {
         return -2;
     }
 
-    /* access modifiers changed from: private */
-    public final void setBackgroundColor(int i) {
+    public static final /* synthetic */ void access$setBackgroundAnimation$p(IlluminationDrawable illuminationDrawable, ValueAnimator valueAnimator) {
+        illuminationDrawable.backgroundAnimation = valueAnimator;
+    }
+
+    /* access modifiers changed from: public */
+    private final void setBackgroundColor(int i) {
         if (i != this.backgroundColor) {
             this.backgroundColor = i;
             animateBackground();
         }
     }
 
-    public void draw(@NotNull Canvas canvas) {
+    public void draw(Canvas canvas) {
         Intrinsics.checkParameterIsNotNull(canvas, "canvas");
         float f = this.cornerRadius;
         canvas.drawRoundRect(0.0f, 0.0f, (float) getBounds().width(), (float) getBounds().height(), f, f, this.paint);
     }
 
-    public void getOutline(@NotNull Outline outline) {
+    public void getOutline(Outline outline) {
         Intrinsics.checkParameterIsNotNull(outline, "outline");
         outline.setRoundRect(getBounds(), this.cornerRadius);
     }
 
     @Override // android.graphics.drawable.Drawable
-    public void inflate(@NotNull Resources resources, @NotNull XmlPullParser xmlPullParser, @NotNull AttributeSet attributeSet, @Nullable Resources.Theme theme) {
+    public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) {
         Intrinsics.checkParameterIsNotNull(resources, "r");
         Intrinsics.checkParameterIsNotNull(xmlPullParser, "parser");
         Intrinsics.checkParameterIsNotNull(attributeSet, "attrs");
@@ -111,7 +110,7 @@ public final class IlluminationDrawable extends Drawable {
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.IlluminationDrawable.canApplyTheme():boolean");
     }
 
-    public void applyTheme(@NotNull Resources.Theme theme) {
+    public void applyTheme(Resources.Theme theme) {
         Intrinsics.checkParameterIsNotNull(theme, "t");
         super.applyTheme(theme);
         int[] iArr = this.themeAttrs;
@@ -123,7 +122,7 @@ public final class IlluminationDrawable extends Drawable {
         }
     }
 
-    public void setColorFilter(@Nullable ColorFilter colorFilter) {
+    public void setColorFilter(ColorFilter colorFilter) {
         throw new UnsupportedOperationException("Color filters are not supported");
     }
 
@@ -153,7 +152,7 @@ public final class IlluminationDrawable extends Drawable {
         this.backgroundAnimation = ofFloat;
     }
 
-    public void setTintList(@Nullable ColorStateList colorStateList) {
+    public void setTintList(ColorStateList colorStateList) {
         super.setTintList(colorStateList);
         if (colorStateList != null) {
             setBackgroundColor(colorStateList.getDefaultColor());
@@ -163,7 +162,7 @@ public final class IlluminationDrawable extends Drawable {
         }
     }
 
-    public final void registerLightSource(@NotNull View view) {
+    public final void registerLightSource(View view) {
         Intrinsics.checkParameterIsNotNull(view, "lightSource");
         if (view.getBackground() instanceof LightSourceDrawable) {
             ArrayList<LightSourceDrawable> arrayList = this.lightSources;
