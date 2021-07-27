@@ -49,7 +49,7 @@ public final class MiuiQuickConnectController implements SettingsObserver.Callba
     @Override // com.miui.systemui.SettingsObserver.Callback
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         if (Intrinsics.areEqual(this.XMYZL_SWITCH_SETTING_KEY, str)) {
-            this.mIsXMYZLEnable = MiuiTextUtils.parseBoolean(str2, true);
+            this.mIsXMYZLEnable = MiuiTextUtils.parseBoolean(str2, false);
             MiuiKeyguardMoveLeftViewContainer leftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
             if (leftView != null) {
                 leftView.inflateLeftView();
@@ -60,9 +60,9 @@ public final class MiuiQuickConnectController implements SettingsObserver.Callba
     /* access modifiers changed from: private */
     public final void initXMYZLRes() {
         this.mIsSupportXMYZL = isSupportXMYZL();
-        boolean z = true;
-        if (Settings.System.getInt(this.mContext.getContentResolver(), this.XMYZL_SWITCH_SETTING_KEY, 1) != 1) {
-            z = false;
+        boolean z = false;
+        if (Settings.System.getInt(this.mContext.getContentResolver(), this.XMYZL_SWITCH_SETTING_KEY, 0) == 1) {
+            z = true;
         }
         this.mIsXMYZLEnable = z;
     }
