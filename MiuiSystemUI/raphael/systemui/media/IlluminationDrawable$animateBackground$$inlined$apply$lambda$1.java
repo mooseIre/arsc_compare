@@ -5,8 +5,9 @@ import com.android.internal.graphics.ColorUtils;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: IlluminationDrawable.kt */
-final class IlluminationDrawable$animateBackground$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class IlluminationDrawable$animateBackground$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ int $finalHighlight$inlined;
     final /* synthetic */ int $initialBackground$inlined;
     final /* synthetic */ int $initialHighlight$inlined;

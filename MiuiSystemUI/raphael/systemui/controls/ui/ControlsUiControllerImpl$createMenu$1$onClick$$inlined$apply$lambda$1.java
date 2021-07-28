@@ -25,12 +25,12 @@ public final class ControlsUiControllerImpl$createMenu$1$onClick$$inlined$apply$
             ControlsUiControllerImpl controlsUiControllerImpl = this.this$0.this$0;
             Context context = view.getContext();
             Intrinsics.checkExpressionValueIsNotNull(context, "view.context");
-            controlsUiControllerImpl.startFavoritingActivity(context, this.this$0.this$0.selectedStructure);
+            controlsUiControllerImpl.startFavoritingActivity(context, ControlsUiControllerImpl.access$getSelectedStructure$p(this.this$0.this$0));
         } else if (i == 1) {
             ControlsUiControllerImpl controlsUiControllerImpl2 = this.this$0.this$0;
             Context context2 = view.getContext();
             Intrinsics.checkExpressionValueIsNotNull(context2, "view.context");
-            controlsUiControllerImpl2.startEditingActivity(context2, this.this$0.this$0.selectedStructure);
+            controlsUiControllerImpl2.startEditingActivity(context2, ControlsUiControllerImpl.access$getSelectedStructure$p(this.this$0.this$0));
         }
         this.$this_apply.dismiss();
     }

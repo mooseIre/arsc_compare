@@ -22,11 +22,11 @@ public final class ControlsUiControllerImpl$createMenu$1 implements View.OnClick
     public void onClick(@NotNull View view) {
         Intrinsics.checkParameterIsNotNull(view, "v");
         ControlsUiControllerImpl controlsUiControllerImpl = this.this$0;
-        GlobalActionsPopupMenu globalActionsPopupMenu = new GlobalActionsPopupMenu(this.this$0.popupThemedContext, false);
+        GlobalActionsPopupMenu globalActionsPopupMenu = new GlobalActionsPopupMenu(ControlsUiControllerImpl.access$getPopupThemedContext$p(this.this$0), false);
         globalActionsPopupMenu.setAnchorView(this.$anchor);
         globalActionsPopupMenu.setAdapter(this.$adapter.element);
         globalActionsPopupMenu.setOnItemClickListener(new ControlsUiControllerImpl$createMenu$1$onClick$$inlined$apply$lambda$1(globalActionsPopupMenu, this));
         globalActionsPopupMenu.show();
-        controlsUiControllerImpl.popup = globalActionsPopupMenu;
+        ControlsUiControllerImpl.access$setPopup$p(controlsUiControllerImpl, globalActionsPopupMenu);
     }
 }

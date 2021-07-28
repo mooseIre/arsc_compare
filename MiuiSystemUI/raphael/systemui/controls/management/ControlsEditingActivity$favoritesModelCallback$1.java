@@ -14,9 +14,9 @@ public final class ControlsEditingActivity$favoritesModelCallback$1 implements F
     @Override // com.android.systemui.controls.management.FavoritesModel.FavoritesModelCallback
     public void onNoneChanged(boolean z) {
         if (z) {
-            ControlsEditingActivity.access$getSubtitle$p(this.this$0).setText(ControlsEditingActivity.EMPTY_TEXT_ID);
+            ControlsEditingActivity.access$getSubtitle$p(this.this$0).setText(ControlsEditingActivity.access$getEMPTY_TEXT_ID$cp());
         } else {
-            ControlsEditingActivity.access$getSubtitle$p(this.this$0).setText(ControlsEditingActivity.SUBTITLE_ID);
+            ControlsEditingActivity.access$getSubtitle$p(this.this$0).setText(ControlsEditingActivity.access$getSUBTITLE_ID$cp());
         }
     }
 

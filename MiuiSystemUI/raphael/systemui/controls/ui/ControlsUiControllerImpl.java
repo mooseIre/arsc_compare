@@ -126,6 +126,10 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         this.onSeedingComplete = new ControlsUiControllerImpl$onSeedingComplete$1(this);
     }
 
+    public static final /* synthetic */ Map access$getControlViewsById$p(ControlsUiControllerImpl controlsUiControllerImpl) {
+        return controlsUiControllerImpl.controlViewsById;
+    }
+
     public static final /* synthetic */ Runnable access$getDismissGlobalActions$p(ControlsUiControllerImpl controlsUiControllerImpl) {
         Runnable runnable = controlsUiControllerImpl.dismissGlobalActions;
         if (runnable != null) {
@@ -135,6 +139,10 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
+    public static final /* synthetic */ StructureInfo access$getEMPTY_STRUCTURE$cp() {
+        return EMPTY_STRUCTURE;
+    }
+
     public static final /* synthetic */ ViewGroup access$getParent$p(ControlsUiControllerImpl controlsUiControllerImpl) {
         ViewGroup viewGroup = controlsUiControllerImpl.parent;
         if (viewGroup != null) {
@@ -142,6 +150,30 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
         Intrinsics.throwUninitializedPropertyAccessException("parent");
         throw null;
+    }
+
+    public static final /* synthetic */ ContextThemeWrapper access$getPopupThemedContext$p(ControlsUiControllerImpl controlsUiControllerImpl) {
+        return controlsUiControllerImpl.popupThemedContext;
+    }
+
+    public static final /* synthetic */ StructureInfo access$getSelectedStructure$p(ControlsUiControllerImpl controlsUiControllerImpl) {
+        return controlsUiControllerImpl.selectedStructure;
+    }
+
+    public static final /* synthetic */ void access$reload(ControlsUiControllerImpl controlsUiControllerImpl, ViewGroup viewGroup) {
+        controlsUiControllerImpl.reload(viewGroup);
+    }
+
+    public static final /* synthetic */ void access$setPopup$p(ControlsUiControllerImpl controlsUiControllerImpl, ListPopupWindow listPopupWindow) {
+        controlsUiControllerImpl.popup = listPopupWindow;
+    }
+
+    public static final /* synthetic */ void access$setSelectedStructure$p(ControlsUiControllerImpl controlsUiControllerImpl, StructureInfo structureInfo) {
+        controlsUiControllerImpl.selectedStructure = structureInfo;
+    }
+
+    public static final /* synthetic */ void access$updatePreferences(ControlsUiControllerImpl controlsUiControllerImpl, StructureInfo structureInfo) {
+        controlsUiControllerImpl.updatePreferences(structureInfo);
     }
 
     @NotNull
@@ -222,8 +254,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void reload(ViewGroup viewGroup) {
         if (!this.hidden) {
             ControlsListingController controlsListingController2 = this.controlsListingController.get();
@@ -510,8 +540,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         return t3 != null ? t3 : list.get(0);
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void updatePreferences(StructureInfo structureInfo) {
         if (!Intrinsics.areEqual(structureInfo, EMPTY_STRUCTURE)) {
             this.sharedPreferences.edit().putString("controls_component", structureInfo.getComponentName().flattenToString()).putString("controls_structure", structureInfo.getStructure().toString()).commit();

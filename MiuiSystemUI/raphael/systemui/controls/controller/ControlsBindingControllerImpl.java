@@ -148,7 +148,6 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
-    /* access modifiers changed from: public */
     private final void unbind() {
         unsubscribe();
         LoadSubscriber loadSubscriber2 = this.loadSubscriber;
