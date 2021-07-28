@@ -7,8 +7,9 @@ import miuix.animation.IAnimTarget;
 import miuix.animation.IStateStyle;
 import miuix.animation.ViewTarget;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiAnimatedNotificationRowBase.kt */
-final class MiuiAnimatedNotificationRowBase$mFolme$2 extends Lambda implements Function0<IStateStyle> {
+public final class MiuiAnimatedNotificationRowBase$mFolme$2 extends Lambda implements Function0<IStateStyle> {
     final /* synthetic */ MiuiAnimatedNotificationRowBase this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */

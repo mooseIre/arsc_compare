@@ -732,6 +732,10 @@ public class QSControlDetail extends FrameLayout {
                 if (viewGroup2 != null) {
                     viewGroup2.suppressLayout(false);
                 }
+                View view = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
+                if (view instanceof MiuiQSDetailItems) {
+                    ((MiuiQSDetailItems) view).notifyData();
+                }
             }
         });
         duration.setInterpolator(physicBasedInterpolator);

@@ -237,7 +237,6 @@ public class MediaCarouselScrollHandler {
         }
     }
 
-    /* access modifiers changed from: public */
     private final boolean onTouch(MotionEvent motionEvent) {
         float f;
         boolean z = true;
@@ -306,7 +305,6 @@ public class MediaCarouselScrollHandler {
         throw null;
     }
 
-    /* access modifiers changed from: public */
     private final boolean onInterceptTouch(MotionEvent motionEvent) {
         return this.gestureDetector.onTouchEvent(motionEvent);
     }

@@ -98,9 +98,9 @@ public class BrightnessMirrorController implements CallbackController<Brightness
     private void reinflate() {
         int indexOfChild = this.mStatusBarWindow.indexOfChild(this.mBrightnessMirror);
         this.mStatusBarWindow.removeView(this.mBrightnessMirror);
-        View inflate = LayoutInflater.from(this.mBrightnessMirror.getContext()).inflate(C0017R$layout.brightness_mirror, (ViewGroup) this.mStatusBarWindow, false);
-        this.mBrightnessMirror = inflate;
-        this.mStatusBarWindow.addView(inflate, indexOfChild);
+        this.mBrightnessMirror = LayoutInflater.from(this.mBrightnessMirror.getContext()).inflate(C0017R$layout.brightness_mirror, (ViewGroup) this.mStatusBarWindow, false);
+        updateResources();
+        this.mStatusBarWindow.addView(this.mBrightnessMirror, indexOfChild);
         for (int i = 0; i < this.mBrightnessMirrorListeners.size(); i++) {
             this.mBrightnessMirrorListeners.valueAt(i).onBrightnessMirrorReinflated(this.mBrightnessMirror);
         }

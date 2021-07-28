@@ -13,7 +13,7 @@ public final class MiuiNotificationEntryManager$recheckFoldNotificationDelayed$1
 
     public final void run() {
         MiuiNotificationEntryManager miuiNotificationEntryManager = this.this$0;
-        MiuiNotificationEntryManager.updateFoldRankingAndSort$default(miuiNotificationEntryManager, miuiNotificationEntryManager.rankingManager.getRankingMap(), "onMiuiThemeChanged", false, 4, null);
+        MiuiNotificationEntryManager.updateFoldRankingAndSort$default(miuiNotificationEntryManager, MiuiNotificationEntryManager.access$getRankingManager$p(miuiNotificationEntryManager).getRankingMap(), "onMiuiThemeChanged", false, 4, null);
         FoldManager.Companion.checkFoldNotification(MiuiNotificationEntryManager.shouldShow$default(this.this$0, 0, 1, null), this.this$0.getCurrentUser());
     }
 }

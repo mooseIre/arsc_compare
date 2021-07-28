@@ -106,7 +106,7 @@ public class UsbNotificationController {
             this.mChargingNotificationId = this.mContext.getResources().getIdentifier("usb_charging_notification_title", "string", "android");
         }
         this.mIsScreenshotMode = MiuiThemeHelper.isScreenshotMode();
-        this.mEnableUsbModeSelection = this.mContext.getResources().getBoolean(285474848);
+        this.mEnableUsbModeSelection = this.mContext.getResources().getBoolean(285474849);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("disable_usb_by_sim"), false, this.mDisableUsbObserver);
         this.mDisableUsbObserver.onChange(false);
         if (SUPPORT_DISABLE_USB_BY_SIM) {

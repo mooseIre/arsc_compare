@@ -419,7 +419,7 @@ public final class ControlCenterPanelView extends LinearLayout {
             }
         }
         ControlsPluginManager controlsPluginManager2 = this.controlsPluginManager;
-        if (!this.panelController.isSuperPowerMode()) {
+        if (!this.panelController.isSuperPowerMode() && this.panelController.getCurrentUserId() == 0) {
             LinearLayout linearLayout5 = this.smartHomeContainer;
             if (linearLayout5 != null) {
                 linearLayout5.suppressLayout(true);

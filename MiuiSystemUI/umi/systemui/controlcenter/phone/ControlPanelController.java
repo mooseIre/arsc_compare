@@ -141,6 +141,10 @@ public class ControlPanelController implements CallbackController<UseControlPane
         };
     }
 
+    public int getCurrentUserId() {
+        return this.mCurrentUserTracker.getCurrentUserId();
+    }
+
     public void setControlCenter(ControlCenter controlCenter) {
         this.mControlCenter = controlCenter;
     }
