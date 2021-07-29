@@ -14,7 +14,7 @@ public final class ControlsFavoritingActivity$setUpPager$$inlined$apply$lambda$1
     @Override // androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
     public void onPageSelected(int i) {
         super.onPageSelected(i);
-        CharSequence structureName = ((StructureContainer) this.this$0.listOfStructures.get(i)).getStructureName();
+        CharSequence structureName = ((StructureContainer) ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0).get(i)).getStructureName();
         if (TextUtils.isEmpty(structureName)) {
             structureName = this.this$0.appName;
         }

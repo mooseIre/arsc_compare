@@ -5,11 +5,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.UserHandle;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
-import com.android.systemui.statusbar.notification.NotificationUtil;
-import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.miui.systemui.BuildConfig;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -82,10 +81,7 @@ public final class FoldManager {
         }
 
         public final void setShowingUnimportant(boolean z) {
-            if (FoldManager.isShowingUnimportant != z) {
-                FoldManager.isShowingUnimportant = z;
-                FoldManager.Companion.handleNotifVisibleLog();
-            }
+            FoldManager.isShowingUnimportant = z;
         }
 
         public final boolean isUnimportantTransfering() {
@@ -240,7 +236,7 @@ public final class FoldManager {
                 return false;
             }
             int canFold = FoldTool.INSTANCE.canFold(statusBarNotification, z, i);
-            NotificationUtil.setFoldReason(statusBarNotification, canFold);
+            Log.d("UnimportantNotificationFoldTool", "isSbnFold: sbn=" + statusBarNotification.getKey() + ", fold_reason=" + canFold);
             return FoldTool.INSTANCE.shouldFold(canFold);
         }
 
@@ -269,10 +265,6 @@ public final class FoldManager {
 
         private final void onFoldRemoved(UserHandle userHandle) {
             ((FoldNotifController) Dependency.get(FoldNotifController.class)).cancelFoldNotification(userHandle);
-        }
-
-        private final void handleNotifVisibleLog() {
-            ((NotificationLogger) Dependency.get(NotificationLogger.class)).maybeUpdateLoggingStatusByFold();
         }
     }
 

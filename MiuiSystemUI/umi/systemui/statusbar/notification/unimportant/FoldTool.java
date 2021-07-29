@@ -20,10 +20,6 @@ public final class FoldTool {
     private static boolean isInit;
     private static Context mContext;
 
-    public final boolean isAnalyzeBySdk(int i) {
-        return i == 306 || i == 307;
-    }
-
     public final void setUnfoldLimit(int i) {
     }
 

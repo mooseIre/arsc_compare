@@ -4,9 +4,8 @@ import android.animation.ValueAnimator;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
-/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowRowTouchHelper.kt */
-public final class AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+final class AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
 
     AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$apply$lambda$1(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper) {
@@ -18,9 +17,9 @@ public final class AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inli
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
             float floatValue = ((Float) animatedValue).floatValue();
-            this.this$0.mExpandedParams.setIconAlpha(floatValue);
-            this.this$0.mExpandedParams.setBackgroundAlpha(floatValue);
-            this.this$0.onExpandedParamsUpdated();
+            AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).setIconAlpha(floatValue);
+            AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).setBackgroundAlpha(floatValue);
+            AppMiniWindowRowTouchHelper.access$onExpandedParamsUpdated(this.this$0);
             return;
         }
         throw new TypeCastException("null cannot be cast to non-null type kotlin.Float");

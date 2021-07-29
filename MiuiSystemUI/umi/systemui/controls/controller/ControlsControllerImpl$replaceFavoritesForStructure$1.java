@@ -1,7 +1,8 @@
 package com.android.systemui.controls.controller;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsControllerImpl.kt */
-final class ControlsControllerImpl$replaceFavoritesForStructure$1 implements Runnable {
+public final class ControlsControllerImpl$replaceFavoritesForStructure$1 implements Runnable {
     final /* synthetic */ StructureInfo $structureInfo;
     final /* synthetic */ ControlsControllerImpl this$0;
 
@@ -12,6 +13,6 @@ final class ControlsControllerImpl$replaceFavoritesForStructure$1 implements Run
 
     public final void run() {
         Favorites.INSTANCE.replaceControls(this.$structureInfo);
-        ControlsControllerImpl.access$getPersistenceWrapper$p(this.this$0).storeFavorites(Favorites.INSTANCE.getAllStructures());
+        this.this$0.persistenceWrapper.storeFavorites(Favorites.INSTANCE.getAllStructures());
     }
 }

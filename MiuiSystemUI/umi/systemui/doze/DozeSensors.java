@@ -340,7 +340,8 @@ public class DozeSensors {
         }
     }
 
-    class PluginSensor extends TriggerSensor implements SensorManagerPlugin.SensorEventListener {
+    /* access modifiers changed from: package-private */
+    public class PluginSensor extends TriggerSensor implements SensorManagerPlugin.SensorEventListener {
         private long mDebounce;
         final SensorManagerPlugin.Sensor mPluginSensor;
 

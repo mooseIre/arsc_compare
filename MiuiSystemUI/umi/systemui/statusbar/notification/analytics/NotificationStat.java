@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.notification.analytics;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,13 +15,9 @@ import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.PushEvents;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
-import com.android.systemui.statusbar.notification.unimportant.FoldManager;
-import com.android.systemui.statusbar.notification.unimportant.FoldTool;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
-import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
-import com.android.systemui.statusbar.policy.MiuiBatteryControllerImpl;
 import com.miui.systemui.EventTracker;
 import com.miui.systemui.events.BlockEvent;
 import com.miui.systemui.events.CancelAllEvent;
@@ -33,7 +28,6 @@ import com.miui.systemui.events.ClickEvent;
 import com.miui.systemui.events.ClickMoreEvent;
 import com.miui.systemui.events.ClickSetUnimportant;
 import com.miui.systemui.events.ClickSnoozeDialog;
-import com.miui.systemui.events.EnqueueEvent;
 import com.miui.systemui.events.ExitModalEvent;
 import com.miui.systemui.events.ExpansionEvent;
 import com.miui.systemui.events.FloatAutoCollapseEvent;
@@ -51,7 +45,6 @@ import com.miui.systemui.events.SnoozeToastClick;
 import com.miui.systemui.events.SnoozeToastVisible;
 import com.miui.systemui.events.VisibleEvent;
 import com.miui.systemui.util.CommonUtil;
-import com.miui.systemui.util.Md5;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,7 +59,6 @@ import java.util.stream.Stream;
 import org.json.JSONArray;
 
 public class NotificationStat extends NotificationStatWithPlugin {
-    private int mBatteryLevel;
     private Context mContext;
     private NotificationEntryManager mEntryManager;
     private EventTracker mEventTracker;
@@ -76,13 +68,14 @@ public class NotificationStat extends NotificationStatWithPlugin {
     private NotificationPanelStat mPanelStat;
     private NotificationSettingsManager mSettingsManager;
 
-    public NotificationStat(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardStateController keyguardStateController, EventTracker eventTracker, NotificationSettingsManager notificationSettingsManager, BatteryController batteryController) {
+    public NotificationStat(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardStateController keyguardStateController, EventTracker eventTracker, NotificationPanelStat notificationPanelStat, NotificationSettingsManager notificationSettingsManager) {
         this.mContext = context;
         this.mEntryManager = notificationEntryManager;
         this.mGroupManager = notificationGroupManager;
         this.mHeadsUpManager = headsUpManagerPhone;
         this.mKeyguardStateController = keyguardStateController;
         this.mEventTracker = eventTracker;
+        this.mPanelStat = notificationPanelStat;
         notificationGroupManager.addOnGroupChangeListener(new NotificationGroupManager.OnGroupChangeListener() {
             /* class com.android.systemui.statusbar.notification.analytics.NotificationStat.AnonymousClass1 */
 
@@ -107,25 +100,6 @@ public class NotificationStat extends NotificationStatWithPlugin {
             @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onPostEntryUpdated(NotificationEntry notificationEntry) {
                 NotificationStat.this.onArrive(notificationEntry, true);
-            }
-
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
-            public void onEntryInflated(NotificationEntry notificationEntry) {
-                NotificationStat.this.handleEntryInflatedEvent(notificationEntry);
-            }
-
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
-            public void onEntryReinflated(NotificationEntry notificationEntry) {
-                NotificationStat.this.handleEntryInflatedEvent(notificationEntry);
-            }
-        });
-        this.mBatteryLevel = ((MiuiBatteryControllerImpl) batteryController).getBatteryLevel();
-        batteryController.addCallback(new BatteryController.BatteryStateChangeCallback() {
-            /* class com.android.systemui.statusbar.notification.analytics.NotificationStat.AnonymousClass3 */
-
-            @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
-            public void onBatteryLevelChanged(int i, boolean z, boolean z2) {
-                NotificationStat.this.mBatteryLevel = i;
             }
         });
     }
@@ -349,7 +323,7 @@ public class NotificationStat extends NotificationStatWithPlugin {
                 }
             }).collect(Collectors.toList());
             if (!list3.isEmpty()) {
-                handleVisibleEvent(list3, getNotifSource(z, z2, null), true);
+                handleVisibleEvent(list3, getNotifSource(z, z2));
             }
         }
     }
@@ -369,31 +343,6 @@ public class NotificationStat extends NotificationStatWithPlugin {
             intent.setPackage("com.miui.systemAdSolution");
             intent.putExtra("adid", str2);
             this.mContext.sendBroadcastAsUser(intent, UserHandle.CURRENT);
-        }
-    }
-
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void handleEntryInflatedEvent(NotificationEntry notificationEntry) {
-        if (notificationEntry != null && !NotificationUtil.isFoldEntrance(notificationEntry.getSbn()).booleanValue()) {
-            ExpandedNotification sbn = notificationEntry.getSbn();
-            int notifId = getNotifId(notificationEntry);
-            long notifTsId = getNotifTsId(notificationEntry);
-            String generateTextId = generateTextId(sbn);
-            String resolvePushMsgId = resolvePushMsgId(sbn);
-            String notifPkg = getNotifPkg(notificationEntry);
-            String notifTargetPkg = getNotifTargetPkg(notificationEntry);
-            boolean containsBigPic = containsBigPic(sbn);
-            boolean containCustomView = containCustomView(sbn);
-            boolean containCustomAction = containCustomAction(sbn);
-            int i = sbn.getNotification().priority;
-            int i2 = this.mBatteryLevel;
-            String channelId = getChannelId(notificationEntry.getSbn());
-            int i3 = sbn.getNotification().flags;
-            String pushUid = getPushUid(sbn);
-            boolean isFold = NotificationUtil.isFold(notificationEntry.getSbn());
-            int foldReason = NotificationUtil.getFoldReason(notificationEntry.getSbn());
-            this.mEventTracker.track(new EnqueueEvent(notifId, notifTsId, generateTextId, resolvePushMsgId, notifPkg, notifTargetPkg, containsBigPic, containCustomView, containCustomAction, i, i2, channelId, i3, pushUid, isFold ? "fold" : CodeInjection.MD5, (!isFold || !FoldTool.INSTANCE.isAnalyzeBySdk(foldReason)) ? "OTHER" : "UNIMPORTANT", foldReason));
         }
     }
 
@@ -426,23 +375,17 @@ public class NotificationStat extends NotificationStatWithPlugin {
     }
 
     private void handleVisibleEvent(List<NotificationEntry> list, String str) {
-        handleVisibleEvent(list, str, false);
-    }
-
-    private void handleVisibleEvent(List<NotificationEntry> list, String str, boolean z) {
-        List list2 = (List) list.stream().map(new Function(z, str) {
-            /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$Yi_37fmON2NUw2aTaWz2DoCRAA */
-            public final /* synthetic */ boolean f$1;
-            public final /* synthetic */ String f$2;
+        List list2 = (List) list.stream().map(new Function(str) {
+            /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$4DW7FVr28pXqGC6w6Dt7TvhjgD4 */
+            public final /* synthetic */ String f$1;
 
             {
                 this.f$1 = r2;
-                this.f$2 = r3;
             }
 
             @Override // java.util.function.Function
             public final Object apply(Object obj) {
-                return NotificationStat.this.lambda$handleVisibleEvent$2$NotificationStat(this.f$1, this.f$2, (NotificationEntry) obj);
+                return NotificationStat.this.lambda$handleVisibleEvent$2$NotificationStat(this.f$1, (NotificationEntry) obj);
             }
         }).collect(Collectors.toList());
         if (list2.size() > 0) {
@@ -452,11 +395,11 @@ public class NotificationStat extends NotificationStatWithPlugin {
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$handleVisibleEvent$2 */
-    public /* synthetic */ Map lambda$handleVisibleEvent$2$NotificationStat(boolean z, String str, NotificationEntry notificationEntry) {
+    public /* synthetic */ Map lambda$handleVisibleEvent$2$NotificationStat(String str, NotificationEntry notificationEntry) {
         long currentTimeMillis = System.currentTimeMillis() - notificationEntry.getSbn().seeTime;
         int notifIndex = getNotifIndex(notificationEntry);
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("source", z ? recalculateNotifSource(str, notificationEntry) : str);
+        hashMap.put("source", str);
         hashMap.put("index", Integer.valueOf(notifIndex));
         hashMap.put("visualPosition", Integer.valueOf(notificationEntry.visualPosition));
         hashMap.put("duration", Long.valueOf(currentTimeMillis));
@@ -525,7 +468,7 @@ public class NotificationStat extends NotificationStatWithPlugin {
         String tag = equals ? notificationEntry.getSbn().getTag() : CodeInjection.MD5;
         int isNotificationGrouped = getIsNotificationGrouped(notificationEntry);
         NotificationPanelStat notificationPanelStat = this.mPanelStat;
-        ClickEvent clickEvent = new ClickEvent(notifPkg, notifTargetPkg, notifTsId, notifIndex, notifClearable, str, notifIndex2, tag, isNotificationGrouped, notificationPanelStat == null ? -1 : notificationPanelStat.getPanelSlidingTimes(), getIsPriority(notificationEntry), getMipushClass(notificationEntry), inImportantSection(notificationEntry), getCategory(notificationEntry.getSbn()), getChannelId(notificationEntry.getSbn()));
+        ClickEvent clickEvent = new ClickEvent(notifPkg, notifTargetPkg, notifTsId, notifIndex, notifClearable, str, notifIndex2, tag, isNotificationGrouped, notificationPanelStat == null ? -1 : notificationPanelStat.getPanelSlidingTimes(), getIsPriority(notificationEntry), getMipushClass(notificationEntry), inImportantSection(notificationEntry));
         this.mEventTracker.track(clickEvent);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("index", Integer.valueOf(clickEvent.getIndex()));
@@ -555,7 +498,7 @@ public class NotificationStat extends NotificationStatWithPlugin {
     }
 
     private void handleBlockEvent(NotificationEntry notificationEntry) {
-        BlockEvent blockEvent = new BlockEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifIndex(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getChannelId(notificationEntry.getSbn()));
+        BlockEvent blockEvent = new BlockEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifIndex(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), notificationEntry.getSbn().getNotification().getChannelId());
         this.mEventTracker.track(blockEvent);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("index", Integer.valueOf(blockEvent.getIndex()));
@@ -566,7 +509,7 @@ public class NotificationStat extends NotificationStatWithPlugin {
     }
 
     private void handleCancelEvent(NotificationEntry notificationEntry, int i) {
-        CancelEvent cancelEvent = new CancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), i, getIsNotificationGrouped(notificationEntry), getIsPriority(notificationEntry), getMipushClass(notificationEntry), inImportantSection(notificationEntry), getCategory(notificationEntry.getSbn()), getChannelId(notificationEntry.getSbn()));
+        CancelEvent cancelEvent = new CancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), i, getIsNotificationGrouped(notificationEntry), getIsPriority(notificationEntry), getMipushClass(notificationEntry), inImportantSection(notificationEntry));
         this.mEventTracker.track(cancelEvent);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("index", Integer.valueOf(cancelEvent.getIndex()));
@@ -576,15 +519,7 @@ public class NotificationStat extends NotificationStatWithPlugin {
     }
 
     private void handleCancelAllEvent(int i) {
-        NotifSource notifSource;
-        EventTracker eventTracker = this.mEventTracker;
-        String name = ClearAllMode.CLEAR_ALL.name();
-        if (FoldManager.Companion.isShowingUnimportant()) {
-            notifSource = NotifSource.UNIMPORTANT;
-        } else {
-            notifSource = NotifSource.PANEL;
-        }
-        eventTracker.track(new CancelAllEvent(name, i, 1, notifSource.name()));
+        this.mEventTracker.track(new CancelAllEvent(ClearAllMode.CLEAR_ALL.name(), i, 1, NotifSource.PANEL.name()));
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("notifications_count", Integer.valueOf(i));
         onPluginEvent(this.mContext, "notification_cancel_all", hashMap);
@@ -679,10 +614,6 @@ public class NotificationStat extends NotificationStatWithPlugin {
         return notificationEntry.getSbn().getPackageName();
     }
 
-    private int getNotifId(NotificationEntry notificationEntry) {
-        return notificationEntry.getSbn().getId();
-    }
-
     private long getNotifTsId(NotificationEntry notificationEntry) {
         return notificationEntry.getSbn().getPostTime();
     }
@@ -709,29 +640,18 @@ public class NotificationStat extends NotificationStatWithPlugin {
     }
 
     private String getNotifSource(NotificationEntry notificationEntry, boolean z) {
-        String notifSource = getNotifSource(this.mHeadsUpManager.isAlerting(notificationEntry.getKey()), this.mKeyguardStateController.isShowing(), notificationEntry);
+        String notifSource = getNotifSource(this.mHeadsUpManager.isAlerting(notificationEntry.getKey()), this.mKeyguardStateController.isShowing());
         return (!z || !NotifSource.PANEL.name().equalsIgnoreCase(notifSource) || !notificationEntry.isVisualInFloat) ? notifSource : NotifSource.FLOAT.name();
     }
 
-    private String getNotifSource(boolean z, boolean z2, NotificationEntry notificationEntry) {
+    private String getNotifSource(boolean z, boolean z2) {
         if (z) {
             return NotifSource.FLOAT.name();
         }
         if (z2) {
             return NotifSource.KEYGUARD.name();
         }
-        if (isEntryFold(notificationEntry)) {
-            return NotifSource.UNIMPORTANT.name();
-        }
         return NotifSource.PANEL.name();
-    }
-
-    private String recalculateNotifSource(String str, NotificationEntry notificationEntry) {
-        return isEntryFold(notificationEntry) ? NotifSource.UNIMPORTANT.name() : str;
-    }
-
-    private boolean isEntryFold(NotificationEntry notificationEntry) {
-        return notificationEntry != null && NotificationUtil.isFold(notificationEntry.getSbn());
     }
 
     private int getIsNotificationGrouped(NotificationEntry notificationEntry) {
@@ -781,38 +701,5 @@ public class NotificationStat extends NotificationStatWithPlugin {
 
     private int inImportantSection(NotificationEntry notificationEntry) {
         return notificationEntry.getSbn().isImportant() ? 1 : 0;
-    }
-
-    private String getChannelId(ExpandedNotification expandedNotification) {
-        return expandedNotification.getNotification().getChannelId();
-    }
-
-    private String generateTextId(ExpandedNotification expandedNotification) {
-        Notification notification = expandedNotification.getNotification();
-        return Md5.getMd5Digest(NotificationUtil.resolveTitle(notification).toString() + ((Object) NotificationUtil.resolveText(notification)));
-    }
-
-    private String resolvePushMsgId(ExpandedNotification expandedNotification) {
-        return NotificationUtil.resolvePushMsgId(expandedNotification.getNotification());
-    }
-
-    private boolean containsBigPic(ExpandedNotification expandedNotification) {
-        return NotificationUtil.containsBigPic(expandedNotification.getNotification());
-    }
-
-    private boolean containCustomView(ExpandedNotification expandedNotification) {
-        return NotificationUtil.containCustomView(expandedNotification.getNotification());
-    }
-
-    private boolean containCustomAction(ExpandedNotification expandedNotification) {
-        return expandedNotification.getNotification().actions != null && expandedNotification.getNotification().actions.length > 0;
-    }
-
-    private String getPushUid(ExpandedNotification expandedNotification) {
-        return NotificationUtil.getPushUid(expandedNotification.getNotification());
-    }
-
-    private String getCategory(ExpandedNotification expandedNotification) {
-        return (!NotificationUtil.isFold(expandedNotification) || !FoldTool.INSTANCE.isAnalyzeBySdk(NotificationUtil.getFoldReason(expandedNotification))) ? "OTHER" : "UNIMPORTANT";
     }
 }

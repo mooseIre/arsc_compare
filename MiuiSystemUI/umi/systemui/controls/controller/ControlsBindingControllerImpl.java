@@ -359,6 +359,10 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             throw null;
         }
 
+        public static final /* synthetic */ AtomicBoolean access$isTerminated$p(LoadSubscriber loadSubscriber) {
+            return loadSubscriber.isTerminated;
+        }
+
         public final ControlsBindingController.LoadCallback getCallback() {
             return this.callback;
         }
@@ -400,7 +404,6 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             maybeTerminateAndRun(new OnLoadRunnable(this.this$0, iBinder, this.loadedControls, this.callback));
         }
 
-        /* access modifiers changed from: public */
         private final void maybeTerminateAndRun(Runnable runnable) {
             if (!this.isTerminated.get()) {
                 this._loadCancelInternal = ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1.INSTANCE;
