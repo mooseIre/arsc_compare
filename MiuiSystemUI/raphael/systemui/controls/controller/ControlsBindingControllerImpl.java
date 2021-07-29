@@ -41,6 +41,10 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         this.lazyController = lazy;
     }
 
+    public static final /* synthetic */ DelayableExecutor access$getBackgroundExecutor$p(ControlsBindingControllerImpl controlsBindingControllerImpl) {
+        return controlsBindingControllerImpl.backgroundExecutor;
+    }
+
     @Override // com.android.systemui.util.UserAwareController
     public int getCurrentUserId() {
         UserHandle userHandle = this.currentUser;
@@ -380,13 +384,13 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             Intrinsics.checkParameterIsNotNull(iControlsSubscription, "subs");
             this.subscription = iControlsSubscription;
             this._loadCancelInternal = new ControlsBindingControllerImpl$LoadSubscriber$onSubscribe$1(this);
-            this.this$0.backgroundExecutor.execute(new OnSubscribeRunnable(this.this$0, iBinder, iControlsSubscription, this.requestLimit));
+            ControlsBindingControllerImpl.access$getBackgroundExecutor$p(this.this$0).execute(new OnSubscribeRunnable(this.this$0, iBinder, iControlsSubscription, this.requestLimit));
         }
 
         public void onNext(IBinder iBinder, Control control) {
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(control, "c");
-            this.this$0.backgroundExecutor.execute(new ControlsBindingControllerImpl$LoadSubscriber$onNext$1(this, control, iBinder));
+            ControlsBindingControllerImpl.access$getBackgroundExecutor$p(this.this$0).execute(new ControlsBindingControllerImpl$LoadSubscriber$onNext$1(this, control, iBinder));
         }
 
         public void onError(IBinder iBinder, String str) {
@@ -400,6 +404,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             maybeTerminateAndRun(new OnLoadRunnable(this.this$0, iBinder, this.loadedControls, this.callback));
         }
 
+        /* access modifiers changed from: public */
         private final void maybeTerminateAndRun(Runnable runnable) {
             if (!this.isTerminated.get()) {
                 this._loadCancelInternal = ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1.INSTANCE;
@@ -407,7 +412,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
                 if (controlsProviderLifecycleManager != null) {
                     controlsProviderLifecycleManager.cancelLoadTimeout();
                 }
-                this.this$0.backgroundExecutor.execute(new ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$2(this, runnable));
+                ControlsBindingControllerImpl.access$getBackgroundExecutor$p(this.this$0).execute(new ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$2(this, runnable));
             }
         }
     }

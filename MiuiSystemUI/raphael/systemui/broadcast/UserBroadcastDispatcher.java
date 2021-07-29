@@ -106,8 +106,7 @@ public class UserBroadcastDispatcher implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void handleRegisterReceiver(ReceiverData receiverData) {
+    public final void handleRegisterReceiver(ReceiverData receiverData) {
         Sequence sequence;
         Looper looper = this.bgHandler.getLooper();
         Intrinsics.checkExpressionValueIsNotNull(looper, "bgHandler.looper");

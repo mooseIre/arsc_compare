@@ -340,8 +340,7 @@ public class DozeTriggers implements DozeMachine.Part {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onProximityFar(boolean z) {
+    public void onProximityFar(boolean z) {
         if (this.mMachine.isExecutingTransition()) {
             Log.w("DozeTriggers", "onProximityFar called during transition. Ignoring sensor response.");
             return;

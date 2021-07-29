@@ -48,8 +48,6 @@ public class InattentiveSleepWarningView extends FrameLayout {
         });
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void removeView() {
         if (this.mDismissing) {
             setVisibility(4);
