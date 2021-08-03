@@ -17,6 +17,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -143,7 +144,11 @@ public class ChargeUtils {
             return resources.getString(C0021R$string.keyguard_charged);
         }
         if (isStrongSuperQuickCharging()) {
-            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
+            String string = resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
+            if (!isDoubleFastCharge()) {
+                return string;
+            }
+            return String.format(resources.getString(C0021R$string.keyguard_charging_double_fast_and_level_tip), NumberFormat.getPercentInstance().format((double) (((float) i) / 100.0f)));
         } else if (isSuperQuickCharging()) {
             return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
         } else if (isQuickCharging()) {
@@ -176,6 +181,10 @@ public class ChargeUtils {
 
     public static boolean isStrongSuperQuickCharging() {
         return ((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).isStrongSuperQuickCharging();
+    }
+
+    public static boolean isDoubleFastCharge() {
+        return ((MiuiChargeController) Dependency.get(MiuiChargeController.class)).isFastCharge();
     }
 
     public static long getHours(long j) {

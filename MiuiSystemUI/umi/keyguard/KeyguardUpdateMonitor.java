@@ -311,6 +311,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     private final boolean mIsAutomotive;
     private boolean mIsDreaming;
     private final boolean mIsPrimaryUser;
+    private boolean mIsSimBindEnable;
     private KeyguardBypassController mKeyguardBypassController;
     private boolean mKeyguardGoingAway;
     private boolean mKeyguardIsVisible;
@@ -360,7 +361,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     HashMap<Integer, ServiceState> mServiceStates = new HashMap<>();
     HashMap<Integer, SimData> mSimDatas = new HashMap<>();
     private Runnable mStartListeningForFingerprintRunnable = new Runnable() {
-        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass17 */
+        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass18 */
 
         public void run() {
             KeyguardUpdateMonitor.this.startListeningForFingerprint();
@@ -379,7 +380,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     private SubscriptionManager mSubscriptionManager;
     private boolean mSwitchingUser;
     private final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
-        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass19 */
+        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass20 */
 
         @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskStackChangedBackground() {
@@ -428,7 +429,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     private SparseBooleanArray mUserIsUnlocked = new SparseBooleanArray();
     private UserManager mUserManager;
     private final UserSwitchObserver mUserSwitchObserver = new UserSwitchObserver() {
-        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass16 */
+        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass17 */
 
         public void onUserSwitching(int i, IRemoteCallback iRemoteCallback) {
             KeyguardUpdateMonitor.this.mHandler.sendMessage(KeyguardUpdateMonitor.this.mHandler.obtainMessage(310, i, 0, iRemoteCallback));
@@ -504,35 +505,37 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void handleSimSubscriptionInfoChanged() {
-        Assert.isMainThread();
-        Log.v("KeyguardUpdateMonitor", "onSubscriptionInfoChanged()");
-        List completeActiveSubscriptionInfoList = this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList();
-        if (completeActiveSubscriptionInfoList != null) {
-            Iterator it = completeActiveSubscriptionInfoList.iterator();
-            while (it.hasNext()) {
-                Log.v("KeyguardUpdateMonitor", "SubInfo:" + ((SubscriptionInfo) it.next()));
+        if (!this.mIsSimBindEnable) {
+            Assert.isMainThread();
+            Log.v("KeyguardUpdateMonitor", "onSubscriptionInfoChanged()");
+            List completeActiveSubscriptionInfoList = this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList();
+            if (completeActiveSubscriptionInfoList != null) {
+                Iterator it = completeActiveSubscriptionInfoList.iterator();
+                while (it.hasNext()) {
+                    Log.v("KeyguardUpdateMonitor", "SubInfo:" + ((SubscriptionInfo) it.next()));
+                }
+            } else {
+                Log.v("KeyguardUpdateMonitor", "onSubscriptionInfoChanged: list is null");
             }
-        } else {
-            Log.v("KeyguardUpdateMonitor", "onSubscriptionInfoChanged: list is null");
-        }
-        List<SubscriptionInfo> subscriptionInfo = getSubscriptionInfo(true);
-        ArrayList arrayList = new ArrayList();
-        for (int i = 0; i < subscriptionInfo.size(); i++) {
-            SubscriptionInfo subscriptionInfo2 = subscriptionInfo.get(i);
-            if (refreshSimState(subscriptionInfo2.getSubscriptionId(), subscriptionInfo2.getSimSlotIndex())) {
-                arrayList.add(subscriptionInfo2);
-            }
-        }
-        for (int i2 = 0; i2 < arrayList.size(); i2++) {
-            SimData simData = this.mSimDatas.get(Integer.valueOf(((SubscriptionInfo) arrayList.get(i2)).getSubscriptionId()));
-            for (int i3 = 0; i3 < this.mCallbacks.size(); i3++) {
-                KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = this.mCallbacks.get(i3).get();
-                if (keyguardUpdateMonitorCallback != null) {
-                    keyguardUpdateMonitorCallback.onSimStateChanged(simData.subId, simData.slotId, simData.simState);
+            List<SubscriptionInfo> subscriptionInfo = getSubscriptionInfo(true);
+            ArrayList arrayList = new ArrayList();
+            for (int i = 0; i < subscriptionInfo.size(); i++) {
+                SubscriptionInfo subscriptionInfo2 = subscriptionInfo.get(i);
+                if (refreshSimState(subscriptionInfo2.getSubscriptionId(), subscriptionInfo2.getSimSlotIndex())) {
+                    arrayList.add(subscriptionInfo2);
                 }
             }
+            for (int i2 = 0; i2 < arrayList.size(); i2++) {
+                SimData simData = this.mSimDatas.get(Integer.valueOf(((SubscriptionInfo) arrayList.get(i2)).getSubscriptionId()));
+                for (int i3 = 0; i3 < this.mCallbacks.size(); i3++) {
+                    KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = this.mCallbacks.get(i3).get();
+                    if (keyguardUpdateMonitorCallback != null) {
+                        keyguardUpdateMonitorCallback.onSimStateChanged(simData.subId, simData.slotId, simData.simState);
+                    }
+                }
+            }
+            callbacksRefreshCarrierInfo();
         }
-        callbacksRefreshCarrierInfo();
     }
 
     /* access modifiers changed from: private */
@@ -1470,7 +1473,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             watchForDeviceProvisioning();
         }
         this.mBatteryStatus = new MiuiBatteryStatus(1, 0, 0, 0, 0, -1, 1, -1, 0);
-        int i = Settings.Secure.getInt(context.getContentResolver(), "sim_lock_enable", 0);
         this.mUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.TIME_TICK");
@@ -1478,10 +1480,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         intentFilter.addAction("android.intent.action.BATTERY_CHANGED");
         intentFilter.addAction("android.intent.action.TIMEZONE_CHANGED");
         intentFilter.addAction("android.intent.action.AIRPLANE_MODE");
-        if (i == 0) {
-            intentFilter.addAction("android.intent.action.SIM_STATE_CHANGED");
-            intentFilter.addAction("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED");
-        }
+        intentFilter.addAction("android.intent.action.SIM_STATE_CHANGED");
+        intentFilter.addAction("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED");
         intentFilter.addAction("android.intent.action.SERVICE_STATE");
         intentFilter.addAction("android.intent.action.PHONE_STATE");
         intentFilter.addAction("android.app.action.DEVICE_POLICY_MANAGER_STATE_CHANGED");
@@ -1511,9 +1511,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         intentFilter2.addAction("android.intent.action.USER_REMOVED");
         intentFilter2.addAction("miui.intent.action.MIUI_REGION_CHANGED");
         this.mBroadcastDispatcher.registerReceiverWithHandler(this.mBroadcastAllReceiver, intentFilter2, this.mHandler, UserHandle.ALL);
-        if (i == 0) {
-            this.mSubscriptionManager.addOnSubscriptionsChangedListener(this.mSubscriptionListener);
-        }
+        this.mSubscriptionManager.addOnSubscriptionsChangedListener(this.mSubscriptionListener);
         try {
             ActivityManager.getService().registerUserSwitchObserver(this.mUserSwitchObserver, "KeyguardUpdateMonitor");
         } catch (RemoteException e) {
@@ -1555,24 +1553,39 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         updateSecondaryLockscreenRequirement(currentUser);
         for (UserInfo userInfo : this.mUserManager.getUsers()) {
             SparseBooleanArray sparseBooleanArray = this.mUserTrustIsUsuallyManaged;
-            int i2 = userInfo.id;
-            sparseBooleanArray.put(i2, this.mTrustManager.isTrustUsuallyManaged(i2));
+            int i = userInfo.id;
+            sparseBooleanArray.put(i, this.mTrustManager.isTrustUsuallyManaged(i));
         }
         updateAirplaneModeState();
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService("phone");
         this.mTelephonyManager = telephonyManager;
-        if (telephonyManager != null && i == 0) {
+        if (telephonyManager != null) {
             telephonyManager.listen(this.mPhoneStateListener, 4194304);
-            for (int i3 = 0; i3 < this.mTelephonyManager.getActiveModemCount(); i3++) {
-                int simState = this.mTelephonyManager.getSimState(i3);
-                int[] subscriptionIds = this.mSubscriptionManager.getSubscriptionIds(i3);
+            for (int i2 = 0; i2 < this.mTelephonyManager.getActiveModemCount(); i2++) {
+                int simState = this.mTelephonyManager.getSimState(i2);
+                int[] subscriptionIds = this.mSubscriptionManager.getSubscriptionIds(i2);
                 if (subscriptionIds != null) {
-                    for (int i4 : subscriptionIds) {
-                        this.mHandler.obtainMessage(304, i4, i3, Integer.valueOf(simState)).sendToTarget();
+                    for (int i3 : subscriptionIds) {
+                        this.mHandler.obtainMessage(304, i3, i2, Integer.valueOf(simState)).sendToTarget();
                     }
                 }
             }
         }
+        this.mIsSimBindEnable = Settings.Secure.getInt(this.mContext.getContentResolver(), "sim_lock_enable", 0) != 0;
+        context.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("sim_lock_enable"), false, new ContentObserver(new Handler()) {
+            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass16 */
+
+            public void onChange(boolean z) {
+                super.onChange(z);
+                KeyguardUpdateMonitor keyguardUpdateMonitor = KeyguardUpdateMonitor.this;
+                boolean z2 = false;
+                if (Settings.Secure.getInt(keyguardUpdateMonitor.mContext.getContentResolver(), "sim_lock_enable", 0) != 0) {
+                    z2 = true;
+                }
+                keyguardUpdateMonitor.mIsSimBindEnable = z2;
+                Log.d("--CAIYU--", "KeyguardUpdateMonitor::KeyguardUpdateMonitor::mIsSimBindEnable = " + KeyguardUpdateMonitor.this.mIsSimBindEnable);
+            }
+        });
     }
 
     /* access modifiers changed from: private */
@@ -1832,7 +1845,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     private void watchForDeviceProvisioning() {
         this.mDeviceProvisionedObserver = new ContentObserver(this.mHandler) {
-            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass18 */
+            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass19 */
 
             public void onChange(boolean z) {
                 super.onChange(z);
@@ -2025,14 +2038,14 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     /* access modifiers changed from: package-private */
-    /* JADX WARNING: Removed duplicated region for block: B:12:0x006a  */
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x0079  */
-    /* JADX WARNING: Removed duplicated region for block: B:26:0x009b  */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x006f  */
+    /* JADX WARNING: Removed duplicated region for block: B:16:0x007e  */
+    /* JADX WARNING: Removed duplicated region for block: B:29:0x00a0  */
     @com.android.internal.annotations.VisibleForTesting
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void handleSimStateChange(int r7, int r8, int r9) {
         /*
-        // Method dump skipped, instructions count: 178
+        // Method dump skipped, instructions count: 183
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardUpdateMonitor.handleSimStateChange(int, int, int):void");
     }
@@ -2535,7 +2548,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             this.mKeyguardOccluded = z2;
         }
         this.mUpdateMonitorInjector.setKeyguardShowingAndOccluded(this.mTaskStackListener, z, z2, new MiuiKeyguardUpdateMonitorCallback(this) {
-            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass20 */
+            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass21 */
         });
     }
 

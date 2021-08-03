@@ -119,6 +119,7 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
     public final void unBindService() {
         Log.d(this.TAG, "unBind service");
         this.mContext.unbindService(this.mServiceConnection);
+        this.mFunctionCallbacks = MiuiWallpaperClient$unBindService$1.INSTANCE;
         this.mBinding = false;
     }
 
