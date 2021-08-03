@@ -1,6 +1,7 @@
 package com.android.systemui.settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -8,6 +9,8 @@ import android.widget.SeekBar;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.injector.RelativeSeekBarInjector;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
+import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.plugins.ActivityStarter;
 
 public class ToggleSeekBar extends SeekBar {
@@ -31,10 +34,18 @@ public class ToggleSeekBar extends SeekBar {
         super(context, attributeSet, i);
     }
 
+    public void postStartActivityDismissingKeyguard(Intent intent, int i) {
+        if (((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter()) {
+            ((ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class)).postStartActivityDismissingKeyguard(intent);
+        } else {
+            ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(intent, i);
+        }
+    }
+
     public boolean onTouchEvent(MotionEvent motionEvent) {
         RestrictedLockUtils.EnforcedAdmin enforcedAdmin = this.mEnforcedAdmin;
         if (enforcedAdmin != null) {
-            ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(RestrictedLockUtils.getShowAdminSupportDetailsIntent(((SeekBar) this).mContext, enforcedAdmin), 0);
+            postStartActivityDismissingKeyguard(RestrictedLockUtils.getShowAdminSupportDetailsIntent(((SeekBar) this).mContext, enforcedAdmin), 0);
             return true;
         }
         if (!isEnabled()) {

@@ -307,7 +307,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
             if (!shouldShowOnKeyguard && this.mGroupManager.isChildInGroupWithSummary(entry.getSbn()) && (logicalGroupSummary = this.mGroupManager.getLogicalGroupSummary(entry.getSbn())) != null && this.mLockscreenUserManager.shouldShowOnKeyguard(logicalGroupSummary)) {
                 shouldShowOnKeyguard = true;
             }
-            if (z2 || this.mLockscreenUserManager.shouldHideNotifications(userId) || (z && !shouldShowOnKeyguard)) {
+            if (z2 || this.mLockscreenUserManager.shouldHideNotifications(userId) || ((this.mStatusBarStateController.getState() == 2 && !shouldShowOnKeyguard) || (z && !shouldShowOnKeyguard))) {
                 entry.getRow().setVisibility(8);
             } else {
                 boolean z3 = entry.getRow().getVisibility() == 8;

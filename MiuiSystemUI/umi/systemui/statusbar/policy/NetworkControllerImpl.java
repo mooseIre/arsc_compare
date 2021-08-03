@@ -59,7 +59,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     private final AccessPointControllerImpl mAccessPoints;
     private int mActiveMobileDataSubscription;
     private boolean mAirplaneMode;
-    protected List<SubscriptionInfo> mAndroidSubscriptions;
+    protected volatile List<SubscriptionInfo> mAndroidSubscriptions;
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final CallbackHandler mCallbackHandler;
     private final Runnable mClearForceValidated;
@@ -488,6 +488,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             this.mMobileSignalControllers.valueAt(i).notifyListeners(signalCallback);
         }
         signalCallback.setDefaultSim(this.mConfig.defaultDataSlotId);
+        signalCallback.setAllSubs(this.mAndroidSubscriptions);
         this.mCallbackHandler.setListening(signalCallback, true);
     }
 
@@ -919,6 +920,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             }
         }
         this.mCallbackHandler.setSubs(list);
+        this.mCallbackHandler.setAllSubs(this.mAndroidSubscriptions);
         notifyAllListeners();
         pushConnectivityToSignals();
         updateAirplaneMode(true);
@@ -1156,11 +1158,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.NetworkController
-    public List<SubscriptionInfo> getAllSubscriptions() {
-        return this.mAndroidSubscriptions;
-    }
-
     /* access modifiers changed from: private */
     public class SubListener extends SubscriptionManager.OnSubscriptionsChangedListener {
         private SubListener() {
@@ -1225,6 +1222,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             SystemProperties.getBoolean("persist.sysui.rat_icon_enhancement", false);
             config.showVowifiIcon = resources.getBoolean(C0010R$bool.config_display_vowifi);
             config.defaultDataSlotId = SubscriptionManager.getPhoneId(defaultDataSubscriptionId);
+            Log.d("NetworkController", "readConfig: defaultDataSubId = " + defaultDataSubscriptionId + ", defaultDataSlotId = " + config.defaultDataSlotId);
             return config;
         }
     }

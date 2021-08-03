@@ -351,6 +351,16 @@ public class NotificationLogger implements StatusBarStateController.StateListene
     }
 
     @GuardedBy({"mDozingLock"})
+    public void maybeUpdateLoggingStatusByFold() {
+        if (this.mPanelExpanded.booleanValue()) {
+            stopNotificationLogging();
+            startNotificationLogging();
+            return;
+        }
+        stopNotificationLogging();
+    }
+
+    @GuardedBy({"mDozingLock"})
     private void maybeUpdateLoggingStatus() {
         if (this.mPanelExpanded != null && this.mDozing != null) {
             Boolean bool = this.mLockscreen;

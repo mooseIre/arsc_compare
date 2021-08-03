@@ -18,6 +18,6 @@ public final class FoldNotifController$iconMargin$2 extends Lambda implements Fu
     /* Return type fixed from 'int' to match base method */
     @Override // kotlin.jvm.functions.Function0
     public final Integer invoke() {
-        return this.this$0.getContext().getResources().getDimensionPixelSize(C0012R$dimen.custom_notification_title_icon_margin_fold);
+        return this.this$0.context.getResources().getDimensionPixelSize(C0012R$dimen.custom_notification_title_icon_margin_fold);
     }
 }

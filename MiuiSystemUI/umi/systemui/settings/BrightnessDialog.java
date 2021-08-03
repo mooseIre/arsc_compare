@@ -14,10 +14,9 @@ import com.android.systemui.statusbar.policy.MiuiBrightnessController;
 
 public class BrightnessDialog extends Activity {
     private MiuiBrightnessController mBrightnessController;
-    private final BroadcastDispatcher mBroadcastDispatcher;
 
-    public BrightnessDialog(BroadcastDispatcher broadcastDispatcher) {
-        this.mBroadcastDispatcher = broadcastDispatcher;
+    public BrightnessDialog(BroadcastDispatcher broadcastDispatcher, MiuiBrightnessController miuiBrightnessController) {
+        this.mBrightnessController = miuiBrightnessController;
     }
 
     /* access modifiers changed from: protected */
@@ -28,7 +27,7 @@ public class BrightnessDialog extends Activity {
         window.clearFlags(2);
         window.requestFeature(1);
         setContentView(LayoutInflater.from(this).inflate(C0017R$layout.quick_settings_brightness_dialog, (ViewGroup) null));
-        this.mBrightnessController = new MiuiBrightnessController(this, (ToggleSliderView) findViewById(C0015R$id.brightness_slider), this.mBroadcastDispatcher);
+        this.mBrightnessController.setToggleSlider((ToggleSliderView) findViewById(C0015R$id.brightness_slider));
     }
 
     /* access modifiers changed from: protected */

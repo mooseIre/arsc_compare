@@ -305,9 +305,8 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
-        public void setSubs(List<SubscriptionInfo> list) {
-            MiuiCellularTile miuiCellularTile = MiuiCellularTile.this;
-            miuiCellularTile.mSimInfoRecordList = miuiCellularTile.mController.getAllSubscriptions();
+        public void setAllSubs(List<SubscriptionInfo> list) {
+            MiuiCellularTile.this.mSimInfoRecordList = list;
             MiuiCellularTile.this.refreshState(this.mInfo);
             if (!MiuiCellularTile.this.isShowingDetail()) {
                 return;

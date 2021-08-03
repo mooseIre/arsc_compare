@@ -142,4 +142,8 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
             this.mChangeCallbacks.get(i).dispatchDemoCommand(str, bundle);
         }
     }
+
+    public int getBatteryLevel() {
+        return this.mLevel;
+    }
 }

@@ -16,6 +16,7 @@ import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
+import com.android.systemui.statusbar.notification.MiuiNotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationUtil;
@@ -33,7 +34,7 @@ public class NotificationAlertController {
     private int mBarState;
     private Handler mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
     private Context mContext;
-    private NotificationEntryManager mEntryManager;
+    private MiuiNotificationEntryManager mEntryManager;
     private NotificationGroupManager mGroupManager;
     private INotificationManager mNm;
     private NotificationLockscreenUserManager mNotificationLockscreenUserManager;
@@ -45,7 +46,7 @@ public class NotificationAlertController {
     public NotificationAlertController(Context context, INotificationManager iNotificationManager, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, StatusBarStateController statusBarStateController, ScreenLifecycle screenLifecycle, ZenModeController zenModeController, SettingsManager settingsManager, NotificationLockscreenUserManager notificationLockscreenUserManager, StatusBarKeyguardViewManager statusBarKeyguardViewManager) {
         this.mContext = context;
         this.mNm = iNotificationManager;
-        this.mEntryManager = notificationEntryManager;
+        this.mEntryManager = (MiuiNotificationEntryManager) notificationEntryManager;
         this.mGroupManager = notificationGroupManager;
         this.mStatusBarStateController = statusBarStateController;
         this.mZenModeController = zenModeController;
@@ -141,7 +142,7 @@ public class NotificationAlertController {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void markVisibleNotificationsShown() {
-        this.mEntryManager.getVisibleNotifications().forEach(new Consumer() {
+        this.mEntryManager.getFinalVisibleNotifications().forEach(new Consumer() {
             /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationAlertController$xlV8R1aidO_UBmnSbqTKHA_gUxE */
 
             @Override // java.util.function.Consumer

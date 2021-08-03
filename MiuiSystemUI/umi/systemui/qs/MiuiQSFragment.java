@@ -448,13 +448,6 @@ public final class MiuiQSFragment extends LifecycleFragment implements QS, Comma
                 qSAnimator.onRtlChanged();
             }
         }
-        MiuiQSContainer miuiQSContainer = this.qsContainer;
-        if (miuiQSContainer != null) {
-            miuiQSContainer.getHeader().onConfigurationChanged(configuration);
-        } else {
-            Intrinsics.throwUninitializedPropertyAccessException("qsContainer");
-            throw null;
-        }
     }
 
     @Override // com.android.systemui.plugins.qs.QS
@@ -1261,12 +1254,13 @@ public final class MiuiQSFragment extends LifecycleFragment implements QS, Comma
         }
         View view = getView();
         if (view != null) {
+            ViewPropertyAnimator animate = view.animate();
             float f = 1.0f;
-            ViewPropertyAnimator scaleX = view.animate().setInterpolator(PanelAppearDisappearEvent.Companion.getINTERPOLATOR()).setDuration(450).alpha(this.mAppeared ? 1.0f : 0.0f).scaleX(this.mAppeared ? 1.0f : 0.8f);
+            ViewPropertyAnimator scaleX = animate.setInterpolator(PanelAppearDisappearEvent.Companion.getINTERPOLATOR()).setDuration(450).alpha(this.mAppeared ? 1.0f : 0.0f).scaleX(this.mAppeared ? 1.0f : 0.8f);
             if (!this.mAppeared) {
                 f = 0.8f;
             }
-            scaleX.scaleY(f).setListener(new MiuiQSFragment$animateAppearDisappear$1(this)).start();
+            scaleX.scaleY(f).setListener(new MiuiQSFragment$animateAppearDisappear$1(this, animate)).start();
             return;
         }
         Intrinsics.throwNpe();

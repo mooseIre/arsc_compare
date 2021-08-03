@@ -60,6 +60,7 @@ import com.android.systemui.statusbar.PulseExpansionHandler;
 import com.android.systemui.statusbar.VibratorHelper;
 import com.android.systemui.statusbar.notification.ConversationNotificationManager;
 import com.android.systemui.statusbar.notification.DynamicPrivacyController;
+import com.android.systemui.statusbar.notification.MiuiNotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
@@ -91,6 +92,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import kotlin.TypeCastException;
 import kotlin.Unit;
@@ -137,7 +139,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private final KeyguardPanelViewInjector mKeyguardPanelViewInjector;
     private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
     private boolean mNCSwitching;
-    private final NotificationEntryManager mNotificationEntryManager;
+    private final MiuiNotificationEntryManager mNotificationEntryManager;
     @NotNull
     private final NotificationStackScrollLayout mNotificationStackScroller;
     private boolean mNssCoveredQs;
@@ -202,7 +204,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         this.wakefulnessLifecycle = wakefulnessLifecycle2;
         this.shadeWindowController = notificationShadeWindowController;
         this.panelBlurLogger = panelViewLogger;
-        this.mNotificationEntryManager = notificationEntryManager;
+        this.mNotificationEntryManager = (MiuiNotificationEntryManager) notificationEntryManager;
         this.mEventTracker = eventTracker;
         ViewConfiguration viewConfiguration = ViewConfiguration.get(notificationPanelView.getContext());
         Intrinsics.checkExpressionValueIsNotNull(viewConfiguration, "ViewConfiguration.get(panelView.context)");
@@ -1505,12 +1507,11 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     /* access modifiers changed from: private */
     public final void startNotificationWakeAnimation(float f) {
-        List<NotificationEntry> visibleNotifications = this.mNotificationEntryManager.getVisibleNotifications();
-        Intrinsics.checkExpressionValueIsNotNull(visibleNotifications, "mNotificationEntryManager.visibleNotifications");
-        ArrayList arrayList = new ArrayList(CollectionsKt.collectionSizeOrDefault(visibleNotifications, 10));
-        for (T t : visibleNotifications) {
-            Intrinsics.checkExpressionValueIsNotNull(t, "it");
-            arrayList.add(t.getRow());
+        List<NotificationEntry> finalVisibleNotifications = this.mNotificationEntryManager.getFinalVisibleNotifications();
+        ArrayList arrayList = new ArrayList(CollectionsKt.collectionSizeOrDefault(finalVisibleNotifications, 10));
+        Iterator<T> it = finalVisibleNotifications.iterator();
+        while (it.hasNext()) {
+            arrayList.add(it.next().getRow());
         }
         ArrayList arrayList2 = new ArrayList();
         for (Object obj : arrayList) {
@@ -1873,13 +1874,14 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:15:0x008d  */
-    /* JADX WARNING: Removed duplicated region for block: B:23:0x00c4  */
-    /* JADX WARNING: Removed duplicated region for block: B:25:0x00e0  */
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x0093  */
+    /* JADX WARNING: Removed duplicated region for block: B:23:0x00ca  */
+    /* JADX WARNING: Removed duplicated region for block: B:25:0x00e6  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private final void updateBlur() {
+    public final void updateBlur() {
         /*
-        // Method dump skipped, instructions count: 395
+        // Method dump skipped, instructions count: 447
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController.updateBlur():void");
     }

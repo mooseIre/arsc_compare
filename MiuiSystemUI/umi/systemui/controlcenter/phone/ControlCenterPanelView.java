@@ -81,6 +81,10 @@ public final class ControlCenterPanelView extends LinearLayout {
     private QSControlCenterTileLayout tileLayout;
     private ControlCenterPanelViewController.TouchHandler touchHandler;
 
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
+
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public ControlCenterPanelView(@NotNull Context context, @Nullable AttributeSet attributeSet, @NotNull Looper looper, @NotNull ConfigurationController configurationController, @NotNull ControlsPluginManager controlsPluginManager2, @NotNull MiPlayPluginManager miPlayPluginManager2, @NotNull ControlPanelController controlPanelController, @NotNull NCSwitchController nCSwitchController, @NotNull StatusBarStateController statusBarStateController) {
         super(context, attributeSet);

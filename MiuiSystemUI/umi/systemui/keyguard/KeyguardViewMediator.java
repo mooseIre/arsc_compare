@@ -1642,7 +1642,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         if ((z || isShowingAndNotOccluded()) && (!this.mShowHomeOverLockscreen || !this.mInGestureNavigationMode)) {
             i = 6291456;
         }
-        if (this.mShowing) {
+        if (this.mInGestureNavigationMode && this.mShowing) {
             i |= 16777216;
         }
         Log.d("KeyguardViewMediator", "adjustStatusBarLocked: mShowing=" + this.mShowing + " mOccluded=" + this.mOccluded + " isSecure=" + isSecure() + " force=" + z + " --> flags=0x" + Integer.toHexString(i));

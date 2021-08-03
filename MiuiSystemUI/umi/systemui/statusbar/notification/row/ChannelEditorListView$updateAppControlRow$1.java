@@ -12,6 +12,6 @@ final class ChannelEditorListView$updateAppControlRow$1 implements CompoundButto
 
     public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
         this.this$0.getController().proposeSetAppNotificationsEnabled(z);
-        this.this$0.updateRows();
+        ChannelEditorListView.access$updateRows(this.this$0);
     }
 }

@@ -45,6 +45,7 @@ import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.analytics.SystemUIStat;
 import com.miui.systemui.anim.PhysicBasedInterpolator;
 import java.util.Collection;
+import miui.os.Build;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
@@ -62,7 +63,7 @@ public class QSControlDetail extends FrameLayout {
         /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass5 */
 
         public void run() {
-            if (DeviceConfig.isLowGpuDevice()) {
+            if (Build.IS_MIUI_LITE_VERSION) {
                 QSControlDetail.this.animateHideDetailAndTileOnLowEnd();
             } else {
                 QSControlDetail.this.animateHideDetailAndTile();
@@ -73,7 +74,7 @@ public class QSControlDetail extends FrameLayout {
         /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass4 */
 
         public void run() {
-            if (DeviceConfig.isLowGpuDevice()) {
+            if (Build.IS_MIUI_LITE_VERSION) {
                 Log.d("QSDetail", "showing on low end");
                 QSControlDetail.this.animateShowDetailAndTileOnLowEnd();
                 return;
@@ -423,7 +424,7 @@ public class QSControlDetail extends FrameLayout {
     public void animateDetailVisibleDiff(boolean z, View view, View view2) {
         Log.d("QSDetail", "animateDetailVisibleDiff: show = " + z + ", tileView = " + view);
         if (!z) {
-            if (!DeviceConfig.isLowGpuDevice()) {
+            if (!Build.IS_MIUI_LITE_VERSION) {
                 animateDetailAlphaWithRotation(false, this.mFromView);
             }
             if (this.mFromView != null) {
@@ -437,12 +438,13 @@ public class QSControlDetail extends FrameLayout {
         } else {
             setVisibility(4);
             this.mFromView = view;
-            this.mToView = this.mDetailContainer;
+            View view3 = this.mDetailContainer;
+            this.mToView = view3;
             this.mTranslateView = view2;
-            if (DeviceConfig.isLowGpuDevice()) {
-                this.mDetailContainer.setAlpha(1.0f);
+            if (Build.IS_MIUI_LITE_VERSION) {
+                view3.setAlpha(1.0f);
             } else {
-                animateDetailAlphaWithRotation(true, this.mFromView);
+                animateDetailAlphaWithRotation(true, view);
             }
             post(this.mAnimateShowRunnable);
         }

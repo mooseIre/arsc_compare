@@ -1,5 +1,7 @@
 package com.android.systemui.settings;
 
+import com.android.settingslib.RestrictedLockUtils;
+
 public interface ToggleSlider {
 
     public interface Listener {
@@ -19,6 +21,8 @@ public interface ToggleSlider {
     default boolean isChecked() {
         return false;
     }
+
+    void setEnforcedAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin);
 
     void setMax(int i);
 

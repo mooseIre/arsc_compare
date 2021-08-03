@@ -267,6 +267,7 @@ public final class AppMiniWindowRowTouchHelper {
         ofFloat.setDuration(300L);
         ofFloat.setInterpolator(new DecelerateInterpolator(1.5f));
         ofFloat.addUpdateListener(new AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1(this, rect, freeformRect));
+        ofFloat.addListener(new AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$2(this, rect, freeformRect));
         ofFloat.start();
         this.mEnterAnimationRunning = true;
         this.mTouchCallback.onStartMiniWindowExpandAnimation();

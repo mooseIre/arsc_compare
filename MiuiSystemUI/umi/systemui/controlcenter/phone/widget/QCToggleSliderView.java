@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import com.android.settingslib.RestrictedLockUtils;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
@@ -136,6 +137,12 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
                 qCToggleSliderView.setMax(i);
             }
         }
+    }
+
+    @Override // com.android.systemui.settings.ToggleSlider
+    public void setEnforcedAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
+        this.mSlider.setEnabled(enforcedAdmin == null);
+        this.mSlider.setEnforcedAdmin(enforcedAdmin);
     }
 
     @Override // com.android.systemui.settings.ToggleSlider

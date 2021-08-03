@@ -4,12 +4,17 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
 import com.android.systemui.statusbar.notification.RowAnimationUtils;
+import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.animation.AnimationListenerFolmeConverter;
+import java.util.List;
 import kotlin.Lazy;
 import kotlin.LazyKt__LazyJVMKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.PropertyReference1Impl;
 import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KProperty;
+import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt___SequencesKt;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
@@ -90,9 +95,29 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
     @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void cancelAppearDrawing() {
         super.cancelAppearDrawing();
-        Folme.useValue(RowAnimationUtils.INSTANCE.getFolmeTarget(this)).cancel();
+        resetTouchAnimation();
         getMFolme().cancel();
         getMFolme().setTo(STATE_VISIBLE);
         setTransitionAlpha(1.0f);
+    }
+
+    private final void resetTouchAnimation() {
+        Sequence sequence;
+        Sequence<ExpandableNotificationRow> sequence2;
+        Folme.useValue(RowAnimationUtils.INSTANCE.getFolmeTarget(this)).cancel();
+        ExpandableViewState viewState = getViewState();
+        if (viewState != null) {
+            viewState.setTouchAnimating(false);
+        }
+        List<ExpandableNotificationRow> attachedChildren = getAttachedChildren();
+        if (!(attachedChildren == null || (sequence = CollectionsKt___CollectionsKt.asSequence(attachedChildren)) == null || (sequence2 = SequencesKt___SequencesKt.filterNotNull(sequence)) == null)) {
+            for (ExpandableNotificationRow expandableNotificationRow : sequence2) {
+                Folme.useValue(RowAnimationUtils.INSTANCE.getFolmeTarget(expandableNotificationRow)).cancel();
+                ExpandableViewState viewState2 = expandableNotificationRow.getViewState();
+                if (viewState2 != null) {
+                    viewState2.setTouchAnimating(false);
+                }
+            }
+        }
     }
 }

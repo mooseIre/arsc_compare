@@ -18,6 +18,10 @@ public final class RingerModeLiveData extends MutableLiveData<Integer> {
     private boolean initialSticky;
     private final RingerModeLiveData$receiver$1 receiver = new RingerModeLiveData$receiver$1(this);
 
+    public static final /* synthetic */ Function0 access$getGetter$p(RingerModeLiveData ringerModeLiveData) {
+        return ringerModeLiveData.getter;
+    }
+
     public RingerModeLiveData(@NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull Executor executor2, @NotNull String str, @NotNull Function0<Integer> function0) {
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
         Intrinsics.checkParameterIsNotNull(executor2, "executor");

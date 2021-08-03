@@ -164,7 +164,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     public void updatePadding() {
     }
 
-    public QSPanel(Context context, AttributeSet attributeSet, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, QSLogger qSLogger, MediaHost mediaHost, UiEventLogger uiEventLogger) {
+    public QSPanel(Context context, AttributeSet attributeSet, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, QSLogger qSLogger, MediaHost mediaHost, UiEventLogger uiEventLogger, MiuiBrightnessController miuiBrightnessController) {
         super(context, attributeSet);
         this.mMediaHost = mediaHost;
         mediaHost.addVisibilityChangeListener(new Function1() {
@@ -179,6 +179,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         this.mQSLogger = qSLogger;
         this.mDumpManager = dumpManager;
         this.mUiEventLogger = uiEventLogger;
+        this.mBrightnessController = miuiBrightnessController;
         setOrientation(1);
         this.mMovableContentStartIndex = getChildCount();
         this.mRegularTileLayout = createRegularTileLayout();

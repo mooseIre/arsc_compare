@@ -21,7 +21,7 @@ public final class FoldNotifController$mNm$2 extends Lambda implements Function0
     @Override // kotlin.jvm.functions.Function0
     @NotNull
     public final NotificationManager invoke() {
-        Object systemService = this.this$0.getContext().getSystemService(MiPlayPlugin.REF_NOTIFICATION);
+        Object systemService = this.this$0.context.getSystemService(MiPlayPlugin.REF_NOTIFICATION);
         if (systemService != null) {
             return (NotificationManager) systemService;
         }

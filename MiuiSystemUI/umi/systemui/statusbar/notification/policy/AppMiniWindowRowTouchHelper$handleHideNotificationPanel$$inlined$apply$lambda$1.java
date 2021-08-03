@@ -18,7 +18,7 @@ final class AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$app
         if (animatedValue != null) {
             float floatValue = ((Float) animatedValue).floatValue();
             AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).setIconAlpha(floatValue);
-            AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).setBackgroundAlpha(floatValue);
+            AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).setBackgroundAlpha(AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0).getBackgroundAlpha() * floatValue);
             AppMiniWindowRowTouchHelper.access$onExpandedParamsUpdated(this.this$0);
             return;
         }

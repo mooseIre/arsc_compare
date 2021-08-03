@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificationRowBase {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
     private final String TAG = "MiuiExpandableNotificationRow";
+    private boolean forceDisableBlur;
     private final Lazy mAppMiniWindowManager$delegate = LazyKt__LazyJVMKt.lazy(MiuiExpandableNotificationRow$mAppMiniWindowManager$2.INSTANCE);
     private final Lazy mBackgroundDimmed$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mBackgroundDimmed$2(this));
     private boolean mCanSlide;
@@ -111,6 +112,13 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         super(context, attributeSet);
     }
 
+    public final void setForceDisableBlur(boolean z) {
+        if (this.forceDisableBlur != z) {
+            this.forceDisableBlur = z;
+            updateBackgroundBg();
+        }
+    }
+
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow, com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void onFinishInflate() {
@@ -145,6 +153,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
 
     /* access modifiers changed from: private */
     public final void updateBackgroundBg() {
+        boolean z = false;
         if (isHeadsUpState()) {
             NotificationContentView showingLayout = getShowingLayout();
             NotificationViewWrapper visibleWrapper = showingLayout != null ? showingLayout.getVisibleWrapper(2) : null;
@@ -170,7 +179,11 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         } else {
             this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
         }
-        this.mBackgroundNormal.setBlurDisable(!NotificationContentInflaterInjector.isBlurAble(this.mIsInModal, isHeadsUpState()));
+        NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
+        if (this.forceDisableBlur || !NotificationContentInflaterInjector.isBlurAble(this.mIsInModal, isHeadsUpState())) {
+            z = true;
+        }
+        notificationBackgroundView.setBlurDisable(z);
     }
 
     public void setTranslationY(float f) {

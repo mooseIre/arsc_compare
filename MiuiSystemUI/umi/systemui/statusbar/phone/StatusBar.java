@@ -2827,7 +2827,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
-    /* JADX WARN: Type inference failed for: r9v0, types: [boolean, int] */
+    /* JADX WARN: Type inference failed for: r9v0, types: [int, boolean] */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void logStateToEventlog() {
@@ -3943,7 +3943,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void startAssist(Bundle bundle) {
-        this.mAssistManagerLazy.get().startAssist(bundle);
+        if ((this.mDisabled1 & 33554432) == 0) {
+            this.mAssistManagerLazy.get().startAssist(bundle);
+        }
     }
 
     public NotificationGutsManager getGutsManager() {

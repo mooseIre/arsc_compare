@@ -113,13 +113,17 @@ public class ExpandableViewState extends ViewState {
             abortAnimation(view, ViewState.TAG_ANIMATOR_TRANSLATION_Y);
             view.clearAnimation();
             view.setTag(ViewState.TAG_ANIMATOR_TRANSLATION_Y, null);
+            boolean wasAdded = animationProperties.wasAdded(view);
+            if (!FoldManager.Companion.isFoldNeedsAnim()) {
+                foldWithoutAnim(view, wasAdded);
+                return;
+            }
             if (FoldManager.Companion.isShowingUnimportant()) {
                 f = FoldManager.Companion.getUnimportantTarget();
             } else {
                 f = FoldManager.Companion.getNormalTarget();
             }
-            float f3 = f - 100.0f;
-            boolean wasAdded = animationProperties.wasAdded(view);
+            float f3 = f - 50.0f;
             if (wasAdded) {
                 float floatValue = this.yTranslation + f2.floatValue();
                 if (f2.floatValue() < 0.0f && floatValue >= f3) {
@@ -135,7 +139,7 @@ public class ExpandableViewState extends ViewState {
             float f4 = this.yTranslation;
             float translationY = view.getTranslationY();
             float max = Math.max(Math.min(translationY, f4), f3);
-            startAnimationUnimportant(view, animationProperties, wasAdded, getUpdateListener(view, f3, Math.abs(Math.max(translationY, f4) - max), max, (wasAdded && f2.floatValue() < 0.0f) || (!wasAdded && f2.floatValue() > 0.0f), wasAdded));
+            foldWithAnim(view, animationProperties, wasAdded, getUpdateListener(view, f3, Math.abs(Math.max(translationY, f4) - max), max, (wasAdded && f2.floatValue() < 0.0f) || (!wasAdded && f2.floatValue() > 0.0f), wasAdded));
         }
     }
 
@@ -183,7 +187,7 @@ public class ExpandableViewState extends ViewState {
         }
     }
 
-    private void startAnimationUnimportant(final View view, AnimationProperties animationProperties, final boolean z, ValueAnimator.AnimatorUpdateListener animatorUpdateListener) {
+    private void foldWithAnim(final View view, AnimationProperties animationProperties, final boolean z, ValueAnimator.AnimatorUpdateListener animatorUpdateListener) {
         Float f = (Float) ViewState.getChildTag(view, ViewState.TAG_END_TRANSLATION_Y);
         float f2 = this.yTranslation;
         if (f == null || f.floatValue() != f2) {
@@ -224,6 +228,24 @@ public class ExpandableViewState extends ViewState {
             view.setTag(ViewState.TAG_START_TRANSLATION_Y, Float.valueOf(view.getTranslationY()));
             view.setTag(ViewState.TAG_END_TRANSLATION_Y, Float.valueOf(f2));
         }
+    }
+
+    private void foldWithoutAnim(View view, boolean z) {
+        ValueAnimator valueAnimator = (ValueAnimator) ViewState.getChildTag(view, ViewState.TAG_ANIMATOR_TRANSLATION_Y);
+        if (valueAnimator != null) {
+            valueAnimator.cancel();
+        }
+        HeadsUpUtil.setIsClickedHeadsUpNotification(view, false);
+        view.setTag(ViewState.TAG_ANIMATOR_TRANSLATION_Y, null);
+        view.setTag(ViewState.TAG_START_TRANSLATION_Y, null);
+        view.setTag(ViewState.TAG_END_TRANSLATION_Y, null);
+        onYTranslationAnimationFinished(view);
+        if (z) {
+            view.setTranslationY(this.yTranslation);
+            view.setTransitionAlpha(1.0f);
+            return;
+        }
+        StackStateAnimator.removeTransientView((ExpandableView) view);
     }
 
     private void startHeightAnimation(final ExpandableView expandableView, AnimationProperties animationProperties) {

@@ -19,7 +19,9 @@ import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
+import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.MiuiNotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationProvider;
@@ -44,7 +46,6 @@ public final class FoldNotifController implements ConfigurationController.Config
     private final Lazy activityStarter$delegate = LazyKt__LazyJVMKt.lazy(FoldNotifController$activityStarter$2.INSTANCE);
     @NotNull
     private final Lazy cache$delegate = LazyKt__LazyJVMKt.lazy(new FoldNotifController$cache$2(this));
-    @NotNull
     private final Context context;
     private int count;
     @NotNull
@@ -53,6 +54,7 @@ public final class FoldNotifController implements ConfigurationController.Config
     private final Lazy iconSize$delegate = LazyKt__LazyJVMKt.lazy(new FoldNotifController$iconSize$2(this));
     private final Lazy mNm$delegate = LazyKt__LazyJVMKt.lazy(new FoldNotifController$mNm$2(this));
     private boolean showNotifFoldFooterIcon = NotificationSettings.Companion.isNotifFoldFooterIconEnabled(this.context);
+    private final SysuiStatusBarStateController statusBarStateController;
 
     static {
         PropertyReference1Impl propertyReference1Impl = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(FoldNotifController.class), "iconSize", "getIconSize()I");
@@ -108,9 +110,11 @@ public final class FoldNotifController implements ConfigurationController.Config
         return (MiuiNotificationEntryManager) lazy.getValue();
     }
 
-    public FoldNotifController(@NotNull Context context2) {
+    public FoldNotifController(@NotNull Context context2, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
+        Intrinsics.checkParameterIsNotNull(sysuiStatusBarStateController, "statusBarStateController");
         this.context = context2;
+        this.statusBarStateController = sysuiStatusBarStateController;
         ((SettingsManager) Dependency.get(SettingsManager.class)).registerNotifFoldListener(new NotificationSettings.FoldListener(this) {
             /* class com.android.systemui.statusbar.notification.unimportant.FoldNotifController.AnonymousClass1 */
             final /* synthetic */ FoldNotifController this$0;
@@ -139,8 +143,18 @@ public final class FoldNotifController implements ConfigurationController.Config
                 this.this$0.getEntryManager().onUserChanged(i, ((SettingsManager) Dependency.get(SettingsManager.class)).getNotifFold());
             }
         });
-        this.context.getContentResolver().registerContentObserver(NotificationProvider.URI_FOLD_IMPORTANCE, false, new ContentObserver(this, (Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
+        this.statusBarStateController.addCallback(new StatusBarStateController.StateListener() {
             /* class com.android.systemui.statusbar.notification.unimportant.FoldNotifController.AnonymousClass3 */
+
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
+            public void onStateChanged(int i) {
+                if (FoldManager.Companion.isShowingUnimportant()) {
+                    FoldManager.Companion.notifyListeners(4);
+                }
+            }
+        });
+        this.context.getContentResolver().registerContentObserver(NotificationProvider.URI_FOLD_IMPORTANCE, false, new ContentObserver(this, (Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
+            /* class com.android.systemui.statusbar.notification.unimportant.FoldNotifController.AnonymousClass4 */
             final /* synthetic */ FoldNotifController this$0;
 
             {
@@ -164,11 +178,6 @@ public final class FoldNotifController implements ConfigurationController.Config
             }
         }, -1);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
-    }
-
-    @NotNull
-    public final Context getContext() {
-        return this.context;
     }
 
     public final void setShowNotifFoldFooterIcon(boolean z) {

@@ -15,6 +15,7 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.media.MediaDataManagerKt;
 import com.android.systemui.plugins.NotificationListenerController;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.NotificationMediaManager;
@@ -108,23 +109,16 @@ public class NotificationFilterController {
         } else if (DEBUG && NotificationUtil.isSystemNotification(notificationEntry.getSbn())) {
             return true;
         } else {
-            Context context = SystemUIApplication.getContext();
-            String packageName = notificationEntry.getSbn().getPackageName();
-            if (!notificationEntry.getSbn().isSubstituteNotification() || TextUtils.equals(notificationEntry.getSbn().getOpPkg(), "com.xiaomi.xmsf") || !NotificationSettingsHelper.isNotificationsBanned(context, packageName)) {
-                if (!(notificationGroupManager != null && notificationGroupManager.isSummaryOfSuppressedGroup(notificationEntry.getSbn()))) {
-                    return shouldFilterOutKeyguard(notificationEntry);
-                }
-                Log.d("NotificationFilterController", String.format("filter group summary suppressed key=%s", notificationEntry.getKey()));
-                return true;
+            if (!(notificationGroupManager != null && notificationGroupManager.isSummaryOfSuppressedGroup(notificationEntry.getSbn()))) {
+                return false;
             }
-            ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).performRemoveNotification(notificationEntry.getSbn(), 7);
-            Log.d("NotificationFilterController", String.format("filter Notification banned substitute key=%s", notificationEntry.getKey()));
+            Log.d("NotificationFilterController", String.format("filter group summary suppressed key=%s", notificationEntry.getKey()));
             return true;
         }
     }
 
-    private static boolean shouldFilterOutKeyguard(NotificationEntry notificationEntry) {
-        if (((KeyguardStateController) Dependency.get(KeyguardStateController.class)).isShowing()) {
+    public static boolean shouldFilterOutKeyguard(NotificationEntry notificationEntry) {
+        if (((KeyguardStateController) Dependency.get(KeyguardStateController.class)).isShowing() || ((StatusBarStateController) Dependency.get(StatusBarStateController.class)).getState() == 2) {
             return !((NotificationLockscreenUserManager) Dependency.get(NotificationLockscreenUserManager.class)).shouldShowOnKeyguard(notificationEntry);
         }
         return false;
@@ -156,7 +150,12 @@ public class NotificationFilterController {
     private boolean filterOut(StatusBarNotification statusBarNotification) {
         String packageName = statusBarNotification.getPackageName();
         String channelId = statusBarNotification.getNotification().getChannelId();
-        if ((statusBarNotification.getNotification().flags & 64) != 0 && this.mSettingsManager.hideForegroundNotification(packageName, channelId)) {
+        Context context = SystemUIApplication.getContext();
+        if (!packageName.equals(NotificationUtil.getTargetPkg(statusBarNotification)) && !TextUtils.equals(packageName, "com.xiaomi.xmsf") && NotificationSettingsHelper.isNotificationsBanned(context, packageName)) {
+            ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).performRemoveNotification(statusBarNotification, 7);
+            Log.d("NotificationFilterController", String.format("filter Notification banned substitute key=%s", statusBarNotification.getKey()));
+            return true;
+        } else if ((statusBarNotification.getNotification().flags & 64) != 0 && this.mSettingsManager.hideForegroundNotification(packageName, channelId)) {
             if (DEBUG) {
                 Log.d("NotificationFilterController", "filter out foreground " + packageName + ":" + channelId);
             }

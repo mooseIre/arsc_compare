@@ -58,7 +58,7 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
             arrayList.add(new StructureContainer((CharSequence) entry.getKey(), new AllModel((List) entry.getValue(), favoritesIds, charSequence, this.this$0.controlsModelCallback)));
         }
         controlsFavoritingActivity.listOfStructures = CollectionsKt___CollectionsKt.sortedWith(arrayList, ControlsFavoritingActivity.access$getComparator$p(this.this$0));
-        Iterator it = ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0).iterator();
+        Iterator it = this.this$0.listOfStructures.iterator();
         final int i = 0;
         while (true) {
             if (!it.hasNext()) {
@@ -75,7 +75,7 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
         }
         if (this.this$0.getIntent().getBooleanExtra("extra_single_structure", false)) {
             ControlsFavoritingActivity controlsFavoritingActivity2 = this.this$0;
-            controlsFavoritingActivity2.listOfStructures = CollectionsKt__CollectionsJVMKt.listOf(ControlsFavoritingActivity.access$getListOfStructures$p(controlsFavoritingActivity2).get(i));
+            controlsFavoritingActivity2.listOfStructures = CollectionsKt__CollectionsJVMKt.listOf(controlsFavoritingActivity2.listOfStructures.get(i));
         }
         this.this$0.executor.execute(new Runnable(this) {
             /* class com.android.systemui.controls.management.ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1.AnonymousClass1 */
@@ -86,7 +86,7 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
             }
 
             public final void run() {
-                ControlsFavoritingActivity.access$getStructurePager$p(this.this$0.this$0).setAdapter(new StructureAdapter(ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0.this$0)));
+                ControlsFavoritingActivity.access$getStructurePager$p(this.this$0.this$0).setAdapter(new StructureAdapter(this.this$0.this$0.listOfStructures));
                 ControlsFavoritingActivity.access$getStructurePager$p(this.this$0.this$0).setCurrentItem(i);
                 int i = 0;
                 if (errorOnLoad) {
@@ -101,15 +101,15 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
                     objArr[0] = obj;
                     access$getStatusText$p.setText(resources.getString(i2, objArr));
                     ControlsFavoritingActivity.access$getSubtitleView$p(this.this$0.this$0).setVisibility(8);
-                } else if (ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0.this$0).isEmpty()) {
+                } else if (this.this$0.this$0.listOfStructures.isEmpty()) {
                     ControlsFavoritingActivity.access$getStatusText$p(this.this$0.this$0).setText(this.this$0.this$0.getResources().getString(C0021R$string.controls_favorite_load_none));
                     ControlsFavoritingActivity.access$getSubtitleView$p(this.this$0.this$0).setVisibility(8);
                 } else {
                     ControlsFavoritingActivity.access$getStatusText$p(this.this$0.this$0).setVisibility(8);
-                    ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0).setNumPages(ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0.this$0).size());
+                    ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0).setNumPages(this.this$0.this$0.listOfStructures.size());
                     ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0).setLocation(0.0f);
                     ManagementPageIndicator access$getPageIndicator$p = ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0);
-                    if (ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0.this$0).size() <= 1) {
+                    if (this.this$0.this$0.listOfStructures.size() <= 1) {
                         i = 4;
                     }
                     access$getPageIndicator$p.setVisibility(i);

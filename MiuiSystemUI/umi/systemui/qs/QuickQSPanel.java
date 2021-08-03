@@ -21,6 +21,7 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.customize.MiuiQSCustomizer;
 import com.android.systemui.qs.logging.QSLogger;
+import com.android.systemui.statusbar.policy.MiuiBrightnessController;
 import com.android.systemui.tuner.TunerService;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,8 +77,8 @@ public class QuickQSPanel extends QSPanel {
     public void updatePadding() {
     }
 
-    public QuickQSPanel(Context context, AttributeSet attributeSet, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, QSLogger qSLogger, MediaHost mediaHost, UiEventLogger uiEventLogger) {
-        super(context, attributeSet, dumpManager, broadcastDispatcher, qSLogger, mediaHost, uiEventLogger);
+    public QuickQSPanel(Context context, AttributeSet attributeSet, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, QSLogger qSLogger, MediaHost mediaHost, UiEventLogger uiEventLogger, MiuiBrightnessController miuiBrightnessController) {
+        super(context, attributeSet, dumpManager, broadcastDispatcher, qSLogger, mediaHost, uiEventLogger, miuiBrightnessController);
         sDefaultMaxTiles = getResources().getInteger(C0016R$integer.quick_settings_qqs_count);
     }
 

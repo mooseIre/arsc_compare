@@ -18,6 +18,6 @@ public final class FoldNotifController$cache$2 extends Lambda implements Functio
     @Override // kotlin.jvm.functions.Function0
     @NotNull
     public final PackageScoreCache invoke() {
-        return new PackageScoreCache(this.this$0.getContext());
+        return new PackageScoreCache(this.this$0.context);
     }
 }

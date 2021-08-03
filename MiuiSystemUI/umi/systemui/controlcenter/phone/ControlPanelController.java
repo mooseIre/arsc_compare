@@ -21,11 +21,14 @@ import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0020R$raw;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.C0022R$style;
+import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.phone.widget.CornerVideoView;
+import com.android.systemui.controlcenter.policy.NCSwitchController;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.settings.CurrentUserTracker;
+import com.android.systemui.statusbar.phone.ShadeController;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.CallbackController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
@@ -73,10 +76,12 @@ public class ControlPanelController implements CallbackController<UseControlPane
                     return;
                 }
                 if (ControlPanelController.this.mUseControlPanel) {
-                    if (ControlPanelController.this.isCCFullyCollapsed()) {
-                        ControlPanelController.this.openPanel();
-                    } else {
+                    if (!ControlPanelController.this.isCCFullyCollapsed()) {
                         ControlPanelController.this.collapseControlCenter(true);
+                    } else if (!ControlPanelController.this.mStatusBar.isQSFullyCollapsed()) {
+                        ((NCSwitchController) Dependency.get(NCSwitchController.class)).handleNCSwitch();
+                    } else {
+                        ControlPanelController.this.openPanel();
                     }
                 } else if (ControlPanelController.this.mStatusBar == null) {
                 } else {
@@ -86,10 +91,12 @@ public class ControlPanelController implements CallbackController<UseControlPane
                         ControlPanelController.this.mStatusBar.postAnimateCollapsePanels();
                     }
                 }
-            } else if (ControlPanelController.this.mStatusBar.isQSFullyCollapsed()) {
-                ControlPanelController.this.mStatusBar.postAnimateOpenPanels();
+            } else if (!ControlPanelController.this.mStatusBar.isQSFullyCollapsed()) {
+                ControlPanelController.this.mShadeController.collapsePanel(true);
+            } else if (!ControlPanelController.this.isCCFullyCollapsed()) {
+                ((NCSwitchController) Dependency.get(NCSwitchController.class)).handleCNSwitch();
             } else {
-                ControlPanelController.this.mStatusBar.postAnimateCollapsePanels();
+                ControlPanelController.this.mStatusBar.animateExpandNotificationsPanel();
             }
         }
     };
@@ -104,6 +111,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
         }
     };
     private SettingsObserver mSettingsObserver;
+    private ShadeController mShadeController;
     private StatusBar mStatusBar;
     private boolean mSuperPowerModeOn;
     private boolean mUseControlPanel;
@@ -113,7 +121,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
         void onUseControlPanelChange(boolean z);
     }
 
-    public ControlPanelController(Context context, KeyguardViewMediator keyguardViewMediator, BroadcastDispatcher broadcastDispatcher, SettingsObserver settingsObserver, KeyguardStateController keyguardStateController) {
+    public ControlPanelController(Context context, KeyguardViewMediator keyguardViewMediator, BroadcastDispatcher broadcastDispatcher, SettingsObserver settingsObserver, KeyguardStateController keyguardStateController, ShadeController shadeController) {
         this.mContext = context;
         this.mListeners = new ArrayList();
         this.mUseControlPanelSettingDefault = context.getResources().getInteger(C0016R$integer.use_control_panel_setting_default);
@@ -121,6 +129,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mSettingsObserver = settingsObserver;
         this.mKeyguardStateController = keyguardStateController;
+        this.mShadeController = shadeController;
         if (TextUtils.isEmpty(settingsObserver.getValue("use_control_panel"))) {
             this.mSettingsObserver.setValue("use_control_panel", this.mUseControlPanelSettingDefault);
         }

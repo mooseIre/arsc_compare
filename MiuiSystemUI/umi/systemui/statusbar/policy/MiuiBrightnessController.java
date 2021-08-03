@@ -29,7 +29,6 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.settings.BrightnessController$BrightnessStateChangeCallback;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.settings.ToggleSlider;
-import com.android.systemui.settings.ToggleSliderView;
 import com.miui.systemui.analytics.SystemUIStat;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -48,7 +47,7 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
     private final BrightnessObserver mBrightnessObserver;
     private ArrayList<BrightnessController$BrightnessStateChangeCallback> mChangeCallbacks = new ArrayList<>();
     private final Context mContext;
-    private final ToggleSlider mControl;
+    private ToggleSlider mControl;
     private boolean mControlValueInitialized;
     private final float mDefaultBacklight;
     private final float mDefaultBacklightForVr;
@@ -242,10 +241,8 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
         }
     }
 
-    public MiuiBrightnessController(Context context, ToggleSlider toggleSlider, BroadcastDispatcher broadcastDispatcher) {
+    public MiuiBrightnessController(Context context, BroadcastDispatcher broadcastDispatcher) {
         this.mContext = context;
-        this.mControl = toggleSlider;
-        toggleSlider.setMax(BrightnessUtils.GAMMA_SPACE_MAX);
         this.mBackgroundHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
         this.mUserTracker = new CurrentUserTracker(broadcastDispatcher) {
             /* class com.android.systemui.statusbar.policy.MiuiBrightnessController.AnonymousClass7 */
@@ -271,6 +268,11 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
         this.mAutomaticAvailable = context.getResources().getBoolean(17891369);
         this.mDisplayManager = (DisplayManager) context.getSystemService(DisplayManager.class);
         this.mVrManager = IVrManager.Stub.asInterface(ServiceManager.getService("vrmanager"));
+    }
+
+    public void setToggleSlider(ToggleSlider toggleSlider) {
+        this.mControl = toggleSlider;
+        toggleSlider.setMax(BrightnessUtils.GAMMA_SPACE_MAX);
     }
 
     @Override // com.android.systemui.settings.ToggleSlider.Listener
@@ -351,12 +353,18 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$checkRestrictionAndSetEnabled$0 */
+    public /* synthetic */ void lambda$checkRestrictionAndSetEnabled$0$MiuiBrightnessController() {
+        this.mControl.setEnforcedAdmin(RestrictedLockUtilsInternal.checkIfRestrictionEnforced(this.mContext, "no_config_brightness", this.mUserTracker.getCurrentUserId()));
+    }
+
     public void checkRestrictionAndSetEnabled() {
         this.mBackgroundHandler.post(new Runnable() {
-            /* class com.android.systemui.statusbar.policy.MiuiBrightnessController.AnonymousClass9 */
+            /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiBrightnessController$odiFKbp5tAqBJ5gja94QYiDL0qY */
 
-            public void run() {
-                ((ToggleSliderView) MiuiBrightnessController.this.mControl).setEnforcedAdmin(RestrictedLockUtilsInternal.checkIfRestrictionEnforced(MiuiBrightnessController.this.mContext, "no_config_brightness", MiuiBrightnessController.this.mUserTracker.getCurrentUserId()));
+            public final void run() {
+                MiuiBrightnessController.this.lambda$checkRestrictionAndSetEnabled$0$MiuiBrightnessController();
             }
         });
     }
@@ -407,10 +415,10 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
         ValueAnimator ofInt = ValueAnimator.ofInt(this.mControl.getValue(), i);
         this.mSliderAnimator = ofInt;
         ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiBrightnessController$piACoSZooumUkA9yjO8oCJ26Pu0 */
+            /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiBrightnessController$GLkHD1dhcmaQqXYZJUvWzRNTDO4 */
 
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                MiuiBrightnessController.this.lambda$animateSliderTo$0$MiuiBrightnessController(valueAnimator);
+                MiuiBrightnessController.this.lambda$animateSliderTo$1$MiuiBrightnessController(valueAnimator);
             }
         });
         ValueAnimator valueAnimator2 = this.mSliderAnimator;
@@ -420,8 +428,8 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$animateSliderTo$0 */
-    public /* synthetic */ void lambda$animateSliderTo$0$MiuiBrightnessController(ValueAnimator valueAnimator) {
+    /* renamed from: lambda$animateSliderTo$1 */
+    public /* synthetic */ void lambda$animateSliderTo$1$MiuiBrightnessController(ValueAnimator valueAnimator) {
         this.mExternalChange = true;
         this.mControl.setValue(((Integer) valueAnimator.getAnimatedValue()).intValue());
         this.mExternalChange = false;

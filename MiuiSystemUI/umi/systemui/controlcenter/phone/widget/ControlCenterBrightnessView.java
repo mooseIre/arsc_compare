@@ -19,19 +19,19 @@ import org.jetbrains.annotations.Nullable;
 public final class ControlCenterBrightnessView extends LinearLayout {
     @NotNull
     private AutoBrightnessView autoBrightness;
-    private MiuiBrightnessController brightnessController;
+    private final MiuiBrightnessController brightnessController;
     private QCBrightnessMirrorController brightnessMirrorController;
     @NotNull
     private QCToggleSliderView brightnessView;
-    private final BroadcastDispatcher broadcastDispatcher;
     private boolean listening;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public ControlCenterBrightnessView(@NotNull Context context, @Nullable AttributeSet attributeSet, @NotNull BroadcastDispatcher broadcastDispatcher2) {
+    public ControlCenterBrightnessView(@NotNull Context context, @Nullable AttributeSet attributeSet, @NotNull BroadcastDispatcher broadcastDispatcher, @NotNull MiuiBrightnessController miuiBrightnessController) {
         super(context, attributeSet);
         Intrinsics.checkParameterIsNotNull(context, "context");
-        Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
-        this.broadcastDispatcher = broadcastDispatcher2;
+        Intrinsics.checkParameterIsNotNull(broadcastDispatcher, "broadcastDispatcher");
+        Intrinsics.checkParameterIsNotNull(miuiBrightnessController, "brightnessController");
+        this.brightnessController = miuiBrightnessController;
     }
 
     @NotNull
@@ -61,18 +61,16 @@ public final class ControlCenterBrightnessView extends LinearLayout {
             if (autoBrightnessView != null) {
                 autoBrightnessView.handleSetListening(z);
                 MiuiBrightnessController miuiBrightnessController = this.brightnessController;
-                if (miuiBrightnessController == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("brightnessController");
-                    throw null;
-                } else if (this.listening) {
+                if (this.listening) {
+                    miuiBrightnessController.checkRestrictionAndSetEnabled();
                     miuiBrightnessController.registerCallbacks();
-                } else {
-                    miuiBrightnessController.unregisterCallbacks();
+                    return;
                 }
-            } else {
-                Intrinsics.throwUninitializedPropertyAccessException("autoBrightness");
-                throw null;
+                miuiBrightnessController.unregisterCallbacks();
+                return;
             }
+            Intrinsics.throwUninitializedPropertyAccessException("autoBrightness");
+            throw null;
         }
     }
 
@@ -84,11 +82,11 @@ public final class ControlCenterBrightnessView extends LinearLayout {
         this.autoBrightness = (AutoBrightnessView) requireViewById;
         View requireViewById2 = requireViewById(C0015R$id.qs_brightness);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(R.id.qs_brightness)");
-        this.brightnessView = (QCToggleSliderView) requireViewById2;
-        Context context = getContext();
-        QCToggleSliderView qCToggleSliderView = this.brightnessView;
+        QCToggleSliderView qCToggleSliderView = (QCToggleSliderView) requireViewById2;
+        this.brightnessView = qCToggleSliderView;
+        MiuiBrightnessController miuiBrightnessController = this.brightnessController;
         if (qCToggleSliderView != null) {
-            this.brightnessController = new MiuiBrightnessController(context, qCToggleSliderView, this.broadcastDispatcher);
+            miuiBrightnessController.setToggleSlider(qCToggleSliderView);
         } else {
             Intrinsics.throwUninitializedPropertyAccessException("brightnessView");
             throw null;

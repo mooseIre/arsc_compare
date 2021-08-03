@@ -27,6 +27,7 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     private MiuiBatteryMeterView mBattery;
     private CarrierText mCarrierText;
     protected CommandQueue mCommandQueue;
+    private int mDisable2;
     private NetworkSpeedView mFullscreenNetworkSpeedView;
     protected MiuiLightDarkIconManager mIconManager;
 
@@ -160,6 +161,18 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
         MiuiBatteryMeterView miuiBatteryMeterView = this.mBattery;
         if (miuiBatteryMeterView != null) {
             miuiBatteryMeterView.onDarkChanged(rect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone, false);
+        }
+    }
+
+    @Override // com.android.systemui.qs.MiuiHeaderView
+    public void disable(int i) {
+        super.disable(i);
+        if (this.mDisable2 != i) {
+            this.mDisable2 = i;
+            ImageView imageView = this.mShortcut;
+            if (imageView != null) {
+                imageView.setVisibility((i & 1) == 0 ? 0 : 8);
+            }
         }
     }
 }

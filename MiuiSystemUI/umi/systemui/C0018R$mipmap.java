@@ -13841,8 +13841,6 @@ public final class R {
         public static final int fingerprint_not_identified_title;
         public static final int fingerprint_try_again_msg;
         public static final int fingerprint_try_again_text;
-        public static final int fiveg_sa_switch_summary;
-        public static final int fiveg_sa_vice_switch_title;
         public static final int flash_device;
         public static final int float_notification_snooze_strategy;
         public static final int fmt_chinese_date;
@@ -14134,6 +14132,7 @@ public final class R {
         public static final int keyguard_charged;
         public static final int keyguard_charging_back_to_lockscreen;
         public static final int keyguard_charging_battery_level;
+        public static final int keyguard_charging_double_fast_and_level_tip;
         public static final int keyguard_charging_info_last_charge_time;
         public static final int keyguard_charging_info_last_charge_today_time;
         public static final int keyguard_charging_info_last_charge_yesterday_time;

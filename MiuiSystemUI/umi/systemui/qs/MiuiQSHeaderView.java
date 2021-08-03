@@ -28,6 +28,7 @@ import miui.os.Build;
 public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeController.SuperSaveModeChangeListener {
     private MiuiBatteryMeterView mBattery;
     private CarrierText mCarrierText;
+    private int mDisable2;
     private NetworkSpeedView mFullscreenNetworkSpeedView;
     private MiuiLightDarkIconManager mIconManager;
     private float mNormalHeightLandscape;
@@ -274,9 +275,18 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
 
     private void updateShortCutVisibility() {
         if (this.mShortcut != null) {
-            int i = (this.mLastOrientation != 1 || this.mSuperSave) ? 8 : 0;
+            int i = (this.mLastOrientation == 1 && !this.mSuperSave && (this.mDisable2 & 1) == 0) ? 0 : 8;
             this.mShortcut.setVisibility(i);
             updateShortCutVisibility(i);
+        }
+    }
+
+    @Override // com.android.systemui.qs.MiuiHeaderView
+    public void disable(int i) {
+        super.disable(i);
+        if (this.mDisable2 != i) {
+            this.mDisable2 = i;
+            updateShortCutVisibility();
         }
     }
 }

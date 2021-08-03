@@ -110,14 +110,18 @@ public final class NCSwitchController {
             }
         } else if (this.mIsNCIntercepted && isLeftSlide(motionEvent) && (this.mInitialTouchX - motionEvent.getRawX()) - Math.abs(this.mInitialTouchY - motionEvent.getRawY()) > ((float) this.mTouchSlop)) {
             this.panelViewLogger.logNcSwitch(true);
-            prepareForNCSwitcher();
-            this.shadeColler.collapsePanel(true);
-            this.mControlPanelController.openPanelImmediately();
+            handleNCSwitch();
             this.mIsNCIntercepted = false;
             this.systemUIStat.handleControlCenterEvent(this.mNCSwitchStatEvent);
             return true;
         }
         return false;
+    }
+
+    public final void handleNCSwitch() {
+        prepareForNCSwitcher();
+        this.shadeColler.collapsePanel(true);
+        this.mControlPanelController.openPanelImmediately();
     }
 
     public final boolean onCNSwitchIntercept(@NotNull MotionEvent motionEvent) {
@@ -160,15 +164,19 @@ public final class NCSwitchController {
                 return true;
             }
         } else if (this.mIsCNHandleTouch) {
-            this.mHeadsUpManager.releaseAllImmediately();
             this.panelViewLogger.logNcSwitch(false);
-            prepareForNCSwitcher();
-            this.mControlPanelController.collapseControlCenter(true, true);
+            handleCNSwitch();
             this.systemUIStat.handleControlCenterEvent(this.mCNSwitchStatEvent);
             this.mIsCNHandleTouch = false;
             return true;
         }
         return false;
+    }
+
+    public final void handleCNSwitch() {
+        this.mHeadsUpManager.releaseAllImmediately();
+        prepareForNCSwitcher();
+        this.mControlPanelController.collapseControlCenter(true, true);
     }
 
     private final void prepareForNCSwitcher() {

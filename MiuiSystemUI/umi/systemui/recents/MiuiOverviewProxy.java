@@ -7,15 +7,22 @@ import com.android.systemui.shared.recents.IMiuiSystemUiProxy;
 import com.android.systemui.stackdivider.Divider;
 import java.util.Optional;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: MiuiOverviewProxy.kt */
 public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
     private final OverviewProxyService proxyService;
 
-    /* access modifiers changed from: public */
-    private final void notifyGestureLineProgress(float f) {
+    /* access modifiers changed from: private */
+    public final void notifyGestureLineProgress(float f) {
     }
 
-    public MiuiOverviewProxy(OverviewProxyService overviewProxyService) {
+    @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
+    public void onDockIndicatorVisibilityChanged(boolean z) {
+    }
+
+    public MiuiOverviewProxy(@NotNull OverviewProxyService overviewProxyService) {
         Intrinsics.checkParameterIsNotNull(overviewProxyService, "proxyService");
         this.proxyService = overviewProxyService;
     }
@@ -37,6 +44,7 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
     }
 
     @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
+    @Nullable
     public Rect getMiddleSplitScreenSecondaryBounds() {
         if (!verifyCaller("getMiddleSplitScreenSecondaryBounds")) {
             return null;
@@ -90,8 +98,8 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         return false;
     }
 
-    /* access modifiers changed from: public */
-    private final void notifyCompleteAssistant() {
+    /* access modifiers changed from: private */
+    public final void notifyCompleteAssistant() {
         this.proxyService.notifyAssistantGestureCompletion(0.0f);
     }
 }

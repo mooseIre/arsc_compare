@@ -167,6 +167,10 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     private void setCustomizing(boolean z) {
     }
 
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
+
     @Override // com.android.systemui.plugins.qs.QSTile.Callback
     public void onAnnouncementRequested(CharSequence charSequence) {
     }
@@ -438,10 +442,8 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
                 @Override // miuix.animation.listener.TransitionListener
                 public void onBegin(Object obj) {
                     super.onBegin(obj);
-                    QSControlCustomizer.this.setLayerType(2, null);
                     QSControlCustomizer.this.mRecyclerView.suppressLayout(true);
                     QSControlCustomizer.this.mOthersRecyclerView.suppressLayout(true);
-                    QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, null);
                     QSControlCustomizer.this.setVisibility(0);
                 }
 
@@ -456,8 +458,6 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
                 @Override // miuix.animation.listener.TransitionListener
                 public void onComplete(Object obj) {
                     super.onComplete(obj);
-                    QSControlCustomizer.this.setLayerType(0, null);
-                    QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, null);
                     QSControlCustomizer.this.mRecyclerView.suppressLayout(false);
                     QSControlCustomizer.this.mOthersRecyclerView.suppressLayout(false);
                     QSControlCustomizer.this.mQSCenterPanel.setVisibility(8);
@@ -478,8 +478,6 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
             public void onBegin(Object obj) {
                 super.onBegin(obj);
                 QSControlCustomizer.this.mQSCenterPanel.setVisibility(0);
-                QSControlCustomizer.this.setLayerType(2, null);
-                QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, null);
             }
 
             @Override // miuix.animation.listener.TransitionListener
@@ -494,8 +492,6 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
             public void onComplete(Object obj) {
                 super.onComplete(obj);
                 QSControlCustomizer.this.setVisibility(8);
-                QSControlCustomizer.this.setLayerType(0, null);
-                QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, null);
             }
         });
         iStateStyle2.fromTo(animState3, animState4, animConfig2);

@@ -41,6 +41,10 @@ public class UnAddedTilesLayout extends FrameLayout {
     private TextView mTitle;
     private VelocityMonitor mVelocityMonitor;
 
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
+
     public UnAddedTilesLayout(Context context) {
         this(context, null);
     }

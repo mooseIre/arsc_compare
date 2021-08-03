@@ -37,7 +37,6 @@ import kotlin.collections.CollectionsKt__CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt__MathJVMKt;
 import miuix.animation.Folme;
-import miuix.animation.IFolme;
 import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.controller.AnimState;
@@ -53,10 +52,9 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     private boolean animateBottomOnNextLayout;
     private int backgroundBottom;
     private View backgroundGradient;
-    private MiuiBrightnessController brightnessController;
+    private final MiuiBrightnessController brightnessController;
     private BrightnessMirrorController brightnessMirrorController;
     private ToggleSliderView brightnessView;
-    private final BroadcastDispatcher broadcastDispatcher;
     private ValueAnimator caretAnimator;
     private Interpolator caretInterpolator;
     private boolean contentAdded;
@@ -76,7 +74,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     private float indicatorProgress;
     private final InjectionInflationController inflationController;
     private LayoutInflater layoutInflater;
-    private IFolme mContainerFolme;
+    private IStateStyle mContainerFolme;
     private AnimConfig mItemConfig;
     private View qsBackground;
     private QSContent qsContent;
@@ -109,15 +107,16 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public MiuiQSContainer(@Nullable Context context, @Nullable AttributeSet attributeSet, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull InjectionInflationController injectionInflationController, @NotNull TunerService tunerService2) {
+    public MiuiQSContainer(@Nullable Context context, @Nullable AttributeSet attributeSet, @NotNull BroadcastDispatcher broadcastDispatcher, @NotNull InjectionInflationController injectionInflationController, @NotNull TunerService tunerService2, @NotNull MiuiBrightnessController miuiBrightnessController) {
         super(context, attributeSet);
-        Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
+        Intrinsics.checkParameterIsNotNull(broadcastDispatcher, "broadcastDispatcher");
         Intrinsics.checkParameterIsNotNull(injectionInflationController, "inflationController");
         Intrinsics.checkParameterIsNotNull(tunerService2, "tunerService");
+        Intrinsics.checkParameterIsNotNull(miuiBrightnessController, "brightnessController");
         if (context != null) {
-            this.broadcastDispatcher = broadcastDispatcher2;
             this.inflationController = injectionInflationController;
             this.tunerService = tunerService2;
+            this.brightnessController = miuiBrightnessController;
             this.sizePoint = new Point();
             this.backgroundBottom = -1;
             this.heightOverride = -1;
@@ -206,7 +205,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     }
 
     private final void initFolme() {
-        this.mContainerFolme = Folme.useAt(this.qsContent);
+        this.mContainerFolme = Folme.useAt(this.qsContent).state();
         AnimState animState = new AnimState("qs_content_hidden");
         animState.add(ViewProperty.SCALE_X, 0.9f, new long[0]);
         animState.add(ViewProperty.SCALE_Y, 0.9f, new long[0]);
@@ -221,6 +220,17 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
         animConfig.setEase(-2, 0.95f, 0.6f);
         this.mItemConfig = animConfig;
         new AnimConfig().setEase(-2, 0.95f, 0.6f);
+    }
+
+    private final void cleanFolme() {
+        IStateStyle iStateStyle = this.mContainerFolme;
+        if (iStateStyle != null) {
+            iStateStyle.clean();
+        }
+        this.mContainerFolme = null;
+        this.hiddenState = null;
+        this.showState = null;
+        this.mItemConfig = null;
     }
 
     /* access modifiers changed from: protected */
@@ -262,8 +272,9 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
                         this.qsCustomizer = (MiuiQSCustomizer) findViewById(C0015R$id.qs_customize);
                         this.qsPanel = (QSPanel) findViewById(C0015R$id.quick_settings_panel);
                         this.quickQSPanel = (QuickQSPanel) findViewById(C0015R$id.quick_qs_panel);
-                        this.brightnessView = (ToggleSliderView) findViewById(C0015R$id.brightness_slider);
-                        this.brightnessController = new MiuiBrightnessController(getContext(), this.brightnessView, this.broadcastDispatcher);
+                        ToggleSliderView toggleSliderView = (ToggleSliderView) findViewById(C0015R$id.brightness_slider);
+                        this.brightnessView = toggleSliderView;
+                        this.brightnessController.setToggleSlider(toggleSliderView);
                         View findViewById = findViewById(C0015R$id.qs_footer);
                         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.qs_footer)");
                         if (findViewById instanceof QSFooter) {
@@ -300,8 +311,8 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
                         setupAnimatedViews();
                         setBrightnessMirror(this.brightnessMirrorController);
                         updateQSDataUsage(this.qsDataUsageEnabled);
-                        this.contentAdded = true;
                         initFolme();
+                        this.contentAdded = true;
                         return;
                     }
                     Intrinsics.throwNpe();
@@ -334,7 +345,6 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
             }
             this.quickQSPanel = null;
             this.brightnessView = null;
-            this.brightnessController = null;
             this.footer = null;
             updateQSDataUsage(false);
             this.footerBundle = null;
@@ -349,6 +359,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
             this.indicatorDrawable = null;
             this.qsBackground = null;
             updateResources$default(this, false, 1, null);
+            cleanFolme();
             this.contentAdded = false;
         }
     }
@@ -384,7 +395,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
         super.onConfigurationChanged(configuration);
         setBackgroundGradientVisibility(configuration);
-        updateResources$default(this, false, 1, null);
+        post(new MiuiQSContainer$onConfigurationChanged$1(this));
         this.sizePoint.set(0, 0);
         updateBrightnessMirror();
     }
@@ -914,8 +925,6 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
 
     public int setShowQSPanelAnimate(boolean z) {
         int i;
-        IStateStyle state;
-        IStateStyle state2;
         MiuiNotificationShadeHeader miuiNotificationShadeHeader = this.header;
         if (miuiNotificationShadeHeader != null) {
             int i2 = 0;
@@ -926,9 +935,9 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
                     throw null;
                 } else if (miuiNotificationShadeHeader2.getUnimportantHeight() != 0) {
                     if (z) {
-                        IFolme iFolme = this.mContainerFolme;
-                        if (!(iFolme == null || (state2 = iFolme.state()) == null)) {
-                            state2.to(this.showState, this.mItemConfig);
+                        IStateStyle iStateStyle = this.mContainerFolme;
+                        if (iStateStyle != null) {
+                            iStateStyle.to(this.showState, this.mItemConfig);
                         }
                         QuickQSPanel quickQSPanel2 = this.quickQSPanel;
                         int height = quickQSPanel2 != null ? quickQSPanel2.getHeight() : 0;
@@ -945,9 +954,9 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
                             throw null;
                         }
                     } else {
-                        IFolme iFolme2 = this.mContainerFolme;
-                        if (!(iFolme2 == null || (state = iFolme2.state()) == null)) {
-                            state.to(this.hiddenState, this.mItemConfig);
+                        IStateStyle iStateStyle2 = this.mContainerFolme;
+                        if (iStateStyle2 != null) {
+                            iStateStyle2.to(this.hiddenState, this.mItemConfig);
                         }
                         MiuiNotificationShadeHeader miuiNotificationShadeHeader4 = this.header;
                         if (miuiNotificationShadeHeader4 != null) {

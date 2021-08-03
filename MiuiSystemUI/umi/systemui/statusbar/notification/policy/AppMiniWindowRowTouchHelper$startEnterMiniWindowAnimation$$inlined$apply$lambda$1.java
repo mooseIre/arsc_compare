@@ -6,9 +6,8 @@ import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
-/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowRowTouchHelper.kt */
-public final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ Rect $from$inlined;
     final /* synthetic */ Rect $to$inlined;
     final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
@@ -24,16 +23,16 @@ public final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$in
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
             float floatValue = ((Float) animatedValue).floatValue();
-            MiniWindowExpandParameters miniWindowExpandParameters = this.this$0.mExpandedParams;
+            MiniWindowExpandParameters access$getMExpandedParams$p = AppMiniWindowRowTouchHelper.access$getMExpandedParams$p(this.this$0);
             int i = this.$from$inlined.left;
-            miniWindowExpandParameters.setLeft((int) (((float) i) + (((float) (this.$to$inlined.left - i)) * floatValue)));
+            access$getMExpandedParams$p.setLeft((int) (((float) i) + (((float) (this.$to$inlined.left - i)) * floatValue)));
             int i2 = this.$from$inlined.top;
-            miniWindowExpandParameters.setTop((int) (((float) i2) + (((float) (this.$to$inlined.top - i2)) * floatValue)));
+            access$getMExpandedParams$p.setTop((int) (((float) i2) + (((float) (this.$to$inlined.top - i2)) * floatValue)));
             int i3 = this.$from$inlined.right;
-            miniWindowExpandParameters.setRight((int) (((float) i3) + (((float) (this.$to$inlined.right - i3)) * floatValue)));
+            access$getMExpandedParams$p.setRight((int) (((float) i3) + (((float) (this.$to$inlined.right - i3)) * floatValue)));
             int i4 = this.$from$inlined.bottom;
-            miniWindowExpandParameters.setBottom((int) (((float) i4) + (((float) (this.$to$inlined.bottom - i4)) * floatValue)));
-            this.this$0.onExpandedParamsUpdated();
+            access$getMExpandedParams$p.setBottom((int) (((float) i4) + (((float) (this.$to$inlined.bottom - i4)) * floatValue)));
+            AppMiniWindowRowTouchHelper.access$onExpandedParamsUpdated(this.this$0);
             return;
         }
         throw new TypeCastException("null cannot be cast to non-null type kotlin.Float");

@@ -9,6 +9,9 @@ import android.os.Looper;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.util.Log;
+import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
+import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.NavigationBarController;
 import kotlin.Lazy;
 import kotlin.LazyKt__LazyJVMKt;
@@ -29,6 +32,7 @@ public final class NavigationModeControllerExt {
     private static boolean mHideGestureLine;
     private static NavigationModeControllerExt$mHideGestureLineObserver$1 mHideGestureLineObserver = new NavigationModeControllerExt$mHideGestureLineObserver$1(null);
     private static boolean mIsFsgMode;
+    private static final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new NavigationModeControllerExt$mKeyguardUpdateMonitorCallback$1();
     private static final Lazy mOverlayManager$delegate = LazyKt__LazyJVMKt.lazy(NavigationModeControllerExt$mOverlayManager$2.INSTANCE);
     private static final Lazy navigationBarController$delegate = LazyKt__LazyJVMKt.lazy(NavigationModeControllerExt$navigationBarController$2.INSTANCE);
 
@@ -112,12 +116,17 @@ public final class NavigationModeControllerExt {
         context.getContentResolver().registerContentObserver(Settings.System.getUriFor("elderly_mode"), false, mElderlyModeObserver, -1);
     }
 
+    private final void registerKeyguardObserver() {
+        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).registerCallback(mKeyguardUpdateMonitorCallback);
+    }
+
     public final void registerSettingObserver(@NotNull Context context) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         init(context);
         registerFullScreenGestureObserver(context);
         registerHideLineObserver(context);
         registerElderlyModeObserver(context);
+        registerKeyguardObserver();
     }
 
     public final void onElderModeChange() {

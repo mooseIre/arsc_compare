@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.internal.widget.ConversationLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -53,6 +54,7 @@ public class HybridConversationNotificationView extends HybridNotificationView {
 
     @Override // com.android.systemui.statusbar.notification.row.HybridNotificationView
     public void bind(CharSequence charSequence, CharSequence charSequence2, View view) {
+        CharSequence charSequence3;
         if (!(view instanceof ConversationLayout)) {
             super.bind(charSequence, charSequence2, view);
             return;
@@ -90,9 +92,14 @@ public class HybridConversationNotificationView extends HybridNotificationView {
             this.mConversationSenderName.setVisibility(0);
             this.mConversationSenderName.setText(conversationLayout.getConversationSenderName());
         }
-        CharSequence conversationText = conversationLayout.getConversationText();
-        if (!TextUtils.isEmpty(conversationText)) {
-            charSequence2 = conversationText;
+        try {
+            charSequence3 = conversationLayout.getConversationText();
+        } catch (Exception e) {
+            e.printStackTrace();
+            charSequence3 = CodeInjection.MD5;
+        }
+        if (!TextUtils.isEmpty(charSequence3)) {
+            charSequence2 = charSequence3;
         }
         super.bind(charSequence, charSequence2, conversationLayout);
     }

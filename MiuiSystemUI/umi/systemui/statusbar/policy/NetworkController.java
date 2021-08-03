@@ -42,8 +42,6 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
 
     AccessPointController getAccessPointController();
 
-    List<SubscriptionInfo> getAllSubscriptions();
-
     DataSaverController getDataSaverController();
 
     DataUsageController getMobileDataController();
@@ -63,6 +61,9 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
     void setWifiEnabled(boolean z);
 
     public interface SignalCallback {
+        default void setAllSubs(List<SubscriptionInfo> list) {
+        }
+
         default void setDefaultSim(int i) {
         }
 

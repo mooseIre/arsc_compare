@@ -40,7 +40,6 @@ import com.android.systemui.recents.OverviewProxyService;
 import com.android.systemui.recents.Recents;
 import com.android.systemui.recents.RecentsOnboarding;
 import com.android.systemui.shared.plugins.PluginManager;
-import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.QuickStepContract;
 import com.android.systemui.shared.system.SysUiStatsLog;
 import com.android.systemui.shared.system.WindowManagerWrapper;
@@ -581,16 +580,8 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         boolean isRecentsButtonDisabled = isRecentsButtonDisabled();
         boolean z3 = isRecentsButtonDisabled && (2097152 & this.mDisabledFlags) != 0;
         boolean z4 = !z && (QuickStepContract.isGesturalMode(this.mNavBarMode) || (this.mDisabledFlags & 4194304) != 0);
-        boolean isScreenPinningActive = ActivityManagerWrapper.getInstance().isScreenPinningActive();
         if (this.mOverviewProxyService.isEnabled()) {
             isRecentsButtonDisabled |= true ^ QuickStepContract.isLegacyMode(this.mNavBarMode);
-            if (isScreenPinningActive && !QuickStepContract.isGesturalMode(this.mNavBarMode)) {
-                z4 = false;
-                z2 = false;
-            }
-        } else if (isScreenPinningActive) {
-            z4 = false;
-            isRecentsButtonDisabled = false;
         }
         ViewGroup viewGroup = (ViewGroup) getCurrentView().findViewById(C0015R$id.nav_buttons);
         if (!(viewGroup == null || (layoutTransition = viewGroup.getLayoutTransition()) == null || layoutTransition.getTransitionListeners().contains(this.mTransitionListener))) {
@@ -670,7 +661,6 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         int displayId = ((FrameLayout) this).mContext.getDisplayId();
         SysUiState sysUiState = this.mSysUiFlagContainer;
         boolean z = true;
-        sysUiState.setFlag(1, ActivityManagerWrapper.getInstance().isScreenPinningActive());
         sysUiState.setFlag(128, (this.mDisabledFlags & 16777216) != 0);
         sysUiState.setFlag(256, (this.mDisabledFlags & 2097152) != 0);
         if ((this.mDisabledFlags & 33554432) == 0) {

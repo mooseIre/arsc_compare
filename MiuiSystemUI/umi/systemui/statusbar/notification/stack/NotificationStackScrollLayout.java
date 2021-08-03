@@ -62,7 +62,6 @@ import com.android.systemui.Dumpable;
 import com.android.systemui.ExpandHelper;
 import com.android.systemui.Interpolators;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
-import com.android.systemui.media.KeyguardMediaController;
 import com.android.systemui.media.MediaDataFilter;
 import com.android.systemui.media.MediaTimeoutListener;
 import com.android.systemui.plugins.FalsingManager;
@@ -282,7 +281,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private boolean mIsExpansionChanging;
     private boolean mIsTrackingSliding;
     private final KeyguardBypassController mKeyguardBypassController;
-    private final KeyguardMediaController mKeyguardMediaController;
     private int mLastMotionY;
     private float mLastSentAppear;
     private float mLastSentExpandedHeight;
@@ -721,8 +719,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
             @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public boolean onDraggedDown(View view, int i) {
-                boolean z = NotificationStackScrollLayout.this.hasActiveNotifications() || NotificationStackScrollLayout.this.mKeyguardMediaController.getView().getVisibility() == 0;
-                if (NotificationStackScrollLayout.this.mStatusBarState == 1 && z) {
+                if (NotificationStackScrollLayout.this.mStatusBarState == 1) {
                     NotificationStackScrollLayout.this.mLockscreenGestureLogger.write(187, (int) (((float) i) / NotificationStackScrollLayout.this.mDisplayMetrics.density), 0);
                     NotificationStackScrollLayout.this.mLockscreenGestureLogger.log(LockscreenGestureLogger.LockscreenUiEvent.LOCKSCREEN_PULL_SHADE_OPEN);
                     if (!NotificationStackScrollLayout.this.mAmbientState.isDozing() || view != null) {
@@ -1022,7 +1019,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         initializeForegroundServiceSection(foregroundServiceDismissalFeatureController);
         this.mUiEventLogger = uiEventLogger;
         this.mColorExtractor.addOnColorsChangedListener(this.mOnColorsChangedListener);
-        this.mKeyguardMediaController = miuiKeyguardMediaController;
         miuiKeyguardMediaController.setVisibilityChangedListener(new Function1(miuiKeyguardMediaController) {
             /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$YKigXFrCTlL9_LHDl6k5qMtmuY */
             public final /* synthetic */ MiuiKeyguardMediaController f$1;
@@ -1198,7 +1194,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         int childCount = getChildCount();
         for (int i2 = 0; i2 < childCount; i2++) {
             View childAt = getChildAt(i2);
-            if (childAt instanceof ExpandableNotificationRow) {
+            if ((childAt instanceof ExpandableNotificationRow) && childAt.getVisibility() != 8) {
                 ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) childAt;
                 if (expandableNotificationRow.canViewBeDismissed() && matchesSelection(expandableNotificationRow, i)) {
                     return true;
@@ -5191,15 +5187,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         if (notificationEntry.rowExists()) {
             updateHideSensitiveForChild(notificationEntry.getRow());
         }
-    }
-
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private boolean hasActiveNotifications() {
-        if (this.mFeatureFlags.isNewNotifPipelineRenderingEnabled()) {
-            return !this.mNotifPipeline.getShadeList().isEmpty();
-        }
-        return this.mEntryManager.hasActiveNotifications();
     }
 
     /* renamed from: onDismissAllAnimationsEnd */

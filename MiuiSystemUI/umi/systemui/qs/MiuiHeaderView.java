@@ -47,6 +47,9 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
     protected View mUnimportantHeader;
     protected ImageView mUnimportantIcon;
 
+    public void disable(int i) {
+    }
+
     public abstract void regionChanged();
 
     public abstract void themeChanged();

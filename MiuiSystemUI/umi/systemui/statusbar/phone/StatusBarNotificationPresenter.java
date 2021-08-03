@@ -4,6 +4,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.os.Trace;
 import android.service.notification.StatusBarNotification;
 import android.service.vr.IVrManager;
 import android.service.vr.IVrStateCallbacks;
@@ -53,7 +54,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.miui.systemui.NotificationSettings;
 import com.miui.systemui.SettingsManager;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
@@ -298,24 +299,26 @@ public class StatusBarNotificationPresenter implements NotificationPresenter, Co
     }
 
     private void updateNotificationOnUiModeChanged() {
-        List<NotificationEntry> activeNotificationsForCurrentUser = this.mEntryManager.getActiveNotificationsForCurrentUser();
-        for (int i = 0; i < activeNotificationsForCurrentUser.size(); i++) {
-            NotificationEntry notificationEntry = activeNotificationsForCurrentUser.get(i);
-            ExpandableNotificationRow row = notificationEntry.getRow();
-            if (row != null) {
-                row.onUiModeChanged();
+        Collection<NotificationEntry> allNotifs = this.mEntryManager.getAllNotifs();
+        if (!(allNotifs == null || allNotifs.size() == 0)) {
+            for (NotificationEntry notificationEntry : allNotifs) {
+                ExpandableNotificationRow row = notificationEntry.getRow();
+                if (row != null) {
+                    row.onUiModeChanged();
+                }
+                notificationEntry.setModalRow(null);
             }
-            notificationEntry.setModalRow(null);
         }
     }
 
     private void updateNotificationsOnDensityOrFontScaleChanged() {
-        List<NotificationEntry> activeNotificationsForCurrentUser = this.mEntryManager.getActiveNotificationsForCurrentUser();
-        for (int i = 0; i < activeNotificationsForCurrentUser.size(); i++) {
-            NotificationEntry notificationEntry = activeNotificationsForCurrentUser.get(i);
-            notificationEntry.onDensityOrFontScaleChanged();
-            if (notificationEntry.areGutsExposed()) {
-                this.mGutsManager.onDensityOrFontScaleChanged(notificationEntry);
+        Collection<NotificationEntry> allNotifs = this.mEntryManager.getAllNotifs();
+        if (!(allNotifs == null || allNotifs.size() == 0)) {
+            for (NotificationEntry notificationEntry : allNotifs) {
+                notificationEntry.onDensityOrFontScaleChanged();
+                if (notificationEntry.areGutsExposed()) {
+                    this.mGutsManager.onDensityOrFontScaleChanged(notificationEntry);
+                }
             }
         }
     }
@@ -352,8 +355,12 @@ public class StatusBarNotificationPresenter implements NotificationPresenter, Co
                 });
                 return;
             }
+            Trace.beginSection("ViewHierarchyManager#updateNotificationViews");
             this.mViewHierarchyManager.updateNotificationViews();
+            Trace.endSection();
+            Trace.beginSection("NotificationPanel#updateNotificationViews");
             this.mNotificationPanel.updateNotificationViews(str);
+            Trace.endSection();
         }
     }
 

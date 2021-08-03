@@ -16,6 +16,7 @@ import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.NotificationRankingManager;
 import com.android.systemui.statusbar.notification.collection.inflation.NotificationRowBinder;
+import com.android.systemui.statusbar.notification.policy.NotificationFilterController;
 import com.android.systemui.statusbar.notification.unimportant.FoldListener;
 import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.notification.unimportant.FoldNotifController;
@@ -42,8 +43,10 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
     private final NotificationListener.NotificationHandler notifListener;
     private final NotificationRankingManager rankingManager;
     private final List<NotificationEntry> readOnlyUnimportantNotifications;
+    private final List<NotificationEntry> readOnlyVisibleFilterOutKeyguard;
     private final ArrayList<NotificationEntry> sortedAndFilteredUnimportant;
     private final HashSet<String> transferSet;
+    private final ArrayList<NotificationEntry> visibleFilterOutKeyguard;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiNotificationEntryManager(Context context, NotificationEntryManagerLogger notificationEntryManagerLogger, NotificationGroupManager notificationGroupManager, NotificationRankingManager notificationRankingManager, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment, FeatureFlags featureFlags, Lazy<NotificationRowBinder> lazy, Lazy<NotificationRemoteInputManager> lazy2, LeakDetector leakDetector, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController) {
@@ -63,6 +66,9 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
         ArrayList<NotificationEntry> arrayList = new ArrayList<>();
         this.sortedAndFilteredUnimportant = arrayList;
         this.readOnlyUnimportantNotifications = Collections.unmodifiableList(arrayList);
+        ArrayList<NotificationEntry> arrayList2 = new ArrayList<>();
+        this.visibleFilterOutKeyguard = arrayList2;
+        this.readOnlyVisibleFilterOutKeyguard = Collections.unmodifiableList(arrayList2);
         this.iconList = new ArrayList();
         this.notifListener = new MiuiNotificationEntryManager$notifListener$1(this);
         FoldTool.INSTANCE.init(context);
@@ -133,6 +139,15 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
     public void updateRankingAndSort(NotificationListenerService.RankingMap rankingMap, String str) {
         updateFoldRankingAndSort$default(this, rankingMap, str, false, 4, null);
         super.updateRankingAndSort(rankingMap, str);
+        this.visibleFilterOutKeyguard.clear();
+        List<NotificationEntry> visibleNotifications = getVisibleNotifications();
+        ArrayList arrayList = new ArrayList();
+        for (T t : visibleNotifications) {
+            if (!NotificationFilterController.shouldFilterOutKeyguard(t)) {
+                arrayList.add(t);
+            }
+        }
+        CollectionsKt___CollectionsKt.toCollection(arrayList, this.visibleFilterOutKeyguard);
     }
 
     static /* synthetic */ void updateFoldRankingAndSort$default(MiuiNotificationEntryManager miuiNotificationEntryManager, NotificationListenerService.RankingMap rankingMap, String str, boolean z, int i, Object obj) {
@@ -203,6 +218,24 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
         return visibleNotifications;
     }
 
+    public final List<NotificationEntry> getFinalVisibleNotifications() {
+        if (this.isShowingUnimportant) {
+            List<NotificationEntry> list = this.readOnlyUnimportantNotifications;
+            Intrinsics.checkExpressionValueIsNotNull(list, "readOnlyUnimportantNotifications");
+            return list;
+        }
+        List<NotificationEntry> list2 = this.readOnlyVisibleFilterOutKeyguard;
+        Intrinsics.checkExpressionValueIsNotNull(list2, "readOnlyVisibleFilterOutKeyguard");
+        return list2;
+    }
+
+    @Override // com.android.systemui.statusbar.notification.NotificationEntryManager
+    public boolean hasActiveNotifications() {
+        List<NotificationEntry> list = this.readOnlyVisibleFilterOutKeyguard;
+        Intrinsics.checkExpressionValueIsNotNull(list, "readOnlyVisibleFilterOutKeyguard");
+        return !list.isEmpty();
+    }
+
     @Override // com.android.systemui.statusbar.notification.NotificationEntryManager
     public NotificationEntry getPendingOrActiveNotif(String str) {
         if (this.mPendingNotifications.containsKey(str)) {
@@ -214,12 +247,14 @@ public class MiuiNotificationEntryManager extends NotificationEntryManager imple
     @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
     public void showUnimportantNotifications() {
         this.isShowingUnimportant = true;
+        FoldManager.Companion.setFoldNeedsAnim(true);
         showUnimportantNotifications(true);
     }
 
     @Override // com.android.systemui.statusbar.notification.unimportant.FoldListener
     public void resetAll(boolean z) {
         this.isShowingUnimportant = false;
+        FoldManager.Companion.setFoldNeedsAnim(z);
         showUnimportantNotifications(false);
     }
 

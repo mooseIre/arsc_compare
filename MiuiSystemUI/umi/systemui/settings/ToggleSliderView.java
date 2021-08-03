@@ -142,6 +142,7 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
         }
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public void setEnforcedAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
         boolean z = true;
         this.mToggle.setEnabled(enforcedAdmin == null);

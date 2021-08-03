@@ -18,6 +18,7 @@ import codeinjection.CodeInjection;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
+import com.android.systemui.statusbar.notification.MiuiNotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -27,15 +28,18 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 import miui.maml.FancyDrawable;
 import miui.provider.KeyguardNotification;
 
 public class KeyguardNotificationController {
     private Handler mBgHandler;
     private Context mContext;
-    private NotificationEntryManager mEntryManager;
+    private MiuiNotificationEntryManager mEntryManager;
     private NotificationGroupManager mGroupManager;
     private KeyguardStateController mKeyguardStateController;
     private NotificationLockscreenUserManager mLockscreenUserManager;
@@ -43,7 +47,7 @@ public class KeyguardNotificationController {
 
     public KeyguardNotificationController(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, KeyguardStateController keyguardStateController, NotificationLockscreenUserManager notificationLockscreenUserManager) {
         this.mContext = context;
-        this.mEntryManager = notificationEntryManager;
+        this.mEntryManager = (MiuiNotificationEntryManager) notificationEntryManager;
         this.mGroupManager = notificationGroupManager;
         this.mKeyguardStateController = keyguardStateController;
         this.mLockscreenUserManager = notificationLockscreenUserManager;
@@ -135,30 +139,37 @@ public class KeyguardNotificationController {
         ArrayList arrayList = new ArrayList(this.mSortedKeys);
         updateSortedKeys(3003, null);
         this.mBgHandler.obtainMessage(3003).sendToTarget();
-        this.mEntryManager.getVisibleNotifications().forEach(new Consumer(arrayList) {
-            /* class com.android.systemui.statusbar.notification.policy.$$Lambda$KeyguardNotificationController$Na2b_4U1h0L_f2rlRPW0xKjNbIY */
-            public final /* synthetic */ ArrayList f$1;
+        this.mEntryManager.getFinalVisibleNotifications().stream().filter(new Predicate() {
+            /* class com.android.systemui.statusbar.notification.policy.$$Lambda$KeyguardNotificationController$wQZ3W3KW5nGOmIU_stL2x4YFouM */
+
+            @Override // java.util.function.Predicate
+            public final boolean test(Object obj) {
+                return KeyguardNotificationController.this.needReadd((NotificationEntry) obj);
+            }
+        }).filter(new Predicate(arrayList) {
+            /* class com.android.systemui.statusbar.notification.policy.$$Lambda$KeyguardNotificationController$KoW3_XHXMSpczuC6npEAlR0JVS0 */
+            public final /* synthetic */ ArrayList f$0;
 
             {
-                this.f$1 = r2;
+                this.f$0 = r1;
             }
+
+            @Override // java.util.function.Predicate
+            public final boolean test(Object obj) {
+                return this.f$0.contains(((NotificationEntry) obj).getKey());
+            }
+        }).forEach(new Consumer() {
+            /* class com.android.systemui.statusbar.notification.policy.$$Lambda$ieMWCO1N96wbjpbwHZTfl2QngQ */
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                KeyguardNotificationController.this.lambda$clear$0$KeyguardNotificationController(this.f$1, (NotificationEntry) obj);
+                KeyguardNotificationController.this.add((NotificationEntry) obj);
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$clear$0 */
-    public /* synthetic */ void lambda$clear$0$KeyguardNotificationController(ArrayList arrayList, NotificationEntry notificationEntry) {
-        if (needReadd(notificationEntry) && arrayList.contains(notificationEntry.getKey())) {
-            add(notificationEntry);
-        }
-    }
-
-    private boolean needReadd(NotificationEntry notificationEntry) {
+    public boolean needReadd(NotificationEntry notificationEntry) {
         Notification notification = notificationEntry.getSbn().getNotification();
         if (notificationEntry.getSbn().isClearable() && !MiuiNotificationCompat.isOnlyShowKeyguard(notification) && !MiuiNotificationCompat.isKeptOnKeyguard(notification)) {
             return false;
@@ -186,27 +197,34 @@ public class KeyguardNotificationController {
         }
         this.mSortedKeys.clear();
         if (!hashSet.isEmpty()) {
-            this.mEntryManager.getVisibleNotifications().forEach(new Consumer(hashSet) {
-                /* class com.android.systemui.statusbar.notification.policy.$$Lambda$KeyguardNotificationController$GuZXS6bJBjs3ceHXMFgWBJ2pts */
-                public final /* synthetic */ Set f$1;
+            Stream<R> filter = this.mEntryManager.getFinalVisibleNotifications().stream().map($$Lambda$kpoFpoZoiVX8t3fHvYFACoEdWls.INSTANCE).filter(new Predicate(hashSet) {
+                /* class com.android.systemui.statusbar.notification.policy.$$Lambda$X3mL3VweBXQxL21HEcoksSGlEm4 */
+                public final /* synthetic */ Set f$0;
 
                 {
-                    this.f$1 = r2;
+                    this.f$0 = r1;
+                }
+
+                @Override // java.util.function.Predicate
+                public final boolean test(Object obj) {
+                    return this.f$0.contains((String) obj);
+                }
+            });
+            ArrayList<String> arrayList = this.mSortedKeys;
+            Objects.requireNonNull(arrayList);
+            filter.forEach(new Consumer(arrayList) {
+                /* class com.android.systemui.statusbar.notification.policy.$$Lambda$I1A8dniBuRdoMGKE4fgVMPvl9YM */
+                public final /* synthetic */ ArrayList f$0;
+
+                {
+                    this.f$0 = r1;
                 }
 
                 @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
-                    KeyguardNotificationController.this.lambda$updateSortedKeys$1$KeyguardNotificationController(this.f$1, (NotificationEntry) obj);
+                    this.f$0.add((String) obj);
                 }
             });
-        }
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$updateSortedKeys$1 */
-    public /* synthetic */ void lambda$updateSortedKeys$1$KeyguardNotificationController(Set set, NotificationEntry notificationEntry) {
-        if (set.contains(notificationEntry.getKey())) {
-            this.mSortedKeys.add(notificationEntry.getKey());
         }
     }
 

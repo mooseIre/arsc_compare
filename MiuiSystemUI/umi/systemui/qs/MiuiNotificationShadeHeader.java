@@ -11,12 +11,13 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
+import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.notification.unimportant.FoldListener;
 import com.android.systemui.statusbar.notification.unimportant.FoldManager;
 import com.android.systemui.statusbar.policy.RegionController;
 import com.miui.systemui.util.CommonUtil;
 
-public class MiuiNotificationShadeHeader extends RelativeLayout implements ControlPanelController.UseControlPanelChangeListener, RegionController.Callback, View.OnLayoutChangeListener, FoldListener {
+public class MiuiNotificationShadeHeader extends RelativeLayout implements ControlPanelController.UseControlPanelChangeListener, RegionController.Callback, View.OnLayoutChangeListener, FoldListener, CommandQueue.Callbacks {
     private boolean mExpanded;
     private MiuiHeaderView mHeaderView;
     private Configuration mLastConfiguration;
@@ -51,17 +52,27 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
+    public void disable(int i, int i2, int i3, boolean z) {
+        MiuiHeaderView miuiHeaderView;
+        if (i == 0 && (miuiHeaderView = this.mHeaderView) != null) {
+            miuiHeaderView.disable(i3);
+        }
+    }
+
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback((ControlPanelController.UseControlPanelChangeListener) this);
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
         FoldManager.Companion.addListener(this);
+        ((CommandQueue) Dependency.get(CommandQueue.class)).addCallback((CommandQueue.Callbacks) this);
     }
 
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        ((CommandQueue) Dependency.get(CommandQueue.class)).removeCallback((CommandQueue.Callbacks) this);
         ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).removeCallback((ControlPanelController.UseControlPanelChangeListener) this);
         FoldManager.Companion.removeListener(this);
