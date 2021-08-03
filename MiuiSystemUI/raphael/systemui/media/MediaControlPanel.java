@@ -219,7 +219,7 @@ public class MediaControlPanel {
                         }
 
                         public final void onClick(View view) {
-                            MediaControlPanel.lambda$bind$2(this.f$0, view);
+                            this.f$0.run();
                         }
                     });
                 }
@@ -248,21 +248,18 @@ public class MediaControlPanel {
         }
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bind$0 */
     public /* synthetic */ void lambda$bind$0$MediaControlPanel(PendingIntent pendingIntent, View view) {
         this.mActivityStarter.postStartActivityDismissingKeyguard(pendingIntent);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bind$1 */
     public /* synthetic */ void lambda$bind$1$MediaControlPanel(MediaData mediaData, View view) {
         this.mActivityStarter.startActivity(new Intent().setAction("com.android.settings.panel.action.MEDIA_OUTPUT").putExtra("com.android.settings.panel.extra.PACKAGE_NAME", mediaData.getPackageName()).putExtra("key_media_session_token", this.mToken), false, true, 268468224);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bind$3 */
     public /* synthetic */ void lambda$bind$3$MediaControlPanel(MediaController mediaController) {
@@ -298,6 +295,7 @@ public class MediaControlPanel {
         return isPlaying(this.mController);
     }
 
+    /* access modifiers changed from: protected */
     public boolean isPlaying(MediaController mediaController) {
         PlaybackState playbackState;
         if (mediaController == null || (playbackState = mediaController.getPlaybackState()) == null || playbackState.getState() != 3) {
@@ -306,6 +304,7 @@ public class MediaControlPanel {
         return true;
     }
 
+    /* access modifiers changed from: protected */
     public void setVisibleAndAlpha(ConstraintSet constraintSet, int i, boolean z) {
         constraintSet.setVisibility(i, z ? 0 : 8);
         constraintSet.setAlpha(i, z ? 1.0f : 0.0f);

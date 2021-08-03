@@ -12,7 +12,7 @@ public final class ControlsEditingActivity$currentUserTracker$1 extends CurrentU
     ControlsEditingActivity$currentUserTracker$1(ControlsEditingActivity controlsEditingActivity, BroadcastDispatcher broadcastDispatcher, BroadcastDispatcher broadcastDispatcher2) {
         super(broadcastDispatcher2);
         this.this$0 = controlsEditingActivity;
-        this.startingUser = ControlsEditingActivity.access$getController$p(controlsEditingActivity).getCurrentUserId();
+        this.startingUser = controlsEditingActivity.controller.getCurrentUserId();
     }
 
     @Override // com.android.systemui.settings.CurrentUserTracker

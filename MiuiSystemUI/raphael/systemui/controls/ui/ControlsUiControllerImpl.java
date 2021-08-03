@@ -117,14 +117,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         this.onSeedingComplete = new ControlsUiControllerImpl$onSeedingComplete$1(this);
     }
 
-    public static final /* synthetic */ Map access$getControlViewsById$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.controlViewsById;
-    }
-
-    public static final /* synthetic */ Map access$getControlsById$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.controlsById;
-    }
-
     public static final /* synthetic */ Runnable access$getDismissGlobalActions$p(ControlsUiControllerImpl controlsUiControllerImpl) {
         Runnable runnable = controlsUiControllerImpl.dismissGlobalActions;
         if (runnable != null) {
@@ -134,10 +126,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
-    public static final /* synthetic */ StructureInfo access$getEMPTY_STRUCTURE$cp() {
-        return EMPTY_STRUCTURE;
-    }
-
     public static final /* synthetic */ ViewGroup access$getParent$p(ControlsUiControllerImpl controlsUiControllerImpl) {
         ViewGroup viewGroup = controlsUiControllerImpl.parent;
         if (viewGroup != null) {
@@ -145,50 +133,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
         Intrinsics.throwUninitializedPropertyAccessException("parent");
         throw null;
-    }
-
-    public static final /* synthetic */ ContextThemeWrapper access$getPopupThemedContext$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.popupThemedContext;
-    }
-
-    public static final /* synthetic */ StructureInfo access$getSelectedStructure$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.selectedStructure;
-    }
-
-    public static final /* synthetic */ ShadeController access$getShadeController$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.shadeController;
-    }
-
-    public static final /* synthetic */ void access$reload(ControlsUiControllerImpl controlsUiControllerImpl, ViewGroup viewGroup) {
-        controlsUiControllerImpl.reload(viewGroup);
-    }
-
-    public static final /* synthetic */ void access$setPopup$p(ControlsUiControllerImpl controlsUiControllerImpl, ListPopupWindow listPopupWindow) {
-        controlsUiControllerImpl.popup = listPopupWindow;
-    }
-
-    public static final /* synthetic */ void access$setSelectedStructure$p(ControlsUiControllerImpl controlsUiControllerImpl, StructureInfo structureInfo) {
-        controlsUiControllerImpl.selectedStructure = structureInfo;
-    }
-
-    public static final /* synthetic */ void access$showControlsView(ControlsUiControllerImpl controlsUiControllerImpl, List list) {
-        controlsUiControllerImpl.showControlsView(list);
-    }
-
-    public static final /* synthetic */ void access$showInitialSetupView(ControlsUiControllerImpl controlsUiControllerImpl, List list) {
-        controlsUiControllerImpl.showInitialSetupView(list);
-    }
-
-    public static final /* synthetic */ void access$showSeedingView(ControlsUiControllerImpl controlsUiControllerImpl, List list) {
-        controlsUiControllerImpl.showSeedingView(list);
-    }
-
-    public static final /* synthetic */ void access$startProviderSelectorActivity(ControlsUiControllerImpl controlsUiControllerImpl, Context context2) {
-        controlsUiControllerImpl.startProviderSelectorActivity(context2);
-    }
-
-    public static final /* synthetic */ void access$updatePreferences(ControlsUiControllerImpl controlsUiControllerImpl, StructureInfo structureInfo) {
-        controlsUiControllerImpl.updatePreferences(structureInfo);
     }
 
     public final Lazy<ControlsController> getControlsController() {

@@ -41,8 +41,8 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         this.lazyController = lazy;
     }
 
-    public static final /* synthetic */ DelayableExecutor access$getBackgroundExecutor$p(ControlsBindingControllerImpl controlsBindingControllerImpl) {
-        return controlsBindingControllerImpl.backgroundExecutor;
+    public static final /* synthetic */ ControlsProviderLifecycleManager access$getCurrentProvider$p(ControlsBindingControllerImpl controlsBindingControllerImpl) {
+        return controlsBindingControllerImpl.currentProvider;
     }
 
     @Override // com.android.systemui.util.UserAwareController
@@ -197,7 +197,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             this.this$0 = controlsBindingControllerImpl;
             this.token = iBinder;
-            this.provider = controlsBindingControllerImpl.currentProvider;
+            this.provider = ControlsBindingControllerImpl.access$getCurrentProvider$p(controlsBindingControllerImpl);
         }
 
         public final ControlsProviderLifecycleManager getProvider() {
@@ -384,13 +384,13 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             Intrinsics.checkParameterIsNotNull(iControlsSubscription, "subs");
             this.subscription = iControlsSubscription;
             this._loadCancelInternal = new ControlsBindingControllerImpl$LoadSubscriber$onSubscribe$1(this);
-            ControlsBindingControllerImpl.access$getBackgroundExecutor$p(this.this$0).execute(new OnSubscribeRunnable(this.this$0, iBinder, iControlsSubscription, this.requestLimit));
+            this.this$0.backgroundExecutor.execute(new OnSubscribeRunnable(this.this$0, iBinder, iControlsSubscription, this.requestLimit));
         }
 
         public void onNext(IBinder iBinder, Control control) {
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(control, "c");
-            ControlsBindingControllerImpl.access$getBackgroundExecutor$p(this.this$0).execute(new ControlsBindingControllerImpl$LoadSubscriber$onNext$1(this, control, iBinder));
+            this.this$0.backgroundExecutor.execute(new ControlsBindingControllerImpl$LoadSubscriber$onNext$1(this, control, iBinder));
         }
 
         public void onError(IBinder iBinder, String str) {
@@ -408,11 +408,11 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         private final void maybeTerminateAndRun(Runnable runnable) {
             if (!this.isTerminated.get()) {
                 this._loadCancelInternal = ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1.INSTANCE;
-                ControlsProviderLifecycleManager controlsProviderLifecycleManager = this.this$0.currentProvider;
-                if (controlsProviderLifecycleManager != null) {
-                    controlsProviderLifecycleManager.cancelLoadTimeout();
+                ControlsProviderLifecycleManager access$getCurrentProvider$p = ControlsBindingControllerImpl.access$getCurrentProvider$p(this.this$0);
+                if (access$getCurrentProvider$p != null) {
+                    access$getCurrentProvider$p.cancelLoadTimeout();
                 }
-                ControlsBindingControllerImpl.access$getBackgroundExecutor$p(this.this$0).execute(new ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$2(this, runnable));
+                this.this$0.backgroundExecutor.execute(new ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$2(this, runnable));
             }
         }
     }

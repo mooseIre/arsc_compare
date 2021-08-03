@@ -23,7 +23,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
             /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiWifiSignalController$MUWAVC22i7B3vqU5A1N8W3Oo91w */
 
             public final void run() {
-                MiuiWifiSignalController.lambda$MUWAVC22i7B3vqU5A1N8W3Oo91w(MiuiWifiSignalController.this);
+                MiuiWifiSignalController.this.handleStatusUpdated();
             }
         });
         this.mWifiTracker = wifiStatusTracker;

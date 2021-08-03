@@ -154,6 +154,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return userHandle.getIdentifier();
     }
 
+    /* access modifiers changed from: public */
     private final ContentResolver getContentResolver() {
         ContentResolver contentResolver = this.context.getContentResolver();
         Intrinsics.checkExpressionValueIsNotNull(contentResolver, "context.contentResolver");
@@ -191,6 +192,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.userChanging = false;
     }
 
+    /* access modifiers changed from: public */
     private final void resetFavorites(boolean z) {
         Favorites.INSTANCE.clear();
         if (z) {
