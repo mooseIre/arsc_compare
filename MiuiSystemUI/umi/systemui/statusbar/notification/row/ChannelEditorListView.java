@@ -20,22 +20,30 @@ import java.util.ArrayList;
 import java.util.List;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: ChannelEditorListView.kt */
 public final class ChannelEditorListView extends LinearLayout {
     private AppControlView appControlRow;
+    @Nullable
     private Drawable appIcon;
+    @Nullable
     private String appName;
     private final List<ChannelRow> channelRows = new ArrayList();
+    @NotNull
     private List<NotificationChannel> channels = new ArrayList();
+    @NotNull
     public ChannelEditorDialogController controller;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public ChannelEditorListView(Context context, AttributeSet attributeSet) {
+    public ChannelEditorListView(@NotNull Context context, @NotNull AttributeSet attributeSet) {
         super(context, attributeSet);
         Intrinsics.checkParameterIsNotNull(context, "c");
         Intrinsics.checkParameterIsNotNull(attributeSet, "attrs");
     }
 
+    @NotNull
     public final ChannelEditorDialogController getController() {
         ChannelEditorDialogController channelEditorDialogController = this.controller;
         if (channelEditorDialogController != null) {
@@ -45,25 +53,26 @@ public final class ChannelEditorListView extends LinearLayout {
         throw null;
     }
 
-    public final void setController(ChannelEditorDialogController channelEditorDialogController) {
+    public final void setController(@NotNull ChannelEditorDialogController channelEditorDialogController) {
         Intrinsics.checkParameterIsNotNull(channelEditorDialogController, "<set-?>");
         this.controller = channelEditorDialogController;
     }
 
-    public final void setAppIcon(Drawable drawable) {
+    public final void setAppIcon(@Nullable Drawable drawable) {
         this.appIcon = drawable;
     }
 
-    public final void setAppName(String str) {
+    public final void setAppName(@Nullable String str) {
         this.appName = str;
     }
 
-    public final void setChannels(List<NotificationChannel> list) {
+    public final void setChannels(@NotNull List<NotificationChannel> list) {
         Intrinsics.checkParameterIsNotNull(list, "newValue");
         this.channels = list;
         updateRows();
     }
 
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         View findViewById = findViewById(C0015R$id.app_control);
@@ -71,7 +80,7 @@ public final class ChannelEditorListView extends LinearLayout {
         this.appControlRow = (AppControlView) findViewById;
     }
 
-    public final void highlightChannel(NotificationChannel notificationChannel) {
+    public final void highlightChannel(@NotNull NotificationChannel notificationChannel) {
         Intrinsics.checkParameterIsNotNull(notificationChannel, "channel");
         Assert.isMainThread();
         for (ChannelRow channelRow : this.channelRows) {
@@ -81,8 +90,8 @@ public final class ChannelEditorListView extends LinearLayout {
         }
     }
 
-    /* access modifiers changed from: public */
-    private final void updateRows() {
+    /* access modifiers changed from: private */
+    public final void updateRows() {
         ChannelEditorDialogController channelEditorDialogController = this.controller;
         if (channelEditorDialogController != null) {
             boolean areAppNotificationsEnabled = channelEditorDialogController.areAppNotificationsEnabled();
