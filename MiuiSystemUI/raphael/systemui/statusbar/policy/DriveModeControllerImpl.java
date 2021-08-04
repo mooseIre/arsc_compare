@@ -62,7 +62,7 @@ public final class DriveModeControllerImpl implements DriveModeController {
                     } catch (PackageManager.NameNotFoundException unused) {
                         Log.d("DriveModeController", "Drive app not exist.");
                     }
-                    DriveModeControllerImpl.access$setMIsDriveModeAvailable$p(driveModeControllerImpl, z);
+                    driveModeControllerImpl.mIsDriveModeAvailable = z;
                 }
             });
             observe();
@@ -70,18 +70,6 @@ public final class DriveModeControllerImpl implements DriveModeController {
         }
         Intrinsics.throwNpe();
         throw null;
-    }
-
-    public static final /* synthetic */ boolean access$getMIsDriveModeAvailable$p(DriveModeControllerImpl driveModeControllerImpl) {
-        return driveModeControllerImpl.mIsDriveModeAvailable;
-    }
-
-    public static final /* synthetic */ void access$leaveDriveMode(DriveModeControllerImpl driveModeControllerImpl) {
-        driveModeControllerImpl.leaveDriveMode();
-    }
-
-    public static final /* synthetic */ void access$setMIsDriveModeAvailable$p(DriveModeControllerImpl driveModeControllerImpl, boolean z) {
-        driveModeControllerImpl.mIsDriveModeAvailable = z;
     }
 
     static {

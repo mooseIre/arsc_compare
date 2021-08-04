@@ -35,6 +35,10 @@ public final class IlluminationDrawable extends Drawable {
         return -2;
     }
 
+    public static final /* synthetic */ void access$setBackgroundAnimation$p(IlluminationDrawable illuminationDrawable, ValueAnimator valueAnimator) {
+        illuminationDrawable.backgroundAnimation = valueAnimator;
+    }
+
     /* access modifiers changed from: public */
     private final void setBackgroundColor(int i) {
         if (i != this.backgroundColor) {

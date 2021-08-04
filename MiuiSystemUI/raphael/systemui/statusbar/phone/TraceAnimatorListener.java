@@ -7,9 +7,8 @@ import android.util.Log;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
-/* access modifiers changed from: package-private */
 /* compiled from: MiuiKeyButtonRipple.kt */
-public final class TraceAnimatorListener extends AnimatorListenerAdapter {
+final class TraceAnimatorListener extends AnimatorListenerAdapter {
     private final String mName;
 
     public TraceAnimatorListener(@NotNull String str) {

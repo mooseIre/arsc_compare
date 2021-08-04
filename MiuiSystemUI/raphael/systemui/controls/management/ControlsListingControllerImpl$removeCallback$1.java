@@ -3,9 +3,8 @@ package com.android.systemui.controls.management;
 import android.util.Log;
 import com.android.systemui.controls.management.ControlsListingController;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsListingControllerImpl.kt */
-public final class ControlsListingControllerImpl$removeCallback$1 implements Runnable {
+final class ControlsListingControllerImpl$removeCallback$1 implements Runnable {
     final /* synthetic */ ControlsListingController.ControlsListingCallback $listener;
     final /* synthetic */ ControlsListingControllerImpl this$0;
 
@@ -16,6 +15,6 @@ public final class ControlsListingControllerImpl$removeCallback$1 implements Run
 
     public final void run() {
         Log.d("ControlsListingControllerImpl", "Unsubscribing callback");
-        this.this$0.callbacks.remove(this.$listener);
+        ControlsListingControllerImpl.access$getCallbacks$p(this.this$0).remove(this.$listener);
     }
 }
