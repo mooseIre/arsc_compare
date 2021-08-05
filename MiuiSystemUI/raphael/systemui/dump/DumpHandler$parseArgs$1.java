@@ -28,7 +28,7 @@ public final class DumpHandler$parseArgs$1 extends Lambda implements Function1<S
     @Nullable
     public final String invoke(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "it");
-        if (ArraysKt___ArraysKt.contains(DumpHandlerKt.PRIORITY_OPTIONS, str)) {
+        if (ArraysKt___ArraysKt.contains(DumpHandlerKt.access$getPRIORITY_OPTIONS$p(), str)) {
             return str;
         }
         throw new IllegalArgumentException();

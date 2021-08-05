@@ -305,7 +305,7 @@ public abstract class AuthBiometricView extends LinearLayout {
                 /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$DNZGqOzv_lXEbjrYTngC9OQfLl4 */
 
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    AuthBiometricView.lambda$updateSize$5(AuthBiometricView.this, valueAnimator);
+                    AuthBiometricView.this.setTranslationY(((Float) valueAnimator.getAnimatedValue()).floatValue());
                 }
             });
             ofFloat3.addListener(new AnimatorListenerAdapter() {
@@ -325,7 +325,7 @@ public abstract class AuthBiometricView extends LinearLayout {
                 /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$NITDpz2CemnJIsSGRaKPYHZqW4 */
 
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    AuthBiometricView.lambda$updateSize$6(AuthBiometricView.this, valueAnimator);
+                    AuthBiometricView.this.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
                 }
             });
             this.mPanelController.setUseFullScreen(true);
@@ -364,14 +364,6 @@ public abstract class AuthBiometricView extends LinearLayout {
         if (!TextUtils.isEmpty(this.mDescriptionView.getText())) {
             this.mDescriptionView.setAlpha(floatValue);
         }
-    }
-
-    static /* synthetic */ void lambda$updateSize$5(AuthBiometricView authBiometricView, ValueAnimator valueAnimator) {
-        authBiometricView.setTranslationY(((Float) valueAnimator.getAnimatedValue()).floatValue());
-    }
-
-    static /* synthetic */ void lambda$updateSize$6(AuthBiometricView authBiometricView, ValueAnimator valueAnimator) {
-        authBiometricView.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
     /* access modifiers changed from: package-private */

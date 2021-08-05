@@ -24,9 +24,9 @@ final class ControlsFavoritingActivity$bindViews$$inlined$apply$lambda$1 extends
     }
 
     public final void invoke(int i) {
-        TooltipManager access$getMTooltipManager$p;
-        if (i != 0 && (access$getMTooltipManager$p = ControlsFavoritingActivity.access$getMTooltipManager$p(this.this$0)) != null) {
-            access$getMTooltipManager$p.hide(true);
+        TooltipManager tooltipManager;
+        if (i != 0 && (tooltipManager = this.this$0.mTooltipManager) != null) {
+            tooltipManager.hide(true);
         }
     }
 }
