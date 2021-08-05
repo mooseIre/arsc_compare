@@ -19,8 +19,10 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0022R$style;
+import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.qs.customize.MiuiQSCustomizer;
 import com.android.systemui.settings.ToggleSliderView;
 import com.android.systemui.statusbar.notification.unimportant.FoldManager;
@@ -783,8 +785,10 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     }
 
     public final void setBrightnessListening(boolean z) {
-        MiuiBrightnessController miuiBrightnessController = this.brightnessController;
-        if (miuiBrightnessController == null) {
+        MiuiBrightnessController miuiBrightnessController;
+        Object obj = Dependency.get(ControlPanelController.class);
+        Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(ControlPanelController::class.java)");
+        if (((ControlPanelController) obj).isUseControlCenter() || (miuiBrightnessController = this.brightnessController) == null) {
             return;
         }
         if (z) {

@@ -42,7 +42,7 @@ public class NotificationStatWithPlugin implements PluginListener<MiuiNotificati
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((MiuiNotificationStatPlugin) obj).onPluginEvent(this.f$0, this.f$1, this.f$2);
+                NotificationStatWithPlugin.lambda$onPluginEvent$0(this.f$0, this.f$1, this.f$2, (MiuiNotificationStatPlugin) obj);
             }
         });
     }
