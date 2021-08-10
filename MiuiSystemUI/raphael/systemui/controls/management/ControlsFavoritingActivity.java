@@ -74,6 +74,10 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
+    public static final /* synthetic */ TooltipManager access$getMTooltipManager$p(ControlsFavoritingActivity controlsFavoritingActivity) {
+        return controlsFavoritingActivity.mTooltipManager;
+    }
+
     public static final /* synthetic */ View access$getOtherAppsButton$p(ControlsFavoritingActivity controlsFavoritingActivity) {
         View view = controlsFavoritingActivity.otherAppsButton;
         if (view != null) {
@@ -266,6 +270,7 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
+    /* access modifiers changed from: public */
     private final void animateExitAndFinish() {
         ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(viewGroup, "rootView");

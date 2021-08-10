@@ -13,7 +13,7 @@ final class ControlsUiControllerImpl$onActionResponse$1 implements Runnable {
     }
 
     public final void run() {
-        ControlViewHolder controlViewHolder = (ControlViewHolder) this.this$0.controlViewsById.get(this.$key);
+        ControlViewHolder controlViewHolder = (ControlViewHolder) ControlsUiControllerImpl.access$getControlViewsById$p(this.this$0).get(this.$key);
         if (controlViewHolder != null) {
             controlViewHolder.actionResponse(this.$response);
         }
