@@ -22,6 +22,11 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.media.MediaDataManagerKt;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.ExpandableView;
+import com.android.systemui.statusbar.notification.row.NotificationContentView;
+import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationOneLineViewWrapper;
+import com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper;
 import com.miui.systemui.BuildConfig;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.SettingsManager;
@@ -349,5 +354,21 @@ public class NotificationUtil {
 
     public static boolean hasExpandingFeature() {
         return BuildConfig.IS_INTERNATIONAL;
+    }
+
+    public static boolean isTransparentBg(ExpandableView expandableView) {
+        NotificationContentView showingLayout;
+        if (!(expandableView instanceof ExpandableNotificationRow)) {
+            return false;
+        }
+        ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) expandableView;
+        if ((!expandableNotificationRow.isHeadsUpState() && !expandableNotificationRow.isPinned()) || (showingLayout = expandableNotificationRow.getShowingLayout()) == null) {
+            return false;
+        }
+        NotificationViewWrapper visibleWrapper = showingLayout.getVisibleWrapper(2);
+        if (!(visibleWrapper instanceof MiuiNotificationOneLineViewWrapper) || !((MiuiNotificationOneLineViewWrapper) visibleWrapper).isTransparentBg()) {
+            return false;
+        }
+        return true;
     }
 }

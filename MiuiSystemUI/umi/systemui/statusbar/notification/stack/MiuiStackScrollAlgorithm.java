@@ -6,10 +6,10 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.EmptyShadeView;
+import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
-import com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector;
 import com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import java.util.ArrayList;
@@ -163,13 +163,12 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
         float f = (float) 2;
-        boolean isTransparentAble = NotificationContentInflaterInjector.isTransparentAble();
         ArrayList<ExpandableView> arrayList = stackScrollAlgorithmState.visibleChildren;
         Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
         for (T t : arrayList) {
-            if (!isTransparentAble && (t instanceof ExpandableNotificationRow)) {
+            if (t instanceof ExpandableNotificationRow) {
                 T t2 = t;
-                if (t2.isPinned()) {
+                if (t2.isPinned() && !NotificationUtil.isTransparentBg(t)) {
                     f = updateChildZValue(t2, f, ambientState);
                 }
             }

@@ -802,7 +802,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             return 0.0f;
         }
         float f = this.mSpringLength;
-        return f > ((float) 0) ? f : super.getHeaderTranslation();
+        return f != 0.0f ? f : super.getHeaderTranslation();
     }
 
     private final float afterFriction(float f, int i) {
@@ -1546,7 +1546,11 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
     public void setQsExpansion(float f) {
         if (!this.mNssCoveredQs) {
-            super.setQsExpansion(f);
+            ControlPanelController controlPanelController2 = this.controlPanelController.get();
+            Intrinsics.checkExpressionValueIsNotNull(controlPanelController2, "controlPanelController.get()");
+            if (!controlPanelController2.isUseControlCenter()) {
+                super.setQsExpansion(f);
+            }
             int i = this.mBarState;
             if (i == 2 || i == 1) {
                 updateAweQsExpandHeight();

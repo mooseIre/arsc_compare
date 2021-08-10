@@ -43,13 +43,13 @@ public class QSControlCenterHeaderView extends LinearLayout {
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         /* class com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.AnonymousClass1 */
 
-        /* JADX WARNING: Removed duplicated region for block: B:13:0x0053  */
-        /* JADX WARNING: Removed duplicated region for block: B:15:0x0060  */
+        /* JADX WARNING: Removed duplicated region for block: B:13:0x0058  */
+        /* JADX WARNING: Removed duplicated region for block: B:15:0x0065  */
         /* JADX WARNING: Removed duplicated region for block: B:17:? A[RETURN, SYNTHETIC] */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public void onClick(android.view.View r6) {
             /*
-            // Method dump skipped, instructions count: 111
+            // Method dump skipped, instructions count: 116
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.AnonymousClass1.onClick(android.view.View):void");
         }

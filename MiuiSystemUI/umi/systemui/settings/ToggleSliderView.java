@@ -144,6 +144,23 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
 
     @Override // com.android.systemui.settings.ToggleSlider
     public void setEnforcedAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
+        post(new Runnable(enforcedAdmin) {
+            /* class com.android.systemui.settings.$$Lambda$ToggleSliderView$OeWPMi7Zj6QUUAIGtEzqTQScqAA */
+            public final /* synthetic */ RestrictedLockUtils.EnforcedAdmin f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                ToggleSliderView.this.lambda$setEnforcedAdmin$0$ToggleSliderView(this.f$1);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setEnforcedAdmin$0 */
+    public /* synthetic */ void lambda$setEnforcedAdmin$0$ToggleSliderView(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
         boolean z = true;
         this.mToggle.setEnabled(enforcedAdmin == null);
         ToggleSeekBar toggleSeekBar = this.mSlider;

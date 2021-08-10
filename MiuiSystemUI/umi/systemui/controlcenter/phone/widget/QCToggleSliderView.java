@@ -141,6 +141,23 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
 
     @Override // com.android.systemui.settings.ToggleSlider
     public void setEnforcedAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
+        post(new Runnable(enforcedAdmin) {
+            /* class com.android.systemui.controlcenter.phone.widget.$$Lambda$QCToggleSliderView$fmAIfAtGWNttWDD08MmK6po0feo */
+            public final /* synthetic */ RestrictedLockUtils.EnforcedAdmin f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                QCToggleSliderView.this.lambda$setEnforcedAdmin$0$QCToggleSliderView(this.f$1);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setEnforcedAdmin$0 */
+    public /* synthetic */ void lambda$setEnforcedAdmin$0$QCToggleSliderView(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
         this.mSlider.setEnabled(enforcedAdmin == null);
         this.mSlider.setEnforcedAdmin(enforcedAdmin);
     }

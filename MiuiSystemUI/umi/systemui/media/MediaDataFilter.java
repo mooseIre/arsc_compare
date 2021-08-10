@@ -34,13 +34,12 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
     private final MediaControlLogger mediaControlLogger;
     private final MediaDataManager mediaDataManager;
     private final LinkedHashMap<String, MediaData> mediaEntries = new LinkedHashMap<>();
-    private final MediaResumeListener mediaResumeListener;
     private final CurrentUserTracker userTracker;
 
-    public MediaDataFilter(@NotNull MediaDataCombineLatest mediaDataCombineLatest, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull MediaResumeListener mediaResumeListener2, @NotNull MediaDataManager mediaDataManager2, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull Executor executor2, @NotNull NotificationEntryManager notificationEntryManager, @NotNull MediaControlLogger mediaControlLogger2) {
+    public MediaDataFilter(@NotNull MediaDataCombineLatest mediaDataCombineLatest, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull MediaResumeListener mediaResumeListener, @NotNull MediaDataManager mediaDataManager2, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull Executor executor2, @NotNull NotificationEntryManager notificationEntryManager, @NotNull MediaControlLogger mediaControlLogger2) {
         Intrinsics.checkParameterIsNotNull(mediaDataCombineLatest, "dataSource");
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
-        Intrinsics.checkParameterIsNotNull(mediaResumeListener2, "mediaResumeListener");
+        Intrinsics.checkParameterIsNotNull(mediaResumeListener, "mediaResumeListener");
         Intrinsics.checkParameterIsNotNull(mediaDataManager2, "mediaDataManager");
         Intrinsics.checkParameterIsNotNull(notificationLockscreenUserManager, "lockscreenUserManager");
         Intrinsics.checkParameterIsNotNull(executor2, "executor");
@@ -48,7 +47,6 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
         Intrinsics.checkParameterIsNotNull(mediaControlLogger2, "mediaControlLogger");
         this.dataSource = mediaDataCombineLatest;
         this.broadcastDispatcher = broadcastDispatcher2;
-        this.mediaResumeListener = mediaResumeListener2;
         this.mediaDataManager = mediaDataManager2;
         this.lockscreenUserManager = notificationLockscreenUserManager;
         this.executor = executor2;
@@ -160,10 +158,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
     }
 
     public final boolean hasAnyMedia() {
-        if (this.mediaResumeListener.isResumptionEnabled()) {
-            return !this.mediaEntries.isEmpty();
-        }
-        return hasActiveMedia();
+        return !this.mediaEntries.isEmpty();
     }
 
     public final boolean addListener(@NotNull MediaDataManager.Listener listener) {

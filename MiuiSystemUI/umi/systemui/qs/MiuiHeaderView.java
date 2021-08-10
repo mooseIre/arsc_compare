@@ -102,13 +102,13 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         this.mUnimportantIcon.setContentDescription(getResources().getString(C0021R$string.accessibility_settings));
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:30:0x0075  */
-    /* JADX WARNING: Removed duplicated region for block: B:32:0x0082  */
+    /* JADX WARNING: Removed duplicated region for block: B:30:0x007a  */
+    /* JADX WARNING: Removed duplicated region for block: B:32:0x0087  */
     /* JADX WARNING: Removed duplicated region for block: B:36:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onClick(android.view.View r7) {
         /*
-        // Method dump skipped, instructions count: 146
+        // Method dump skipped, instructions count: 151
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.MiuiHeaderView.onClick(android.view.View):void");
     }

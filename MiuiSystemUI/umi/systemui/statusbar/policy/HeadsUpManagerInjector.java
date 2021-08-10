@@ -20,7 +20,6 @@ import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationOneLineViewWrapper;
 import com.android.systemui.statusbar.views.ClickableToast;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -182,8 +181,7 @@ public class HeadsUpManagerInjector {
     }
 
     public static void stopAlertingEntriesHeadsUp(Context context, NotificationEntry notificationEntry, Stream<NotificationEntry> stream) {
-        MiuiNotificationOneLineViewWrapper miuiNotificationOneLineViewWrapper = notificationEntry.getRow().getShowingLayout().getVisibleWrapper(2) instanceof MiuiNotificationOneLineViewWrapper ? (MiuiNotificationOneLineViewWrapper) notificationEntry.getRow().getShowingLayout().getVisibleWrapper(2) : null;
-        if (miuiNotificationOneLineViewWrapper != null && miuiNotificationOneLineViewWrapper.isTransparentBg()) {
+        if (NotificationUtil.isTransparentBg(notificationEntry.getRow())) {
             stream.forEach(new Consumer(context) {
                 /* class com.android.systemui.statusbar.policy.$$Lambda$HeadsUpManagerInjector$mbS9gDFMDcVjVYXe4_WasRMasRk */
                 public final /* synthetic */ Context f$1;

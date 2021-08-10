@@ -153,7 +153,7 @@ public class DozeTriggers implements DozeMachine.Part {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                DozeTriggers.this.onProximityFar(((Boolean) obj).booleanValue());
+                DozeTriggers.lambda$ulqUMEXi8OgK7771oZ9BOr21BBk(DozeTriggers.this, ((Boolean) obj).booleanValue());
             }
         }, dozeLog, proximitySensor);
         this.mUiModeManager = (UiModeManager) this.mContext.getSystemService(UiModeManager.class);

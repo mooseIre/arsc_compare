@@ -85,10 +85,6 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
         this.tunerService.addTunable(new MediaResumeListener$setManager$1(this), "qs_media_resumption");
     }
 
-    public final boolean isResumptionEnabled() {
-        return this.useMediaResumption;
-    }
-
     /* access modifiers changed from: private */
     public final void loadSavedComponents() {
         List<String> split;

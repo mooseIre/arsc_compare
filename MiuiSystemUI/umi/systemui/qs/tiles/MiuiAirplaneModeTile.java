@@ -79,6 +79,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(@Nullable QSTile.BooleanState booleanState, @Nullable Object obj) {
+        checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_airplane_mode");
         boolean z = this.mAirplane;
         if (booleanState != null) {
             booleanState.value = z;

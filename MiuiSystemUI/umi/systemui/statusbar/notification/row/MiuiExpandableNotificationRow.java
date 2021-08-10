@@ -19,11 +19,10 @@ import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.FakeShadowView;
 import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
+import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.RowAnimationUtils;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.policy.AppMiniWindowManager;
-import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationOneLineViewWrapper;
-import com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.CommonExtensionsKt;
@@ -153,11 +152,8 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
 
     /* access modifiers changed from: private */
     public final void updateBackgroundBg() {
-        boolean z = false;
         if (isHeadsUpState()) {
-            NotificationContentView showingLayout = getShowingLayout();
-            NotificationViewWrapper visibleWrapper = showingLayout != null ? showingLayout.getVisibleWrapper(2) : null;
-            boolean isTransparentBg = visibleWrapper instanceof MiuiNotificationOneLineViewWrapper ? ((MiuiNotificationOneLineViewWrapper) visibleWrapper).isTransparentBg() : false;
+            boolean isTransparentBg = NotificationUtil.isTransparentBg(this);
             if (isTransparentBg) {
                 this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_transparent_heads_up_notification_bg);
             } else {
@@ -179,11 +175,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         } else {
             this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
         }
-        NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
-        if (this.forceDisableBlur || !NotificationContentInflaterInjector.isBlurAble(this.mIsInModal, isHeadsUpState())) {
-            z = true;
-        }
-        notificationBackgroundView.setBlurDisable(z);
+        this.mBackgroundNormal.setBlurDisable(this.forceDisableBlur || !NotificationContentInflaterInjector.isBlurAble(this.mIsInModal, isHeadsUpState()));
     }
 
     public void setTranslationY(float f) {
@@ -436,6 +428,14 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             }
         }
         return resetViewState;
+    }
+
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
+    public boolean hasOverlappingRendering() {
+        if (getActualHeight() <= 0) {
+            return false;
+        }
+        return super.hasOverlappingRendering();
     }
 
     /* access modifiers changed from: protected */

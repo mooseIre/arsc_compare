@@ -1173,9 +1173,12 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: protected */
     public float getQsExpansionFraction() {
-        float f = this.mQsExpansionHeight;
-        int i = this.mQsMinExpansionHeight;
-        return Math.min(1.0f, (f - ((float) i)) / ((float) (this.mQsMaxExpansionHeight - i)));
+        int i = this.mQsMaxExpansionHeight;
+        int i2 = this.mQsMinExpansionHeight;
+        if (i == i2) {
+            return 0.0f;
+        }
+        return Math.min(1.0f, (this.mQsExpansionHeight - ((float) i2)) / ((float) (i - i2)));
     }
 
     /* access modifiers changed from: protected */
@@ -1529,6 +1532,9 @@ public class NotificationPanelViewController extends PanelViewController {
         }
         int i = this.mQsMaxExpansionHeight;
         this.mQsFullyExpanded = f == ((float) i) && i != 0;
+        if (this.mQsMaxExpansionHeight == this.mQsMinExpansionHeight) {
+            this.mQsFullyExpanded = false;
+        }
         if (f > ((float) this.mQsMinExpansionHeight) && !this.mQsExpanded && !this.mStackScrollerOverscrolling && !this.mDozing) {
             setQsExpanded(true);
         } else if (f <= ((float) this.mQsMinExpansionHeight) && this.mQsExpanded) {

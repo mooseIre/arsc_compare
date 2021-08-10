@@ -20,7 +20,7 @@ public final class MiniWindowPolicy {
         if (!Intrinsics.areEqual("com.tencent.tim", str)) {
             intent.addFlags(134217728);
             intent.addFlags(268435456);
-            intent.addFlags(8388608);
+            intent.addMiuiFlags(256);
         }
     }
 
