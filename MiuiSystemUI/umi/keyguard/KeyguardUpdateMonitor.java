@@ -1583,7 +1583,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
                     z2 = true;
                 }
                 keyguardUpdateMonitor.mIsSimBindEnable = z2;
-                Log.d("--CAIYU--", "KeyguardUpdateMonitor::KeyguardUpdateMonitor::mIsSimBindEnable = " + KeyguardUpdateMonitor.this.mIsSimBindEnable);
+                Log.d("KeyguardUpdateMonitor", "KeyguardUpdateMonitor::KeyguardUpdateMonitor::mIsSimBindEnable = " + KeyguardUpdateMonitor.this.mIsSimBindEnable);
             }
         });
     }

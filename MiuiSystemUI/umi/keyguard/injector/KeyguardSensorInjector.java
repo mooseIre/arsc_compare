@@ -203,7 +203,8 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* access modifiers changed from: private */
-    public final void unregisterPickupSensor() {
+    /* access modifiers changed from: public */
+    private final void unregisterPickupSensor() {
         this.mUiOffloadThread.submit(new KeyguardSensorInjector$unregisterPickupSensor$1(this));
     }
 

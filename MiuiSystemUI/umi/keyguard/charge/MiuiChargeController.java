@@ -320,6 +320,10 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         if ("key_fast_charge_enabled".equals(str)) {
             this.mShowNewAnimation = true;
             this.mIsFastCharge = MiuiTextUtils.parseInt(str2, 0) != 0;
+            KeyguardIndicationController keyguardIndicationController = this.mKeyguardIndicationController;
+            if (keyguardIndicationController != null) {
+                keyguardIndicationController.updatePowerIndication(this.mChargeAnimationShowing);
+            }
             if (this.mCurrentUser != KeyguardUpdateMonitor.getCurrentUser()) {
                 this.mCurrentUser = KeyguardUpdateMonitor.getCurrentUser();
                 return;
