@@ -14,11 +14,11 @@ final class KeyguardSensorInjector$mProximitySensorListener$1 implements Proximi
     }
 
     public final void onSensorChanged(boolean z) {
-        if (this.this$0.mProximitySensorChangeCallback != null) {
+        if (KeyguardSensorInjector.access$getMProximitySensorChangeCallback$p(this.this$0) != null) {
             AnalyticsHelper.getInstance(this.this$0.getMContext()).recordKeyguardProximitySensor(z);
-            KeyguardSensorInjector.ProximitySensorChangeCallback proximitySensorChangeCallback = this.this$0.mProximitySensorChangeCallback;
-            if (proximitySensorChangeCallback != null) {
-                proximitySensorChangeCallback.onChange(z);
+            KeyguardSensorInjector.ProximitySensorChangeCallback access$getMProximitySensorChangeCallback$p = KeyguardSensorInjector.access$getMProximitySensorChangeCallback$p(this.this$0);
+            if (access$getMProximitySensorChangeCallback$p != null) {
+                access$getMProximitySensorChangeCallback$p.onChange(z);
             } else {
                 Intrinsics.throwNpe();
                 throw null;

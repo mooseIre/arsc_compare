@@ -1,8 +1,7 @@
 package com.android.keyguard.injector;
 
-/* access modifiers changed from: package-private */
 /* compiled from: KeyguardSensorInjector.kt */
-public final class KeyguardSensorInjector$registerLargeAreaTouchSensor$1 implements Runnable {
+final class KeyguardSensorInjector$registerLargeAreaTouchSensor$1 implements Runnable {
     final /* synthetic */ KeyguardSensorInjector this$0;
 
     KeyguardSensorInjector$registerLargeAreaTouchSensor$1(KeyguardSensorInjector keyguardSensorInjector) {
@@ -10,10 +9,10 @@ public final class KeyguardSensorInjector$registerLargeAreaTouchSensor$1 impleme
     }
 
     public final void run() {
-        if (this.this$0.shouldRegisterLargeAreaSensor()) {
+        if (KeyguardSensorInjector.access$shouldRegisterLargeAreaSensor(this.this$0)) {
             KeyguardSensorInjector keyguardSensorInjector = this.this$0;
-            keyguardSensorInjector.mLargeAreaTouchSensor = keyguardSensorInjector.mSensorManager.getDefaultSensor(this.this$0.LARGE_AREA_TOUCH_SENSOR);
-            this.this$0.mSensorManager.registerListener(this.this$0.mLargeAreaTouchSensorListener, this.this$0.mLargeAreaTouchSensor, 3);
+            KeyguardSensorInjector.access$setMLargeAreaTouchSensor$p(keyguardSensorInjector, KeyguardSensorInjector.access$getMSensorManager$p(keyguardSensorInjector).getDefaultSensor(KeyguardSensorInjector.access$getLARGE_AREA_TOUCH_SENSOR$p(this.this$0)));
+            KeyguardSensorInjector.access$getMSensorManager$p(this.this$0).registerListener(KeyguardSensorInjector.access$getMLargeAreaTouchSensorListener$p(this.this$0), KeyguardSensorInjector.access$getMLargeAreaTouchSensor$p(this.this$0), 3);
         }
     }
 }
