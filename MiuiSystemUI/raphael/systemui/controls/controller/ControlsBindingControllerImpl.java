@@ -148,6 +148,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
+    /* access modifiers changed from: public */
     private final void unbind() {
         unsubscribe();
         LoadSubscriber loadSubscriber2 = this.loadSubscriber;
@@ -359,14 +360,6 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             throw null;
         }
 
-        public static final /* synthetic */ AtomicBoolean access$isTerminated$p(LoadSubscriber loadSubscriber) {
-            return loadSubscriber.isTerminated;
-        }
-
-        public static final /* synthetic */ void access$maybeTerminateAndRun(LoadSubscriber loadSubscriber, Runnable runnable) {
-            loadSubscriber.maybeTerminateAndRun(runnable);
-        }
-
         public final ControlsBindingController.LoadCallback getCallback() {
             return this.callback;
         }
@@ -408,6 +401,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             maybeTerminateAndRun(new OnLoadRunnable(this.this$0, iBinder, this.loadedControls, this.callback));
         }
 
+        /* access modifiers changed from: public */
         private final void maybeTerminateAndRun(Runnable runnable) {
             if (!this.isTerminated.get()) {
                 this._loadCancelInternal = ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1.INSTANCE;

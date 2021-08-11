@@ -11,6 +11,6 @@ final class MiuiOverviewProxy$onGestureLineProgress$1 implements Runnable {
     }
 
     public final void run() {
-        MiuiOverviewProxy.access$notifyGestureLineProgress(this.this$0, this.$progress);
+        this.this$0.notifyGestureLineProgress(this.$progress);
     }
 }

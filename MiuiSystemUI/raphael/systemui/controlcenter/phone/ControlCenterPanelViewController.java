@@ -180,7 +180,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return this.transRatio;
     }
 
-    /* access modifiers changed from: public */
     private final void setTransRatio(float f) {
         if (this.transRatio != f && isExpandable()) {
             this.transRatio = f;

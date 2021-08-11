@@ -5,8 +5,9 @@ import android.content.pm.ResolveInfo;
 import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlActionCoordinatorImpl.kt */
-final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable {
+public final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable {
     final /* synthetic */ ControlViewHolder $cvh;
     final /* synthetic */ Intent $intent;
     final /* synthetic */ ControlActionCoordinatorImpl this$0;
