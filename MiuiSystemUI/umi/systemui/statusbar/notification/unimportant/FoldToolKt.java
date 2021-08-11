@@ -6,7 +6,9 @@ import kotlin.TypeCastException;
 import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 
+/* compiled from: FoldTool.kt */
 public final class FoldToolKt {
+    /* access modifiers changed from: private */
     public static final boolean isXmsfNotificationChannel(String str, String str2) {
         String str3;
         if (!NotificationUtil.isXmsfChannel(str, str2)) {
@@ -31,6 +33,7 @@ public final class FoldToolKt {
         return false;
     }
 
+    /* access modifiers changed from: private */
     public static final boolean isLocalWhitelist(String str) {
         List<String> localWhitelist = FoldCloudDataHelper.INSTANCE.getLocalWhitelist();
         if (localWhitelist != null) {

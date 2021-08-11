@@ -9,6 +9,6 @@ final class MiuiOverviewProxy$exitSplitScreen$1 implements Runnable {
     }
 
     public final void run() {
-        MiuiOverviewProxy.access$getProxyService$p(this.this$0).getDividerOptional().get().onUndockingTask();
+        this.this$0.proxyService.getDividerOptional().get().onUndockingTask();
     }
 }

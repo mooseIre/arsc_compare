@@ -204,7 +204,6 @@ public final class AppMiniWindowRowTouchHelper {
         this.mTouchCallback.onMiniWindowTrackingEnd();
     }
 
-    /* access modifiers changed from: public */
     private final void onMiniWindowReset() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
@@ -219,7 +218,6 @@ public final class AppMiniWindowRowTouchHelper {
         this.mTouchCallback.onMiniWindowReset();
     }
 
-    /* access modifiers changed from: public */
     private final void onExpandedParamsUpdated() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {

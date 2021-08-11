@@ -15,7 +15,8 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
     private final OverviewProxyService proxyService;
 
     /* access modifiers changed from: private */
-    public final void notifyGestureLineProgress(float f) {
+    /* access modifiers changed from: public */
+    private final void notifyGestureLineProgress(float f) {
     }
 
     @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
@@ -99,7 +100,8 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
     }
 
     /* access modifiers changed from: private */
-    public final void notifyCompleteAssistant() {
+    /* access modifiers changed from: public */
+    private final void notifyCompleteAssistant() {
         this.proxyService.notifyAssistantGestureCompletion(0.0f);
     }
 }

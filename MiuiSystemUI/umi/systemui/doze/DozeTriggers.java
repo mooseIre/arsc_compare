@@ -153,7 +153,7 @@ public class DozeTriggers implements DozeMachine.Part {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                DozeTriggers.lambda$ulqUMEXi8OgK7771oZ9BOr21BBk(DozeTriggers.this, ((Boolean) obj).booleanValue());
+                DozeTriggers.this.onProximityFar(((Boolean) obj).booleanValue());
             }
         }, dozeLog, proximitySensor);
         this.mUiModeManager = (UiModeManager) this.mContext.getSystemService(UiModeManager.class);
@@ -340,7 +340,8 @@ public class DozeTriggers implements DozeMachine.Part {
     }
 
     /* access modifiers changed from: private */
-    public void onProximityFar(boolean z) {
+    /* access modifiers changed from: public */
+    private void onProximityFar(boolean z) {
         if (this.mMachine.isExecutingTransition()) {
             Log.w("DozeTriggers", "onProximityFar called during transition. Ignoring sensor response.");
             return;

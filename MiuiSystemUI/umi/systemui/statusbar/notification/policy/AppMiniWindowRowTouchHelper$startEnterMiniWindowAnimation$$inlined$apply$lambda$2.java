@@ -15,23 +15,23 @@ public final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$in
     }
 
     public void onAnimationEnd(@Nullable Animator animator) {
-        MiuiExpandableNotificationRow access$getMPickedMiniWindowChild$p = AppMiniWindowRowTouchHelper.access$getMPickedMiniWindowChild$p(this.this$0);
-        if (access$getMPickedMiniWindowChild$p != null) {
-            access$getMPickedMiniWindowChild$p.setForceDisableBlur(false);
+        MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.this$0.mPickedMiniWindowChild;
+        if (miuiExpandableNotificationRow != null) {
+            miuiExpandableNotificationRow.setForceDisableBlur(false);
         }
     }
 
     public void onAnimationCancel(@Nullable Animator animator) {
-        MiuiExpandableNotificationRow access$getMPickedMiniWindowChild$p = AppMiniWindowRowTouchHelper.access$getMPickedMiniWindowChild$p(this.this$0);
-        if (access$getMPickedMiniWindowChild$p != null) {
-            access$getMPickedMiniWindowChild$p.setForceDisableBlur(false);
+        MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.this$0.mPickedMiniWindowChild;
+        if (miuiExpandableNotificationRow != null) {
+            miuiExpandableNotificationRow.setForceDisableBlur(false);
         }
     }
 
     public void onAnimationStart(@Nullable Animator animator) {
-        MiuiExpandableNotificationRow access$getMPickedMiniWindowChild$p = AppMiniWindowRowTouchHelper.access$getMPickedMiniWindowChild$p(this.this$0);
-        if (access$getMPickedMiniWindowChild$p != null) {
-            access$getMPickedMiniWindowChild$p.setForceDisableBlur(true);
+        MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.this$0.mPickedMiniWindowChild;
+        if (miuiExpandableNotificationRow != null) {
+            miuiExpandableNotificationRow.setForceDisableBlur(true);
         }
     }
 }

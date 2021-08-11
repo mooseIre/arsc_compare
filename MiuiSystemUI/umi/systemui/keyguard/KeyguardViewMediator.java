@@ -16,13 +16,16 @@ import android.hardware.biometrics.BiometricSourceType;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.os.Trace;
@@ -42,6 +45,7 @@ import com.android.internal.policy.IKeyguardDismissCallback;
 import com.android.internal.policy.IKeyguardDrawnCallback;
 import com.android.internal.policy.IKeyguardExitCallback;
 import com.android.internal.policy.IKeyguardStateCallback;
+import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardDisplayManager;
@@ -88,6 +92,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     private AlarmManager mAlarmManager;
     private boolean mAodShowing;
     private AudioManager mAudioManager;
+    final IStatusBarService mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
     private MiuiBleUnlockHelper mBleUnlockHelper;
     private boolean mBootCompleted;
     private boolean mBootSendUserPresent;
@@ -309,6 +314,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     private MiuiSmartCoverHelper mSmartCoverHelper;
     private StatusBarManager mStatusBarManager;
     private boolean mSystemReady;
+    private final IBinder mToken = new Binder();
     private final TrustManager mTrustManager;
     private int mTrustedSoundId;
     private final Executor mUiBgExecutor;
@@ -323,6 +329,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
 
         @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserSwitching(int i) {
+            KeyguardViewMediator.this.mUserId = i;
             synchronized (KeyguardViewMediator.this) {
                 KeyguardViewMediator.this.resetKeyguardDonePendingLocked();
                 if (KeyguardViewMediator.this.mLockPatternUtils.isLockScreenDisabled(i)) {
@@ -536,6 +543,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         }
     };
     private final KeyguardUpdateMonitor mUpdateMonitor;
+    private int mUserId;
     ViewMediatorCallback mViewMediatorCallback = new ViewMediatorCallback() {
         /* class com.android.systemui.keyguard.KeyguardViewMediator.AnonymousClass3 */
 
@@ -1646,7 +1654,16 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             i |= 16777216;
         }
         Log.d("KeyguardViewMediator", "adjustStatusBarLocked: mShowing=" + this.mShowing + " mOccluded=" + this.mOccluded + " isSecure=" + isSecure() + " force=" + z + " --> flags=0x" + Integer.toHexString(i));
-        this.mStatusBarManager.disable(i);
+        IStatusBarService iStatusBarService = this.mBarService;
+        if (iStatusBarService == null) {
+            this.mStatusBarManager.disable(i);
+            return;
+        }
+        try {
+            iStatusBarService.disableForUser(i, this.mToken, this.mContext.getPackageName(), this.mUserId);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /* access modifiers changed from: private */
