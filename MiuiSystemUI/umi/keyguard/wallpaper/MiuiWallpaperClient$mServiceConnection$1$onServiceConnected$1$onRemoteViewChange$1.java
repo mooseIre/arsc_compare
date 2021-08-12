@@ -6,7 +6,7 @@ import com.android.systemui.Dependency;
 import kotlin.ResultKt;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
-import kotlin.coroutines.intrinsics.IntrinsicsKt;
+import kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsKt;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
@@ -48,7 +48,7 @@ final class MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1$onRemo
     @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @Nullable
     public final Object invokeSuspend(@NotNull Object obj) {
-        IntrinsicsKt.getCOROUTINE_SUSPENDED();
+        Object unused = IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();
         if (this.label == 0) {
             ResultKt.throwOnFailure(obj);
             ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).onRemoteViewChange(this.$mainRemoteView, this.$fullScreenRemoteView);
