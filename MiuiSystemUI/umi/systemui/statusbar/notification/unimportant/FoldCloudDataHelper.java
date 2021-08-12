@@ -16,28 +16,36 @@ import kotlin.ranges.RangesKt___RangesKt;
 import kotlinx.coroutines.BuildersKt__Builders_commonKt;
 import kotlinx.coroutines.GlobalScope;
 import kotlinx.coroutines.Job;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/* compiled from: FoldCloudDataHelper.kt */
 public final class FoldCloudDataHelper {
     public static final FoldCloudDataHelper INSTANCE = new FoldCloudDataHelper();
+    @Nullable
     private static List<String> localWhitelist;
+    @Nullable
     private static Context mContext;
+    @Nullable
     private static List<String> xmsfNotificationChannel;
 
     private FoldCloudDataHelper() {
     }
 
+    @Nullable
     public final List<String> getXmsfNotificationChannel() {
         return xmsfNotificationChannel;
     }
 
+    @Nullable
     public final List<String> getLocalWhitelist() {
         return localWhitelist;
     }
 
-    public final void init(Context context) {
+    public final void init(@NotNull Context context) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         mContext = context;
         String[] stringArray = context.getResources().getStringArray(C0008R$array.config_xmsfNotificationChannel);
@@ -48,15 +56,15 @@ public final class FoldCloudDataHelper {
         localWhitelist = ArraysKt___ArraysJvmKt.asList(stringArray2);
     }
 
-    public final void updateAll(Context context) {
+    public final void updateAll(@NotNull Context context) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Job unused = BuildersKt__Builders_commonKt.launch$default(GlobalScope.INSTANCE, null, null, new FoldCloudDataHelper$updateAll$1(context, null), 3, null);
     }
 
-    /* access modifiers changed from: public */
+    /* access modifiers changed from: private */
     /* JADX WARNING: Removed duplicated region for block: B:62:0x0158  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private final void updateAllCore(android.content.Context r14) {
+    public final void updateAllCore(android.content.Context r14) {
         /*
         // Method dump skipped, instructions count: 408
         */
@@ -97,7 +105,7 @@ public final class FoldCloudDataHelper {
         }
     }
 
-    private final List<String> jsonArrayStr2StrList(String str) {
+    private final List<String> jsonArrayStr2StrList(@NotNull String str) {
         JSONArray jSONArray;
         try {
             jSONArray = new JSONArray(str);

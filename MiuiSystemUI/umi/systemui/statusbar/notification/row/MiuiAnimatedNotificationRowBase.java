@@ -104,7 +104,9 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
     private final void resetTouchAnimation() {
         Sequence sequence;
         Sequence<ExpandableNotificationRow> sequence2;
-        Folme.useValue(RowAnimationUtils.INSTANCE.getFolmeTarget(this)).cancel();
+        String folmeTarget = RowAnimationUtils.INSTANCE.getFolmeTarget(this);
+        Folme.useValue(folmeTarget).cancel();
+        Folme.clean(folmeTarget);
         ExpandableViewState viewState = getViewState();
         if (viewState != null) {
             viewState.setTouchAnimating(false);
@@ -112,7 +114,9 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
         List<ExpandableNotificationRow> attachedChildren = getAttachedChildren();
         if (!(attachedChildren == null || (sequence = CollectionsKt___CollectionsKt.asSequence(attachedChildren)) == null || (sequence2 = SequencesKt___SequencesKt.filterNotNull(sequence)) == null)) {
             for (ExpandableNotificationRow expandableNotificationRow : sequence2) {
-                Folme.useValue(RowAnimationUtils.INSTANCE.getFolmeTarget(expandableNotificationRow)).cancel();
+                String folmeTarget2 = RowAnimationUtils.INSTANCE.getFolmeTarget(expandableNotificationRow);
+                Folme.useValue(folmeTarget2).cancel();
+                Folme.clean(folmeTarget2);
                 ExpandableViewState viewState2 = expandableNotificationRow.getViewState();
                 if (viewState2 != null) {
                     viewState2.setTouchAnimating(false);

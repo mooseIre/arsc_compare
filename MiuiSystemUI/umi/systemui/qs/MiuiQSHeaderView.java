@@ -101,7 +101,6 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         FoldManager.Companion.setNormalTarget(getNormalHeight());
         FoldManager.Companion.setUnimportantTarget(getUnimportantHeight());
         FoldManager.Companion.setHeaderDif((getNormalHeight() + ((float) dimensionPixelSize)) - getUnimportantHeight());
-        initFolme();
         if (isShowingUnimportant) {
             showUnimportantWithoutAnim();
         }
@@ -124,6 +123,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mIconManager);
@@ -131,6 +131,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);

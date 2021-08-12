@@ -130,8 +130,7 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         return intent;
     }
 
-    /* access modifiers changed from: protected */
-    public void initFolme() {
+    private void initFolme() {
         this.mTotalHeightStyle = Folme.useAt(this).state();
         AnimConfig animConfig = new AnimConfig();
         animConfig.setEase(-2, 0.95f, 0.25f);
@@ -333,6 +332,39 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
             showNotificationsAnim();
         } else {
             showNotificationWithoutAnim();
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        initFolme();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        cancelAllFolme();
+        cleanAllFolme();
+    }
+
+    private void cleanAllFolme() {
+        this.mHeightConfig.clear();
+        this.mItemConfig.clear();
+        IStateStyle iStateStyle = this.mTotalHeightStyle;
+        if (iStateStyle != null) {
+            iStateStyle.clean();
+        }
+        cleanFolmeCore(this.mDateView);
+        cleanFolmeCore(this.mClock);
+        cleanFolmeCore(this.mSysIconArea);
+        cleanFolmeCore(this.mShortcut);
+        cleanFolmeCore(this.mUnimportantHeader);
+    }
+
+    private void cleanFolmeCore(View view) {
+        if (view != null) {
+            Folme.clean(view);
         }
     }
 }

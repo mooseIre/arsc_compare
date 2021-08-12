@@ -104,7 +104,6 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
         FoldManager.Companion.setNormalTarget(getNormalHeight());
         FoldManager.Companion.setUnimportantTarget(getUnimportantHeight());
         FoldManager.Companion.setHeaderDif(getNormalHeight() - getUnimportantHeight());
-        initFolme();
         if (FoldManager.Companion.isShowingUnimportant()) {
             showUnimportantWithoutAnim();
         }
@@ -126,12 +125,14 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mIconManager);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mIconManager);

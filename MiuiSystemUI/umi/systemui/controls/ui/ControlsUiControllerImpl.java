@@ -144,14 +144,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
-    public static final /* synthetic */ ContextThemeWrapper access$getPopupThemedContext$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.popupThemedContext;
-    }
-
-    public static final /* synthetic */ void access$setPopup$p(ControlsUiControllerImpl controlsUiControllerImpl, ListPopupWindow listPopupWindow) {
-        controlsUiControllerImpl.popup = listPopupWindow;
-    }
-
     @NotNull
     public final Lazy<ControlsController> getControlsController() {
         return this.controlsController;
