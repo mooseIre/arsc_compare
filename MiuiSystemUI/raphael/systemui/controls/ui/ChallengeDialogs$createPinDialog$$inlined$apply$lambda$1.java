@@ -7,8 +7,9 @@ import android.widget.EditText;
 import com.android.systemui.C0015R$id;
 import kotlin.jvm.functions.Function0;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ChallengeDialogs.kt */
-final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$1 implements DialogInterface.OnClickListener {
+public final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$1 implements DialogInterface.OnClickListener {
     final /* synthetic */ ControlViewHolder $cvh$inlined;
     final /* synthetic */ ControlAction $lastAction$inlined;
 

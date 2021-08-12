@@ -106,7 +106,8 @@ public class UserBroadcastDispatcher implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public final void handleRegisterReceiver(ReceiverData receiverData) {
+    /* access modifiers changed from: public */
+    private final void handleRegisterReceiver(ReceiverData receiverData) {
         Sequence sequence;
         Looper looper = this.bgHandler.getLooper();
         Intrinsics.checkExpressionValueIsNotNull(looper, "bgHandler.looper");
@@ -147,7 +148,8 @@ public class UserBroadcastDispatcher implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public final void handleUnregisterReceiver(BroadcastReceiver broadcastReceiver) {
+    /* access modifiers changed from: public */
+    private final void handleUnregisterReceiver(BroadcastReceiver broadcastReceiver) {
         Looper looper = this.bgHandler.getLooper();
         Intrinsics.checkExpressionValueIsNotNull(looper, "bgHandler.looper");
         Preconditions.checkState(looper.isCurrentThread(), "This method should only be called from BG thread");
